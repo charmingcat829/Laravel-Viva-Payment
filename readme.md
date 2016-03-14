@@ -1,8 +1,8 @@
 # Viva Payments for Laravel
 
-![Build Status](https://img.shields.io/travis/sebdesign/laravel-viva-payments.svg)
+[![Build Status](https://travis-ci.org/sebdesign/laravel-viva-payments.svg)](https://travis-ci.org/sebdesign/laravel-viva-payments)
 
-![VivaPayments logo](https://camo.githubusercontent.com/7f0b41d204f5c27c416a83fa0bc8d1d1e45cf495/68747470733a2f2f7777772e766976617061796d656e74732e636f6d2f436f6e74656e742f696d672f6c6f676f2e737667 "VivaPayments logo")
+[![VivaPayments logo](https://camo.githubusercontent.com/7f0b41d204f5c27c416a83fa0bc8d1d1e45cf495/68747470733a2f2f7777772e766976617061796d656e74732e636f6d2f436f6e74656e742f696d672f6c6f676f2e737667 "VivaPayments logo")](https://www.vivapayments.com/)
 
 This package provides an interface for the [Viva Payments](https://www.vivapayments.com/) API. It handles the **Redirect Checkout**, **Native Checkout**, and **Mobile Checkout** payment methods, as well as **Webhooks**.
 
