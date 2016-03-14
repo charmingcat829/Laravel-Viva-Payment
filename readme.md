@@ -54,6 +54,7 @@ Also the Wiki has detailed instructions on the APIs: https://github.com/VivaPaym
     - [Webhooks](#webhooks)
         - [Get an authorization code](#get-an-authorization-code)
 - [Exceptions](#exceptions)
+- [Tests](#tests)
 
 ## Setup
 
@@ -643,3 +644,9 @@ $key = $webhook->verify();
 When the VivaPayments API returns an error, a `Sebdesign\VivaPayments\VivaException` is thrown.
 
 For any other HTTP error a `GuzzleHttp\Exception\ClientException` is thrown.
+
+## Tests
+
+Unit tests are triggered by runnning `phpunit --group unit`.
+
+To run functional tests you have to include a `.env` file in the root folder, containing the credentials (`VIVA_API_KEY`, `VIVA_MERCHANT_ID`, `VIVA_PUBLIC_KEY`), in order to hit the VivaPayments demo API. Then run `phpunit --group functional` to trigger the tests.
