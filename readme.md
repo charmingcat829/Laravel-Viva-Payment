@@ -232,11 +232,13 @@ Below is an example of the last step using this package.
 </head>
 <body>
     <form action="/order/checkout" id="paymentform" method="POST" accept-charset="UTF-8">
+        {!! csrf_field() !!}
+
         <label for="txtCardHolder">Cardholder name:</label>
         <input id="txtCardHolder" data-vp="cardholder" type="text">
 
         <label for="txtCardNumber">Card number:</label>
-        <input id="txtCardNumber" data-vp="cardnumber" type="text">
+        <input id="txtCardNumber" data-vp="cardnumber" type="number">
 
         <div id="divInstallments" style="display: none;">
             <label for="installments">Installments:</label>
@@ -244,13 +246,13 @@ Below is an example of the last step using this package.
         </div>
 
         <label for="txtCCV">CVV:</form>
-        <input id="txtCCV" data-vp="cvv">
+        <input id="txtCCV" data-vp="cvv" type="number">
 
         <label for="txtExpMonth">Expiration Month:</label>
-        <input id="txtExpMonth" data-vp="month">
+        <input id="txtExpMonth" data-vp="month" type="number">
 
         <label for="txtExpYear">Expiration Year:</label>
-        <input id="txtExpYear" data-vp="year">
+        <input id="txtExpYear" data-vp="year" type="number">
 
         <input name="token" id="token" type="hidden">
 
