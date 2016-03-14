@@ -6,7 +6,7 @@
 
 This package provides an interface for the [Viva Payments](https://www.vivapayments.com/) API. It handles the **Redirect Checkout**, **Native Checkout**, and **Mobile Checkout** payment methods, as well as **Webhooks**.
 
-Check out official repository for more information: https://github.com/VivaPayments/API
+Check out the official repository for more information: https://github.com/VivaPayments/API
 
 Also the Wiki has detailed instructions on the APIs: https://github.com/VivaPayments/API/wiki
 
@@ -82,6 +82,15 @@ Add the following service provider in your `config/app.php`.
 
 Add the following array in your `config/services.php`.
 
+```php
+'viva' => [
+    'api_key' => env('VIVA_API_KEY'),
+    'merchant_id' => env('VIVA_MERCHANT_ID'),
+    'public_key' => env('VIVA_PUBLIC_KEY'),
+    'environment' => env('VIVA_ENVIRONMENT', 'production'),
+],
+```
+
 The `api_key` and `merchant_id` can be found in the *Settings > API Access* section of your profile.
 
 > Read more about API authentication on the wiki: https://github.com/VivaPayments/API/wiki/API%20Authentication
@@ -91,15 +100,6 @@ The `public_key` is only needed for the *Native Checkout* and the *Mobile Checko
 The `environment` can be either `production` or `demo`.
 
 > To simulate a successful payment on the demo environment, use the card number 4111 1111 1111 1111 with any valid date and 111 for the CVV2.
-
-```php
-'viva' => [
-    'api_key' => env('VIVA_API_KEY'),
-    'merchant_id' => env('VIVA_MERCHANT_ID'),
-    'public_key' => env('VIVA_PUBLIC_KEY'),
-    'environment' => env('VIVA_ENVIRONMENT', 'production'),
-],
-```
 
 ## Redirect Checkout
 
