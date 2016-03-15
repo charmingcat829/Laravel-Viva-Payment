@@ -50,7 +50,7 @@ class TransactionTest extends TestCase
             'MerchantTrns' => 'Your reference',
         ];
 
-        $response = $transaction->createRecurring($original, 1, $parameters);
+        $response = $transaction->createRecurring($original, 30, $parameters);
         $request = $history->getLastRequest();
 
         $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');

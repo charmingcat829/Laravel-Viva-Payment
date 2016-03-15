@@ -14,7 +14,7 @@ class OrderFunctionalTest extends TestCase
 
         // POST
 
-        $orderCode = $order->create(1, ['CustomerTrns' => 'Test Transaction']);
+        $orderCode = $order->create(30, ['CustomerTrns' => 'Test Transaction']);
 
         $this->assertTrue(is_int($orderCode));
 
@@ -23,15 +23,15 @@ class OrderFunctionalTest extends TestCase
         $response = $order->get($orderCode);
 
         $this->assertEquals(Order::PENDING, $response->StateId);
-        $this->assertEquals(0.01, $response->RequestAmount);
+        $this->assertEquals(0.3, $response->RequestAmount);
         $this->assertEquals('Test Transaction', $response->CustomerTrns);
 
         // PATCH
 
-        $order->update($orderCode, ['Amount' => 2]);
+        $order->update($orderCode, ['Amount' => 50]);
         $response = $order->get($orderCode);
 
-        $this->assertEquals(0.02, $response->RequestAmount);
+        $this->assertEquals(0.5, $response->RequestAmount);
 
         // DELETE
 

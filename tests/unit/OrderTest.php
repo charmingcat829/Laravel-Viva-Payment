@@ -16,13 +16,13 @@ class OrderTest extends TestCase
         $this->mockJsonResponses([['OrderCode' => 175936509216]]);
 
         $parameters = ['CustomerTrns' => 'Your reference'];
-        $orderCode = $order->create(1, $parameters);
+        $orderCode = $order->create(30, $parameters);
         $request = $history->getLastRequest();
 
         $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
         $this->assertArraySubset($parameters, $request->getBody()->getFields(), 'The parameters should be passed in the request body.');
         $this->assertTrue($request->getBody()->hasField('Amount'), 'The amount should be passed in the parameters.');
-        $this->assertEquals(1, $request->getBody()->getField('Amount'), 'The amount should be 1.');
+        $this->assertEquals(30, $request->getBody()->getField('Amount'), 'The amount should be 1.');
         $this->assertEquals(175936509216, $orderCode, 'The order code should be 175936509216');
     }
 
@@ -56,7 +56,7 @@ class OrderTest extends TestCase
         $history = $this->mockRequests();
         $this->mockJsonResponses([[]]);
 
-        $parameters = ['Amount' => 2];
+        $parameters = ['Amount' => 50];
         $orderCode = $order->update(175936509216, $parameters);
         $request = $history->getLastRequest();
 
