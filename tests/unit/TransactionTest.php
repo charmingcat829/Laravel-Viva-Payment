@@ -54,7 +54,7 @@ class TransactionTest extends TestCase
         $request = $history->getLastRequest();
 
         $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
-        $this->assertStringEndsWith($original, $request->getUrl(), 'The original transaction ID should be in the URL.');
+        $this->assertStringEndsWith($original, $request->getPath(), 'The original transaction ID should be in the URL.');
         $this->assertArraySubset($parameters, $request->getBody()->getFields(), 'The request body should contain the parameters.');
         $this->assertEquals(['foo' => 'bar'], (array) $response);
     }
@@ -73,13 +73,13 @@ class TransactionTest extends TestCase
         $original = '252b950e-27f2-4300-ada1-4dedd7c17904';
         $customer = 'Customer name';
 
-        $response = $transaction->cancel($original, 1, $customer);
+        $response = $transaction->cancel($original, 30, $customer);
         $request = $history->getLastRequest();
 
         $this->assertEquals('DELETE', $request->getMethod(), 'The request method should be DELETE.');
-        $this->assertStringEndsWith($original, $request->getUrl(), 'The original transaction ID should be in the URL.');
-        $this->assertEquals(1, $request->getBody()->getField('Amount'), 'The request body should contain the amount.');
-        $this->assertEquals($customer, $request->getBody()->getField('ActionUser'), 'The request body should contain the customer.');
+        $this->assertStringEndsWith($original, $request->getPath(), 'The original transaction ID should be in the URL.');
+        $this->assertEquals(30, $request->getQuery()->get('Amount'), 'The query string should contain the amount.');
+        $this->assertEquals($customer, $request->getQuery()->get('ActionUser'), 'The query string should contain the customer.');
         $this->assertEquals(['foo' => 'bar'], (array) $response);
     }
 
@@ -100,7 +100,7 @@ class TransactionTest extends TestCase
         $request = $history->getLastRequest();
 
         $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
-        $this->assertStringEndsWith($id, $request->getUrl(), 'The transaction ID should be in the URL.');
+        $this->assertStringEndsWith($id, $request->getPath(), 'The transaction ID should be in the URL.');
         $this->assertTrue(is_array($transactions));
     }
 

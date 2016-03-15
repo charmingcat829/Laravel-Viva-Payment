@@ -211,11 +211,11 @@ class Transaction
      */
     public function cancel($id, $amount, $actionUser = null)
     {
-        $body = ['Amount' => $amount];
+        $query = ['Amount' => $amount];
         $actionUser = $actionUser ? ['ActionUser' => $actionUser] : [];
 
         return $this->client->delete(self::ENDPOINT.$id, [
-            'body' => array_merge($body, $actionUser),
+            'query' => array_merge($query, $actionUser),
         ]);
     }
 
