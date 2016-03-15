@@ -1,32 +1,34 @@
 <?php
 
+use Carbon\Carbon;
 use Sebdesign\VivaPayments\Card;
 use Sebdesign\VivaPayments\Order;
 use Sebdesign\VivaPayments\Transaction;
 
 class TransactionFunctionalTest extends TestCase
 {
-    // Need a native source for this
-
     /**
      * @test
      * @group functional
      */
-    public function it_creates_a_transaction()
+    public function api_methods()
     {
         $order = app(Order::class);
         $transaction = app(Transaction::class);
         $card = app(Card::class);
 
-        $orderCode = $order->create(1, [
+        $orderCode = $order->create(30, [
             'CustomerTrns' => 'Test Transaction',
             'SourceCode' => 4693,
+            'AllowRecurring' => true,
         ]);
 
         $token = $card->token('Customer name', '4111 1111 1111 1111', 111, 06, 2016);
         $installments = $card->installments('4111 1111 1111 1111');
 
-        $response = $transaction->create([
+        // Create transaction
+
+        $original = $transaction->create([
             'OrderCode'     => $orderCode,
             'SourceCode'    => 4693,
             'Installments'  => $installments,
@@ -35,72 +37,71 @@ class TransactionFunctionalTest extends TestCase
             ],
         ]);
 
-        dd($response);
-    }
+        $this->assertEquals(Transaction::COMPLETED, $original->StatusId, 'The transaction was not completed.');
+        $this->assertEquals(0.3, $original->Amount);
 
-    /**
-     * @test
-     * @group functional
-     */
-    public function it_creates_a_recurring_transaction()
-    {
-    }
+        // Create recurring transaction
 
-    /**
-     * @test
-     * @group functional
-     */
-    public function it_refunds_a_transaction()
-    {
-    }
+        // $recurring = $transaction->createRecurring($original->TransactionId, [
+        //     'Amount'        => 50,
+        //     'SourceCode'    => 4693,
+        //     'Installments'  => $installments,
+        // ]);
 
-    /**
-     * @test
-     * @group functional
-     */
-    public function it_gets_transactions_by_id()
-    {
-    }
+        // dump($recurring);
 
-    /**
-     * @test
-     * @group functional
-     */
-    public function it_gets_transactions_by_order_code()
-    {
-        $order = app(Order::class);
-        $transaction = app(Transaction::class);
+        // $this->assertEquals(Transaction::COMPLETED, $recurring->StatusId, 'The transaction was not completed.');
+        // $this->assertEquals(0., $recurring->Amount);
 
-        $orderCode = $order->create(1, ['CustomerTrns' => 'Test Transaction']);
+        // Get by ID
+
+        $transactions = $transaction->get($original->TransactionId);
+
+        $this->assertNotEmpty($transactions);
+        $this->assertCount(1, $transactions, 'There should be 1 transaction.');
+        $this->assertEquals(Transaction::COMPLETED, $transactions[0]->StatusId, 'The transaction was not completed.');
+        $this->assertEquals($original->TransactionId, $transactions[0]->TransactionId, "The transaction ID should be {$original->TransactionId}.");
+
+        // Get by order code
 
         $transactions = $transaction->getByOrder($orderCode);
 
-        $this->assertTrue(is_array($transactions));
-    }
+        $this->assertNotEmpty($transactions);
 
-    /**
-     * @test
-     * @group functional
-     */
-    public function it_gets_transactions_by_date()
-    {
-        $transaction = app(Transaction::class);
+        foreach ($transactions as $key => $trns) {
+            $this->assertEquals($orderCode, $trns->Order->OrderCode, "Transaction #{$key} should have order code {$orderCode}");
+        }
 
-        $transactions = $transaction->getByDate('2016-03-12');
+        // Get by date
 
-        $this->assertTrue(is_array($transactions));
-    }
+        $transactions = $transaction->getByDate(Carbon::today());
 
-    /**
-     * @test
-     * @group functional
-     */
-    public function it_gets_transactions_by_clearance_date()
-    {
-        $transaction = app(Transaction::class);
+        $this->assertNotEmpty($transactions);
 
-        $transactions = $transaction->getByClearanceDate('2016-03-12');
+        foreach ($transactions as $key => $trns) {
+            $this->assertTrue(Carbon::parse($trns->InsDate)->isToday());
+        }
 
-        $this->assertTrue(is_array($transactions));
+        // Get by clearance date
+
+        $transactions = $transaction->getByClearanceDate(Carbon::today());
+
+        foreach ($transactions as $key => $trns) {
+            $this->assertTrue(Carbon::parse($trns->ClearanceDate)->isToday());
+        }
+
+        // Cancel transaction
+
+        $response = $transaction->cancel($original->TransactionId, 30);
+
+        $this->assertEquals(Transaction::COMPLETED, $response->StatusId, 'The cancel transaction was not completed.');
+        $this->assertEquals(0.3, $response->Amount);
+
+        $transactions = $transaction->get($original->TransactionId);
+
+        $this->assertNotEmpty($transactions);
+        $this->assertCount(1, $transactions, 'There should be 1 transaction.');
+        $this->assertEquals(Transaction::CANCELED, $transactions[0]->StatusId, 'The original transaction should be canceled.');
+        $this->assertEquals(0.3, $transactions[0]->Amount);
     }
 }
