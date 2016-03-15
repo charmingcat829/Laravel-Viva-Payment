@@ -14,7 +14,7 @@ class OrderTest extends TestCase
 
         $history = $this->mockRequests();
         $this->mockJsonResponses([['OrderCode' => 175936509216]]);
-        
+
         $parameters = ['CustomerTrns' => 'Your reference'];
         $orderCode = $order->create(1, $parameters);
         $request = $history->getLastRequest();
@@ -36,7 +36,7 @@ class OrderTest extends TestCase
 
         $history = $this->mockRequests();
         $this->mockJsonResponses([['foo' => 'bar']]);
-        
+
         $response = $order->get(175936509216);
         $request = $history->getLastRequest();
 
@@ -55,7 +55,7 @@ class OrderTest extends TestCase
 
         $history = $this->mockRequests();
         $this->mockJsonResponses([[]]);
-        
+
         $parameters = ['Amount' => 2];
         $orderCode = $order->update(175936509216, $parameters);
         $request = $history->getLastRequest();

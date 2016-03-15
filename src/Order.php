@@ -18,7 +18,7 @@ class Order
 
     /**
      * Constructor.
-     * 
+     *
      * @param \Sebdesign\VivaPayments\Client $client
      */
     public function __construct(Client $client)
@@ -28,8 +28,8 @@ class Order
 
     /**
      * Create a payment order.
-     * 
-     * @param  integer  $amount     amount in cents
+     *
+     * @param  int  $amount     amount in cents
      * @param  array    $parameters optional parameters (Full list available here: https://github.com/VivaPayments/API/wiki/Optional-Parameters)
      * @return int
      */
@@ -44,7 +44,7 @@ class Order
 
     /**
      * Retrieve information about an order.
-     * 
+     *
      * @param  int $orderCode  The unique Payment Order ID.
      * @return object
      */
@@ -55,7 +55,7 @@ class Order
 
     /**
      * Update certain information of an order.
-     * 
+     *
      * @param  int    $orderCode   The unique Payment Order ID.
      * @param  array  $parameters
      * @return null
@@ -69,7 +69,7 @@ class Order
 
     /**
      * Cancel an order.
-     * 
+     *
      * @param  int $orderCode  The unique Payment Order ID.
      * @return object
      */
@@ -80,7 +80,7 @@ class Order
 
     /**
      * Get the checkout URL for an order.
-     * 
+     *
      * @param  int $orderCode  The unique Payment Order ID.
      * @return string
      */

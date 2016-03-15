@@ -1,4 +1,6 @@
-<?php namespace Sebdesign\VivaPayments;
+<?php
+
+namespace Sebdesign\VivaPayments;
 
 use GuzzleHttp\Client as GuzzleClient;
 use Illuminate\Support\ServiceProvider;
@@ -26,7 +28,7 @@ class VivaPaymentsServiceProvider extends ServiceProvider
 
     /**
      * Instantiate the Guzzlehttp client.
-     * 
+     *
      * @return GuzzleHttp\Client
      */
     protected function bootGuzzleClient()
@@ -49,7 +51,7 @@ class VivaPaymentsServiceProvider extends ServiceProvider
 
     /**
      * Get the URL based on the environment.
-     * 
+     *
      * @param  string $environment
      * @return string
      */
@@ -63,7 +65,7 @@ class VivaPaymentsServiceProvider extends ServiceProvider
             return Client::DEMO_URL;
         }
 
-        throw new \InvalidArgumentException("The Viva Payments environment must be demo or production.");
+        throw new \InvalidArgumentException('The Viva Payments environment must be demo or production.');
     }
 
     /**

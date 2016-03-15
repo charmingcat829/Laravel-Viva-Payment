@@ -15,7 +15,7 @@ class TransactionTest extends TestCase
 
         $history = $this->mockRequests();
         $this->mockJsonResponses([['foo' => 'bar']]);
-        
+
         $parameters = [
             'OrderCode'     => 175936509216,
             'SourceCode'    => 'Default',
@@ -95,7 +95,7 @@ class TransactionTest extends TestCase
         $this->mockJsonResponses([['Transactions' => []]]);
 
         $id = '252b950e-27f2-4300-ada1-4dedd7c17904';
-        
+
         $transactions = $transaction->get($id);
         $request = $history->getLastRequest();
 
@@ -116,7 +116,7 @@ class TransactionTest extends TestCase
         $this->mockJsonResponses([['Transactions' => []]]);
 
         $orderCode = 175936509216;
-        
+
         $transactions = $transaction->getByOrder($orderCode);
         $request = $history->getLastRequest();
 
@@ -132,7 +132,7 @@ class TransactionTest extends TestCase
     public function it_gets_transactions_by_date()
     {
         $transaction = app(Transaction::class);
-        
+
         $history = $this->mockRequests();
         $this->mockJsonResponses([
             ['Transactions' => []],
@@ -160,7 +160,7 @@ class TransactionTest extends TestCase
     public function it_gets_transactions_by_clearance_date()
     {
         $transaction = app(Transaction::class);
-        
+
         $history = $this->mockRequests();
         $this->mockJsonResponses([
             ['Transactions' => []],

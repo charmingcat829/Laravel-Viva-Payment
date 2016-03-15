@@ -8,12 +8,12 @@ use GuzzleHttp\Message\Response;
 class Client
 {
     /**
-     * Demo environment URL
+     * Demo environment URL.
      */
     const DEMO_URL = 'http://demo.vivapayments.com';
 
     /**
-     * Production environment URL
+     * Production environment URL.
      */
     const PRODUCTION_URL = 'https://www.vivapayments.com';
 
@@ -24,7 +24,7 @@ class Client
 
     /**
      * Constructor.
-     * 
+     *
      * @param \GuzzleHttp\ClientInterface   $client
      */
     public function __construct(ClientInterface $client)
@@ -34,7 +34,7 @@ class Client
 
     /**
      * Make a GET request.
-     * 
+     *
      * @param  string $url
      * @param  array  $options
      * @return object
@@ -48,7 +48,7 @@ class Client
 
     /**
      * Make a POST request.
-     * 
+     *
      * @param  string $url
      * @param  array  $options
      * @return object
@@ -62,7 +62,7 @@ class Client
 
     /**
      * Make a PATCH request.
-     * 
+     *
      * @param  string $url
      * @param  array  $options
      * @return object
@@ -76,7 +76,7 @@ class Client
 
     /**
      * Make a DELETE request.
-     * 
+     *
      * @param  string $endpoint
      * @param  array  $options
      * @return object
@@ -90,7 +90,7 @@ class Client
 
     /**
      * Get the response body.
-     * 
+     *
      * @param  \GuzzleHttp\Message\Response $response
      * @return object
      *
@@ -109,7 +109,7 @@ class Client
 
     /**
      * Get the URL.
-     * 
+     *
      * @return string
      */
     public function getUrl()
@@ -119,7 +119,7 @@ class Client
 
     /**
      * Get the Guzzlehttp client.
-     * 
+     *
      * @return \GuzzleHttp\Client
      */
     public function getClient()

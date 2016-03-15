@@ -7,6 +7,7 @@ use Sebdesign\VivaPayments\Transaction;
 class TransactionFunctionalTest extends TestCase
 {
     // Need a native source for this
+
     /**
      * @test
      * @group functional
@@ -16,7 +17,7 @@ class TransactionFunctionalTest extends TestCase
         $order = app(Order::class);
         $transaction = app(Transaction::class);
         $card = app(Card::class);
-        
+
         $orderCode = $order->create(1, [
             'CustomerTrns' => 'Test Transaction',
             'SourceCode' => 4693,
@@ -69,9 +70,9 @@ class TransactionFunctionalTest extends TestCase
     {
         $order = app(Order::class);
         $transaction = app(Transaction::class);
-        
+
         $orderCode = $order->create(1, ['CustomerTrns' => 'Test Transaction']);
-        
+
         $transactions = $transaction->getByOrder($orderCode);
 
         $this->assertTrue(is_array($transactions));
@@ -84,7 +85,7 @@ class TransactionFunctionalTest extends TestCase
     public function it_gets_transactions_by_date()
     {
         $transaction = app(Transaction::class);
-        
+
         $transactions = $transaction->getByDate('2016-03-12');
 
         $this->assertTrue(is_array($transactions));
@@ -97,7 +98,7 @@ class TransactionFunctionalTest extends TestCase
     public function it_gets_transactions_by_clearance_date()
     {
         $transaction = app(Transaction::class);
-        
+
         $transactions = $transaction->getByClearanceDate('2016-03-12');
 
         $this->assertTrue(is_array($transactions));

@@ -15,7 +15,7 @@ class Card
 
     /**
      * Constructor.
-     * 
+     *
      * @param \Sebdesign\VivaPayments\Client $client
      */
     public function __construct(Client $client)
@@ -25,7 +25,7 @@ class Card
 
     /**
      * Get a token for the credit card.
-     * 
+     *
      * @param  string $name   The cardholder's name
      * @param  mixed  $number The credit card number
      * @param  int    $cvc    The CVC number
@@ -43,7 +43,7 @@ class Card
                 'ExpirationDate'    => $this->getExpirationDate($month, $year),
             ],
             'query' => [
-                'key'               => $this->getKey()
+                'key'               => $this->getKey(),
             ],
         ]);
 
@@ -52,17 +52,18 @@ class Card
 
     /**
      * Strip non-numeric characters.
-     * 
+     *
      * @param  mixed $number  The credit card number
      * @return int
      */
-    protected function normalizeNumber($number) {
+    protected function normalizeNumber($number)
+    {
         return preg_replace('/\D/', '', $number);
     }
 
     /**
      * Get the public key as query string.
-     * 
+     *
      * @return string
      */
     protected function getKey()
@@ -72,9 +73,9 @@ class Card
 
     /**
      * Get the expiration date.
-     * 
+     *
      * @param  int $month
-     * @param  int $year 
+     * @param  int $year
      * @return string
      */
     protected function getExpirationDate($month, $year)
@@ -84,7 +85,7 @@ class Card
 
     /**
      * Check for installments support.
-     * 
+     *
      * @param  mixed $number  The credit card number
      * @return int
      */

@@ -38,7 +38,7 @@ class CardTest extends TestCase
 
         $history = $this->mockRequests();
         $this->mockJsonResponses([['MaxInstallments' => 36]]);
-        
+
         $installments = $card->installments('4111 1111 1111 1111');
         $request = $history->getLastRequest();
 
