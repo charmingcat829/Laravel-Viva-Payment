@@ -55,6 +55,7 @@ class TransactionTest extends TestCase
 
         $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
         $this->assertStringEndsWith($original, $request->getPath(), 'The original transaction ID should be in the URL.');
+        $this->assertEquals(30, $request->getBody()->getField('Amount'), 'The request body contain the amount.');
         $this->assertArraySubset($parameters, $request->getBody()->getFields(), 'The request body should contain the parameters.');
         $this->assertEquals(['foo' => 'bar'], (array) $response);
     }

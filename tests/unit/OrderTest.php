@@ -22,7 +22,7 @@ class OrderTest extends TestCase
         $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
         $this->assertArraySubset($parameters, $request->getBody()->getFields(), 'The parameters should be passed in the request body.');
         $this->assertTrue($request->getBody()->hasField('Amount'), 'The amount should be passed in the parameters.');
-        $this->assertEquals(30, $request->getBody()->getField('Amount'), 'The amount should be 1.');
+        $this->assertEquals(30, $request->getBody()->getField('Amount'), 'The amount should be 30.');
         $this->assertEquals(175936509216, $orderCode, 'The order code should be 175936509216');
     }
 
