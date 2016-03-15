@@ -11,7 +11,7 @@ class OrderFunctionalTest extends TestCase
     public function api_methods()
     {
         $order = app(Order::class);
-        
+
         // POST
 
         $orderCode = $order->create(1, ['CustomerTrns' => 'Test Transaction']);

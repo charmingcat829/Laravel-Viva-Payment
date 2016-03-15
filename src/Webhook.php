@@ -5,14 +5,14 @@ namespace Sebdesign\VivaPayments;
 class Webhook
 {
     const ENDPOINT = '/api/messages/config/token/';
-    
+
     /**
-     * Create Transaction event
+     * Create Transaction event.
      */
     const CREATE_TRANSACTION = 1796;
 
     /**
-     * Cancel/Refund Transaction event
+     * Cancel/Refund Transaction event.
      */
     const REFUND_TRANSACTION = 1797;
 
@@ -23,7 +23,7 @@ class Webhook
 
     /**
      * Constructor.
-     * 
+     *
      * @param \Sebdesign\VivaPayments\Client $client
      */
     public function __construct(Client $client)
@@ -33,7 +33,7 @@ class Webhook
 
     /**
      * Get a webhook authorization code.
-     * 
+     *
      * @return object
      */
     public function getAuthorizationCode()

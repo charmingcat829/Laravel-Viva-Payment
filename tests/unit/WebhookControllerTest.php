@@ -98,7 +98,7 @@ class WebhookTestController extends WebhookController
     protected function handleCreateTransaction(Request $request)
     {
         $request['handler'] = __METHOD__;
-        
+
         return $request->all();
     }
 

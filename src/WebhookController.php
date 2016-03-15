@@ -4,7 +4,6 @@ namespace Sebdesign\VivaPayments;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Sebdesign\VivaPayments\Webhook;
 
 class WebhookController extends Controller
 {
@@ -19,7 +18,7 @@ class WebhookController extends Controller
      * Handle an incoming request.
      *
      * Handle a GET verification request or a POST notification.
-     * 
+     *
      * @param  Illuminate\Http\Request $request
      * @return mixed
      */
@@ -34,7 +33,7 @@ class WebhookController extends Controller
 
     /**
      * Handle a POST notification.
-     * 
+     *
      * @param  Illuminate\Http\Request $request
      * @return mixed
      */
@@ -48,13 +47,13 @@ class WebhookController extends Controller
             default:
                 return $this->handleEventNotification($request);
         }
-        
+
         return $this->missingMethod();
     }
 
     /**
      * Handle a Create Transaction event notification.
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      */
     protected function handleCreateTransaction(Request $request)
@@ -63,7 +62,7 @@ class WebhookController extends Controller
 
     /**
      * Handle a Refund Transaction event notification.
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      */
     protected function handleRefundTransaction(Request $request)
@@ -72,7 +71,7 @@ class WebhookController extends Controller
 
     /**
      * Handle any other type of event notification.
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      */
     protected function handleEventNotification(Request $request)
@@ -81,7 +80,7 @@ class WebhookController extends Controller
 
     /**
      * Verify a webhook.
-     * 
+     *
      * @return Illuminate\Http\JsonResponse
      */
     protected function verify()

@@ -7,7 +7,7 @@ class Transaction
     const ENDPOINT = '/api/Transactions/';
 
     /**
-     * Transaction types
+     * Transaction types.
      */
 
     // A Capture event of a preAuthorized transaction
@@ -53,39 +53,39 @@ class Transaction
     const BANK_TRANSFER = 24;
 
     /**
-     * Transaction statuses
+     * Transaction statuses.
      */
 
     // The transaction was not completed because of an error
     const ERROR = 'E';
-    
+
     // The transaction is in progress
     const PROGRESS = 'A';
-    
+
     // The cardholder has disputed the transaction with the issuing Bank
     const DISPUTED = 'M';
-    
+
     // Dispute Awaiting Response
     const DISPUTE_AWAITING = 'MA';
-    
+
     // Dispute in Progress
     const DISPUTE_IN_PROGRESS = 'MI';
-    
+
     // A disputed transaction has been refunded (Dispute Lost)
     const DISPUTE_REFUNDED = 'ML';
-    
+
     // Dispute Won
     const DISPUTE_WON = 'MW';
-    
+
     // Suspected Dispute
     const DISPUTE_SUSPECTED = 'MS';
-    
+
     // The transaction was cancelled by the merchant
     const CANCELED = 'X';
-    
+
     // The transaction has been fully or partially refunded
     const REFUNDED = 'R';
-    
+
     // The transaction has been completed successfully
     const COMPLETED = 'F';
 
@@ -96,7 +96,7 @@ class Transaction
 
     /**
      * Constructor.
-     * 
+     *
      * @param \Sebdesign\VivaPayments\Client $client
      */
     public function __construct(Client $client)
@@ -106,7 +106,7 @@ class Transaction
 
     /**
      * Create a new transaction.
-     * 
+     *
      * @param  array   $parameters
      * @return object
      */
@@ -122,11 +122,11 @@ class Transaction
 
     /**
      * Create a recurring transaction.
-     * 
+     *
      * @param  string   $id
-     * @param  int      $amount    
+     * @param  int      $amount
      * @param  array    $parameters
-     * @return object            
+     * @return object
      */
     public function createRecurring($id, $amount, array $parameters = [])
     {
@@ -137,20 +137,20 @@ class Transaction
 
     /**
      * Get the transactions for an order code, a transaction id, or a date.
-     * 
+     *
      * @param  mixed $id
      * @return array
      */
     public function get($id)
     {
         $response = $this->client->get(self::ENDPOINT.$id);
-        
+
         return $response->Transactions;
     }
 
     /**
      * Get the transactions for an order code.
-     * 
+     *
      * @param  int $orderCode
      * @return array
      */
@@ -159,13 +159,13 @@ class Transaction
         $response = $this->client->get(self::ENDPOINT, [
             'query' => compact('ordercode'),
         ]);
-        
+
         return $response->Transactions;
     }
 
     /**
      * Get the transactions that occured on a given date.
-     * 
+     *
      * @param  \DateTimeInterface|string $date
      * @return array
      */
@@ -178,13 +178,13 @@ class Transaction
         $response = $this->client->get(self::ENDPOINT, [
             'query' => compact('date'),
         ]);
-        
+
         return $response->Transactions;
     }
 
     /**
      * Get the transactions that were cleared on a given date.
-     * 
+     *
      * @param  \DateTimeInterface|string $date
      * @return array
      */
@@ -197,15 +197,15 @@ class Transaction
         $response = $this->client->get(self::ENDPOINT, [
             'query' => compact('clearancedate'),
         ]);
-        
+
         return $response->Transactions;
     }
 
     /**
      * Cancel or refund a payment.
-     * 
+     *
      * @param  string       $id
-     * @param  int          $amount    
+     * @param  int          $amount
      * @param  string|null  $actionUser
      * @return object
      */
@@ -221,7 +221,7 @@ class Transaction
 
     /**
      * Get the public key as query string.
-     * 
+     *
      * @return string
      */
     protected function getKey()

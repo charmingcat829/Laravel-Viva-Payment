@@ -13,7 +13,7 @@ class Source
 
     /**
      * Constructor.
-     * 
+     *
      * @param \Sebdesign\VivaPayments\Client $client
      */
     public function __construct(Client $client)
@@ -23,7 +23,7 @@ class Source
 
     /**
      * Create a payment source.
-     * 
+     *
      * @param  string $name    A meaningful name that will help you identify the source in Web Self Care environment
      * @param  string $code    A unique code that is exchanged between your application and the API
      * @param  string $url     The primary domain of your site WITH protocol scheme (http/https)
@@ -47,7 +47,7 @@ class Source
 
     /**
      * Get the domain of the given URL.
-     * 
+     *
      * @param  string $url
      * @return string
      */
@@ -58,7 +58,7 @@ class Source
 
     /**
      * Check if the given URL has an https:// protocol scheme.
-     * 
+     *
      * @param  string  $url
      * @return bool
      */

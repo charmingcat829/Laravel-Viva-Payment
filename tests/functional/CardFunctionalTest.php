@@ -13,7 +13,7 @@ class CardFunctionalTest extends TestCase
         $card = app(Card::class);
 
         $token = $card->token('Customer name', '4111 1111 1111 1111', 111, 06, 2016);
-        
+
         $this->assertTrue(is_string($token));
     }
 
@@ -24,7 +24,7 @@ class CardFunctionalTest extends TestCase
     public function it_checks_for_installments()
     {
         $card = app(Card::class);
-        
+
         $installments = $card->installments('4111 1111 1111 1111');
 
         $this->assertTrue(is_int($installments));
