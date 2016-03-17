@@ -10,7 +10,7 @@ Check out the official repository for more information: https://github.com/VivaP
 
 Also the Wiki has detailed instructions on the APIs: https://github.com/VivaPayments/API/wiki
 
-**Note:** This project is not an official package, and I'm not affiated with Viva Payments in any way.
+**Note:** This project is not an official package, and I'm not affiliated with Viva Payments in any way.
 
 ## Table of Contents
 
@@ -103,7 +103,7 @@ The `environment` can be either `production` or `demo`.
 
 ## Redirect Checkout
 
-Redirect checkout is a simple 3 step process, where you create the Payment Order, redirect the customer to Viva Payments secure environment and then confirm the transaction. 
+Redirect checkout is a simple 3 step process, where you create the Payment Order, redirect the customer to Viva Payments secure environment and then confirm the transaction.
 
 > Read more about the redirect checkout process on the wiki: https://github.com/VivaPayments/API/wiki/Redirect-Checkout
 
@@ -156,7 +156,7 @@ class CheckoutController extends Controller
 {
     /**
      * Create a payment order and redirect to the checkout page.
-     * 
+     *
      * @param  \Illuminate\Http\Request          $request
      * @param  \Sebdesign\VivaPayments\Order     $order
      * @return \Illuminate\Http\RedirectResponse
@@ -182,7 +182,7 @@ class CheckoutController extends Controller
 
     /**
      * Redirect from the checkout page and get the order details from the API.
-     * 
+     *
      * @param  \Illuminate\Http\Request          $request
      * @param  \Sebdesign\VivaPayments\Order     $order
      * @return \Illuminate\Http\RedirectResponse
@@ -231,7 +231,7 @@ Below is an example of the last step using this package.
     <title></title>
 </head>
 <body>
-    <form action="/order/checkout" id="paymentform" method="POST" accept-charset="UTF-8">
+    <form action="/order/checkout" id="paymentForm" method="POST" accept-charset="UTF-8">
         {!! csrf_field() !!}
 
         <label for="txtCardHolder">Cardholder name:</label>
@@ -325,7 +325,7 @@ class CheckoutController extends Controller
 {
     /**
      * Create a payment order and a new transaction with the token from the form.
-     * 
+     *
      * @param  \Illuminate\Http\Request             $request
      * @param  \Sebdesign\VivaPayments\Order        $order
      * @param  \Sebdesign\VivaPayments\Transaction  $transaction
@@ -435,7 +435,7 @@ class WebhookController extends BaseController
 {
     /**
      * Handle a Create Transaction event notification.
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      */
     protected function handleCreateTransaction(Request $request)
@@ -445,7 +445,7 @@ class WebhookController extends BaseController
 
     /**
      * Handle a Refund Transaction event notification.
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      */
     protected function handleRefundTransaction(Request $request)
@@ -455,7 +455,7 @@ class WebhookController extends BaseController
 
     /**
      * Handle any other type of event notification.
-     * 
+     *
      * @param  \Illuminate\Http\Request $request
      */
     protected function handleEventNotification(Request $request)
@@ -589,7 +589,7 @@ $transactions = $transaction->getByDate('2016-03-11');
 $transactions = $transaction->getByClearanceDate('2016-03-11');
 ```
 
-##### Cancel a card payment / Make a refund 
+##### Cancel a card payment / Make a refund
 
 > See: https://github.com/VivaPayments/API/wiki/CancelTransaction
 
@@ -649,6 +649,6 @@ For any other HTTP error a `GuzzleHttp\Exception\ClientException` is thrown.
 
 ## Tests
 
-Unit tests are triggered by runnning `phpunit --group unit`.
+Unit tests are triggered by running `phpunit --group unit`.
 
 To run functional tests you have to include a `.env` file in the root folder, containing the credentials (`VIVA_API_KEY`, `VIVA_MERCHANT_ID`, `VIVA_PUBLIC_KEY`), in order to hit the VivaPayments demo API. Then run `phpunit --group functional` to trigger the tests.
