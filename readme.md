@@ -62,7 +62,7 @@ Also the Wiki has detailed instructions on the APIs: https://github.com/VivaPaym
 
 Install the package through Composer.
 
-This package requires Laravel 5.1 or higher, and uses Guzzle v5 to make API calls.
+This package requires Laravel 5.0 or higher, and uses Guzzle v5 to make API calls.
 
 ```
 composer require sebdesign/laravel-viva-payments

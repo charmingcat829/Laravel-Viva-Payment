@@ -25,8 +25,8 @@ abstract class TestCase extends Orchestra\Testbench\TestCase
         $env = __DIR__.'/../.env';
 
         if (is_readable($env) && is_file($env)) {
-            $dotenv = new Dotenv\Dotenv(__DIR__.'/..');
-            $dotenv->load();
+            $app->loadEnvironmentFrom('../../../../.env');
+            $app->make('Illuminate\Foundation\Bootstrap\DetectEnvironment')->bootstrap($app);
         }
 
         $app['config']->set('services.viva', [
