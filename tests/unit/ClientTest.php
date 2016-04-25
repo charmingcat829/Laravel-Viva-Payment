@@ -1,7 +1,6 @@
 <?php
 
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Stream\Stream;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Order;
 use Sebdesign\VivaPayments\VivaException;
