@@ -10,19 +10,21 @@ class OrderTest extends TestCase
      */
     public function it_creates_an_order()
     {
-        $order = app(Order::class);
-
-        $history = $this->mockRequests();
         $this->mockJsonResponses([['OrderCode' => 175936509216]]);
+        $this->mockRequests();
+
+        $order = new Order($this->client);
 
         $parameters = ['CustomerTrns' => 'Your reference'];
         $orderCode = $order->create(30, $parameters);
-        $request = $history->getLastRequest();
+        $request = $this->getLastRequest();
+
+        parse_str($request->getBody(), $body);
 
         $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
-        $this->assertArraySubset($parameters, $request->getBody()->getFields(), 'The parameters should be passed in the request body.');
-        $this->assertTrue($request->getBody()->hasField('Amount'), 'The amount should be passed in the parameters.');
-        $this->assertEquals(30, $request->getBody()->getField('Amount'), 'The amount should be 30.');
+        $this->assertArraySubset($parameters, $body, 'The parameters should be passed in the request body.');
+        $this->assertTrue(isset($body['Amount']), 'The amount should be passed in the parameters.');
+        $this->assertEquals(30, $body['Amount'], 'The amount should be 30.');
         $this->assertEquals(175936509216, $orderCode, 'The order code should be 175936509216');
     }
 
@@ -32,16 +34,16 @@ class OrderTest extends TestCase
      */
     public function it_gets_an_order()
     {
-        $order = app(Order::class);
-
-        $history = $this->mockRequests();
         $this->mockJsonResponses([['foo' => 'bar']]);
+        $this->mockRequests();
+
+        $order = new Order($this->client);
 
         $response = $order->get(175936509216);
-        $request = $history->getLastRequest();
+        $request = $this->getLastRequest();
 
         $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
-        $this->assertStringEndsWith('175936509216', $request->getUrl(), 'The order code should be in the URL.');
+        $this->assertStringEndsWith('175936509216', $request->getUri()->getPath(), 'The order code should be in the URL.');
         $this->assertEquals(['foo' => 'bar'], (array) $response, 'The response is not correct.');
     }
 
@@ -51,18 +53,20 @@ class OrderTest extends TestCase
      */
     public function it_updates_an_order()
     {
-        $order = app(Order::class);
-
-        $history = $this->mockRequests();
         $this->mockJsonResponses([[]]);
+        $this->mockRequests();
+
+        $order = new Order($this->client);
 
         $parameters = ['Amount' => 50];
         $orderCode = $order->update(175936509216, $parameters);
-        $request = $history->getLastRequest();
+        $request = $this->getLastRequest();
+
+        parse_str($request->getBody(), $body);
 
         $this->assertEquals('PATCH', $request->getMethod(), 'The request method should be PATCH.');
-        $this->assertStringEndsWith('175936509216', $request->getUrl(), 'The order code should be in the URL.');
-        $this->assertEquals($parameters, $request->getBody()->getFields(), 'The parameters should be passed in the request body.');
+        $this->assertStringEndsWith('175936509216', $request->getUri()->getPath(), 'The order code should be in the URL.');
+        $this->assertEquals($parameters, $body, 'The parameters should be passed in the request body.');
     }
 
     /**
@@ -71,17 +75,17 @@ class OrderTest extends TestCase
      */
     public function it_cancels_an_order()
     {
-        $order = app(Order::class);
-
-        $history = $this->mockRequests();
         $this->mockJsonResponses([[]]);
+        $this->mockRequests();
+
+        $order = new Order($this->client);
 
         $orderCode = 175936509216;
 
         $response = $order->cancel($orderCode);
-        $request = $history->getLastRequest();
+        $request = $this->getLastRequest();
 
         $this->assertEquals('DELETE', $request->getMethod(), 'The request method should be DELETE.');
-        $this->assertStringEndsWith((string) $orderCode, $request->getUrl(), 'The order code should be in the URL.');
+        $this->assertStringEndsWith((string) $orderCode, $request->getUri()->getPath(), 'The order code should be in the URL.');
     }
 }

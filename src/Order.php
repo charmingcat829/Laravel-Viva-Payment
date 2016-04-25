@@ -29,14 +29,14 @@ class Order
     /**
      * Create a payment order.
      *
-     * @param  int  $amount     amount in cents
-     * @param  array    $parameters optional parameters (Full list available here: https://github.com/VivaPayments/API/wiki/Optional-Parameters)
+     * @param  int   $amount     amount in cents
+     * @param  array $parameters optional parameters (Full list available here: https://github.com/VivaPayments/API/wiki/Optional-Parameters)
      * @return int
      */
     public function create($amount, array $parameters = [])
     {
         $response = $this->client->post(self::ENDPOINT, [
-            'body' => array_merge(['Amount' => $amount], $parameters),
+            \GuzzleHttp\RequestOptions::FORM_PARAMS => array_merge(['Amount' => $amount], $parameters),
         ]);
 
         return $response->OrderCode;
@@ -63,7 +63,7 @@ class Order
     public function update($orderCode, array $parameters)
     {
         return $this->client->patch(self::ENDPOINT.$orderCode, [
-            'body' => $parameters,
+            \GuzzleHttp\RequestOptions::FORM_PARAMS => $parameters,
         ]);
     }
 

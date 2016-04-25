@@ -36,13 +36,13 @@ class Card
     public function token($name, $number, $cvc, $month, $year)
     {
         $token = $this->client->post(self::ENDPOINT, [
-            'body' => [
+            \GuzzleHttp\RequestOptions::FORM_PARAMS => [
                 'CardHolderName'    => $name,
                 'Number'            => $this->normalizeNumber($number),
                 'CVC'               => $cvc,
                 'ExpirationDate'    => $this->getExpirationDate($month, $year),
             ],
-            'query' => [
+            \GuzzleHttp\RequestOptions::QUERY => [
                 'key'               => $this->getKey(),
             ],
         ]);
@@ -92,10 +92,10 @@ class Card
     public function installments($number)
     {
         $response = $this->client->get(self::ENDPOINT.'/installments', [
-            'headers' => [
+            \GuzzleHttp\RequestOptions::HEADERS => [
                 'CardNumber' => $this->normalizeNumber($number),
             ],
-            'query' => [
+            \GuzzleHttp\RequestOptions::QUERY => [
                 'key' => $this->getKey(),
             ],
         ]);

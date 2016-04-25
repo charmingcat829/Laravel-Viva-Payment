@@ -3,7 +3,7 @@
 namespace Sebdesign\VivaPayments;
 
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Psr7\Response;
 
 class Client
 {
@@ -91,7 +91,7 @@ class Client
     /**
      * Get the response body.
      *
-     * @param  \GuzzleHttp\Message\Response $response
+     * @param  \GuzzleHttp\Psr7\Response $response
      * @return object
      *
      * @throws \Sebdesign\VivaPayments\VivaException
@@ -114,7 +114,7 @@ class Client
      */
     public function getUrl()
     {
-        return $this->client->getBaseUrl();
+        return $this->client->getConfig('base_uri');
     }
 
     /**

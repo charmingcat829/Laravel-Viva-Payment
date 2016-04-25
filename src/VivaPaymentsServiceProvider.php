@@ -36,15 +36,13 @@ class VivaPaymentsServiceProvider extends ServiceProvider
         $config = $this->app['config']->get('services.viva');
 
         return new GuzzleClient([
-            'base_url' => $this->getUrl($config['environment']),
-            'curl.options' => [
+            'base_uri' => $this->getUrl($config['environment']),
+            'curl' => [
                 CURLOPT_SSL_CIPHER_LIST => 'TLSv1',
             ],
-            'defaults' => [
-                'auth' => [
-                    $config['merchant_id'],
-                    $config['api_key'],
-                ],
+            'auth' => [
+                $config['merchant_id'],
+                $config['api_key'],
             ],
         ]);
     }

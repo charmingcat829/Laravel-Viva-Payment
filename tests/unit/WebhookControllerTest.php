@@ -12,14 +12,15 @@ class WebhookControllerTest extends TestCase
      */
     public function it_verifies_a_webhook()
     {
-        $webhook = app(Webhook::class);
-        $controller = new WebhookTestController($webhook);
-
-        $request = Request::create('/', 'GET');
-
         $verification = ['foo' => 'bar'];
 
         $this->mockJsonResponses([$verification]);
+
+        $webhook = new Webhook($this->client);
+
+        $controller = new WebhookTestController($webhook);
+
+        $request = Request::create('/', 'GET');
 
         $response = $controller->handle($request);
 

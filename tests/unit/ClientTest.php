@@ -1,6 +1,6 @@
 <?php
 
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Stream\Stream;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Order;
@@ -25,16 +25,16 @@ class ClientTest extends TestCase
      */
     public function it_decodes_a_json_response()
     {
-        $order = app(Order::class);
-
         $json = json_encode([
             'ErrorCode' => 0,
             'ErrorText' => 'No errors.',
         ]);
 
         $this->mockResponses([
-            new Response(200, [], Stream::factory($json)),
+            new Response(200, [], $json),
         ]);
+
+        $order = new Order($this->client);
 
         $response = $order->get('foo');
 
@@ -47,8 +47,6 @@ class ClientTest extends TestCase
      */
     public function it_throws_an_exception()
     {
-        $order = app(Order::class);
-
         $success = [
             'ErrorCode' => 0,
             'ErrorText' => 'No errors.',
@@ -60,6 +58,8 @@ class ClientTest extends TestCase
         ];
 
         $this->mockJsonResponses(compact('success', 'failure'));
+
+        $order = new Order($this->client);
 
         $order->get('foo');
 

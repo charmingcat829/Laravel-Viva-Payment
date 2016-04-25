@@ -1,14 +1,20 @@
 <?php
 
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\Stream;
-use GuzzleHttp\Subscriber\History;
-use GuzzleHttp\Subscriber\Mock;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\Middleware;
+use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Client as GuzzleClient;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\VivaPaymentsServiceProvider;
 
 abstract class TestCase extends Orchestra\Testbench\TestCase
 {
+    protected $client;
+    protected $handler;
+    protected $requests = [];
+    protected $responses = [];
+
     protected function getPackageProviders($app)
     {
         return [VivaPaymentsServiceProvider::class];
@@ -39,24 +45,50 @@ abstract class TestCase extends Orchestra\Testbench\TestCase
 
     protected function mockRequests()
     {
-        $history = new History();
-        $this->app->make(Client::class)->getClient()->getEmitter()->attach($history);
+        $history = Middleware::history($this->requests);
 
-        return $history;
+        $this->handler->push($history);
+    }
+
+    protected function getLastRequest()
+    {
+        return $this->requests[0]['request'];
     }
 
     protected function mockResponses(array $responses)
     {
-        $mock = new Mock($responses);
+        $mock = new MockHandler($responses);
+        $this->handler = HandlerStack::create($mock);
 
-        // Add the mock subscriber to the client.
-        $this->app->make(Client::class)->getClient()->getEmitter()->attach($mock);
+        $this->makeClient();
+    }
+
+    /**
+     * Make a client instance from a Guzzle handler.
+     *
+     * @param   GuzzleHttp\HandlerStack $handler
+     */
+    protected function makeClient()
+    {
+        $mockClient = new GuzzleClient([
+            'handler' => $this->handler,
+            'base_uri' => Client::DEMO_URL,
+            'curl' => [
+                CURLOPT_SSL_CIPHER_LIST => 'TLSv1',
+            ],
+            'auth' => [
+                $this->app['config']['merchant_id'],
+                $this->app['config']['api_key'],
+            ],
+        ]);
+
+        $this->client = new Client($mockClient);
     }
 
     protected function mockJsonResponses(array $bodies)
     {
         $responses = array_map(function ($body) {
-            return new Response(200, [], Stream::factory(json_encode($body)));
+            return new Response(200, [], json_encode($body));
         }, $bodies);
 
         $this->mockResponses($responses);

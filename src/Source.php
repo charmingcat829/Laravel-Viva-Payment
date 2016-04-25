@@ -34,7 +34,7 @@ class Source
     public function create($name, $code, $url, $fail, $success)
     {
         return $this->client->post(self::ENDPOINT, [
-            'body' => [
+            \GuzzleHttp\RequestOptions::FORM_PARAMS => [
                 'Name'          => $name,
                 'SourceCode'    => $code,
                 'Domain'        => $this->getDomain($url),

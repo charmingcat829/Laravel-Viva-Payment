@@ -10,15 +10,15 @@ class WebhookTest extends TestCase
      */
     public function it_gets_an_authorization_code()
     {
-        $webhook = app(Webhook::class);
-
         $verification = ['foo' => 'bar'];
 
-        $history = $this->mockRequests();
         $this->mockJsonResponses([$verification]);
+        $this->mockRequests();
+
+        $webhook = new Webhook($this->client);
 
         $code = $webhook->getAuthorizationCode();
-        $request = $history->getLastRequest();
+        $request = $this->getLastRequest();
 
         $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
         $this->assertEquals($verification, (array) $code);

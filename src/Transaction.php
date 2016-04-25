@@ -113,8 +113,8 @@ class Transaction
     public function create(array $parameters)
     {
         return $this->client->post(self::ENDPOINT, [
-            'body' => $parameters,
-            'query' => [
+            \GuzzleHttp\RequestOptions::FORM_PARAMS => $parameters,
+            \GuzzleHttp\RequestOptions::QUERY => [
                 'key' => $this->getKey(),
             ],
         ]);
@@ -131,7 +131,7 @@ class Transaction
     public function createRecurring($id, $amount, array $parameters = [])
     {
         return $this->client->post(self::ENDPOINT.$id, [
-            'body' => array_merge(['Amount' => $amount], $parameters),
+            \GuzzleHttp\RequestOptions::FORM_PARAMS => array_merge(['Amount' => $amount], $parameters),
         ]);
     }
 
@@ -157,7 +157,7 @@ class Transaction
     public function getByOrder($ordercode)
     {
         $response = $this->client->get(self::ENDPOINT, [
-            'query' => compact('ordercode'),
+            \GuzzleHttp\RequestOptions::QUERY => compact('ordercode'),
         ]);
 
         return $response->Transactions;
@@ -176,7 +176,7 @@ class Transaction
         }
 
         $response = $this->client->get(self::ENDPOINT, [
-            'query' => compact('date'),
+            \GuzzleHttp\RequestOptions::QUERY => compact('date'),
         ]);
 
         return $response->Transactions;
@@ -195,7 +195,7 @@ class Transaction
         }
 
         $response = $this->client->get(self::ENDPOINT, [
-            'query' => compact('clearancedate'),
+            \GuzzleHttp\RequestOptions::QUERY => compact('clearancedate'),
         ]);
 
         return $response->Transactions;
@@ -215,7 +215,7 @@ class Transaction
         $actionUser = $actionUser ? ['ActionUser' => $actionUser] : [];
 
         return $this->client->delete(self::ENDPOINT.$id, [
-            'query' => array_merge($query, $actionUser),
+            \GuzzleHttp\RequestOptions::QUERY => array_merge($query, $actionUser),
         ]);
     }
 
