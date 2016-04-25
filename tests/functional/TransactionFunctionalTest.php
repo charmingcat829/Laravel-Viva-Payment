@@ -17,9 +17,9 @@ class TransactionFunctionalTest extends TestCase
         $transaction = app(Transaction::class);
         $card = app(Card::class);
 
-        $orderCode = $order->create(30, [
+        $orderCode = $order->create(1500, [
             'CustomerTrns' => 'Test Transaction',
-            'SourceCode' => 4693,
+            'SourceCode' => env('VIVA_SOURCE_CODE'),
             'AllowRecurring' => true,
         ]);
 
@@ -29,29 +29,28 @@ class TransactionFunctionalTest extends TestCase
         // Create transaction
 
         $original = $transaction->create([
-            'OrderCode'     => $orderCode,
-            'SourceCode'    => 4693,
-            'Installments'  => $installments,
-            'CreditCard'    => [
-                'Token'     => $token,
+            'OrderCode'       => $orderCode,
+            'SourceCode'      => env('VIVA_SOURCE_CODE'),
+            'Installments'    => $installments,
+            'AllowsRecurring' => true,
+            'CreditCard'      => [
+                'Token'       => $token,
             ],
         ]);
 
         $this->assertEquals(Transaction::COMPLETED, $original->StatusId, 'The transaction was not completed.');
-        $this->assertEquals(0.3, $original->Amount);
+        $this->assertEquals(15, $original->Amount);
 
         // Create recurring transaction
 
-        // $recurring = $transaction->createRecurring($original->TransactionId, [
-        //     'Amount'        => 50,
-        //     'SourceCode'    => 4693,
-        //     'Installments'  => $installments,
-        // ]);
+        $recurring = $transaction->createRecurring($original->TransactionId, [
+            'Amount'        => 1500,
+            'SourceCode'    => env('VIVA_SOURCE_CODE'),
+            'Installments'  => $installments,
+        ]);
 
-        // dump($recurring);
-
-        // $this->assertEquals(Transaction::COMPLETED, $recurring->StatusId, 'The transaction was not completed.');
-        // $this->assertEquals(0., $recurring->Amount);
+        $this->assertEquals(Transaction::COMPLETED, $recurring->StatusId, 'The transaction was not completed.');
+        $this->assertEquals(0., $recurring->Amount);
 
         // Get by ID
 
@@ -92,16 +91,16 @@ class TransactionFunctionalTest extends TestCase
 
         // Cancel transaction
 
-        $response = $transaction->cancel($original->TransactionId, 30);
+        $response = $transaction->cancel($original->TransactionId, 1500);
 
         $this->assertEquals(Transaction::COMPLETED, $response->StatusId, 'The cancel transaction was not completed.');
-        $this->assertEquals(0.3, $response->Amount);
+        $this->assertEquals(15, $response->Amount);
 
         $transactions = $transaction->get($original->TransactionId);
 
         $this->assertNotEmpty($transactions);
         $this->assertCount(1, $transactions, 'There should be 1 transaction.');
         $this->assertEquals(Transaction::CANCELED, $transactions[0]->StatusId, 'The original transaction should be canceled.');
-        $this->assertEquals(0.3, $transactions[0]->Amount);
+        $this->assertEquals(15, $transactions[0]->Amount);
     }
 }

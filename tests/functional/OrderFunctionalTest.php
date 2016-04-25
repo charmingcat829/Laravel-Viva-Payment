@@ -14,7 +14,7 @@ class OrderFunctionalTest extends TestCase
 
         // POST
 
-        $orderCode = $order->create(30, ['CustomerTrns' => 'Test Transaction']);
+        $orderCode = $order->create(1500, ['CustomerTrns' => 'Test Transaction', 'SourceCode' => env('VIVA_SOURCE_CODE')]);
 
         $this->assertTrue(is_int($orderCode));
 
@@ -23,7 +23,7 @@ class OrderFunctionalTest extends TestCase
         $response = $order->get($orderCode);
 
         $this->assertEquals(Order::PENDING, $response->StateId);
-        $this->assertEquals(0.3, $response->RequestAmount);
+        $this->assertEquals(15, $response->RequestAmount);
         $this->assertEquals('Test Transaction', $response->CustomerTrns);
 
         // PATCH
