@@ -274,7 +274,7 @@ Below is an example of the last step using this package.
 
             VivaPayments.cards.setup({
                 publicKey: '{!! config("services.viva.public_key") !!}',
-                baseURL: '{!! app(Sebdesign\VivaPayments\Client)->getUrl() !!}',
+                baseURL: '{!! app(Sebdesign\VivaPayments\Client::class)->getUrl() !!}',
                 cardTokenHandler: function (response) {
                     if (!response.Error) {
                         $paymentForm.find('#token').val(response.Token);
