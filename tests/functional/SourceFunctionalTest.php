@@ -12,6 +12,6 @@ class SourceFunctionalTest extends TestCase
     {
         $source = app(Source::class);
 
-        $source->create('Site 1', 'site1', 'https://www.domain.com', 'order/failure', 'order/success');
+        $response = $source->create('Site 1', str_random(), 'https://www.domain.com', 'order/failure', 'order/success');
     }
 }

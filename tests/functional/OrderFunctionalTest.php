@@ -14,7 +14,11 @@ class OrderFunctionalTest extends TestCase
 
         // POST
 
-        $orderCode = $order->create(1500, ['CustomerTrns' => 'Test Transaction', 'SourceCode' => env('VIVA_SOURCE_CODE')]);
+        $orderCode = $order->create(1500, [
+            'CustomerTrns' => 'Test Transaction',
+            'SourceCode' => env('VIVA_SOURCE_CODE'),
+            'AllowRecurring' => true,
+        ]);
 
         $this->assertTrue(is_int($orderCode));
 

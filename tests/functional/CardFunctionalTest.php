@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 use Sebdesign\VivaPayments\Card;
 
 class CardFunctionalTest extends TestCase
@@ -10,9 +11,16 @@ class CardFunctionalTest extends TestCase
      */
     public function it_creates_a_token()
     {
-        $card = app(Card::class);
+        // arrange
 
-        $token = $card->token('Customer name', '4111 1111 1111 1111', 111, 06, 2016);
+        $card = app(Card::class);
+        $expirationDate = Carbon::parse('next year');
+
+        // act
+
+        $token = $card->token('Customer name', '4111 1111 1111 1111', 111, $expirationDate->month, $expirationDate->year);
+
+        // assert
 
         $this->assertTrue(is_string($token));
     }

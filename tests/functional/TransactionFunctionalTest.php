@@ -23,7 +23,8 @@ class TransactionFunctionalTest extends TestCase
             'AllowRecurring' => true,
         ]);
 
-        $token = $card->token('Customer name', '4111 1111 1111 1111', 111, 06, 2016);
+        $expirationDate = Carbon::parse('next year');
+        $token = $card->token('Customer name', '4111 1111 1111 1111', 111, $expirationDate->month, $expirationDate->year);
         $installments = $card->installments('4111 1111 1111 1111');
 
         // Create transaction
