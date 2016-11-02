@@ -37,5 +37,5 @@
             "email": "info@sebdesign.eu"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }
