@@ -40,7 +40,7 @@ class VivaPaymentsServiceProvider extends ServiceProvider
             'curl' => [
                 CURLOPT_SSL_CIPHER_LIST => 'TLSv1',
             ],
-            'auth' => [
+            \GuzzleHttp\RequestOptions::AUTH => [
                 $config['merchant_id'],
                 $config['api_key'],
             ],
