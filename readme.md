@@ -265,7 +265,7 @@ Below is an example of the last step using this package.
     </form>
 
     <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
-    <script src="http://demo.vivapayments.com/web/checkout/js"></script>
+    <script src="https://demo.vivapayments.com/web/checkout/js"></script>
 
     <script>
         $(document).ready(function () {
@@ -287,7 +287,7 @@ Below is an example of the last step using this package.
                     var $select = $installments.find('select');
 
                     if (!response.Error) {
-                        if (response.MaxInstallments == 0) {
+                        if (response.MaxInstallments === 0) {
                             $select.empty();
                             $installments.hide();
                             return;

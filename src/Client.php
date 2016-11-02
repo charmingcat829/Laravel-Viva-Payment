@@ -10,7 +10,7 @@ class Client
     /**
      * Demo environment URL.
      */
-    const DEMO_URL = 'http://demo.vivapayments.com';
+    const DEMO_URL = 'https://demo.vivapayments.com';
 
     /**
      * Production environment URL.
