@@ -2,6 +2,9 @@
 
 namespace Sebdesign\VivaPayments;
 
+use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\UriInterface;
+
 class Source
 {
     const ENDPOINT = '/api/sources/';
@@ -33,12 +36,14 @@ class Source
      */
     public function create($name, $code, $url, $fail, $success)
     {
+        $uri = new Uri($url);
+
         return $this->client->post(self::ENDPOINT, [
             \GuzzleHttp\RequestOptions::FORM_PARAMS => [
                 'Name'          => $name,
                 'SourceCode'    => $code,
-                'Domain'        => $this->getDomain($url),
-                'isSecure'      => $this->isSecure($url),
+                'Domain'        => $this->getDomain($uri),
+                'isSecure'      => $this->isSecure($uri),
                 'PathFail'      => $fail,
                 'PathSuccess'   => $success,
             ],
@@ -48,24 +53,22 @@ class Source
     /**
      * Get the domain of the given URL.
      *
-     * @param  string $url
+     * @param  \Psr\Http\Message\UriInterface $uri
      * @return string
      */
-    protected function getDomain($url)
+    protected function getDomain(UriInterface $uri)
     {
-        return parse_url($url, PHP_URL_HOST);
+        return $uri->getHost();
     }
 
     /**
      * Check if the given URL has an https:// protocol scheme.
      *
-     * @param  string  $url
+     * @param  \Psr\Http\Message\UriInterface  $uri
      * @return bool
      */
-    protected function isSecure($url)
+    protected function isSecure(UriInterface $uri)
     {
-        $scheme = parse_url($url, PHP_URL_SCHEME);
-
-        return strtolower($scheme) === 'https';
+        return strtolower($uri->getScheme()) === 'https';
     }
 }

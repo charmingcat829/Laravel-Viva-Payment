@@ -1,6 +1,7 @@
 <?php
 
 use Sebdesign\VivaPayments\Order;
+use Sebdesign\VivaPayments\Client;
 
 class OrderTest extends TestCase
 {
@@ -87,5 +88,20 @@ class OrderTest extends TestCase
 
         $this->assertEquals('DELETE', $request->getMethod(), 'The request method should be DELETE.');
         $this->assertStringEndsWith((string) $orderCode, $request->getUri()->getPath(), 'The order code should be in the URL.');
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_gets_a_checkout_url()
+    {
+        $this->mockJsonResponses([[]]);
+        $this->mockRequests();
+
+        $order = new Order($this->client);
+        $url = $order->getCheckoutUrl(175936509216);
+
+        $this->assertEquals(Client::DEMO_URL.'/web/checkout?ref=175936509216', $url);
     }
 }

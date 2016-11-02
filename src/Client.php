@@ -110,7 +110,7 @@ class Client
     /**
      * Get the URL.
      *
-     * @return string
+     * @return \GuzzleHttp\Psr7\Uri
      */
     public function getUrl()
     {

@@ -2,6 +2,8 @@
 
 namespace Sebdesign\VivaPayments;
 
+use GuzzleHttp\Psr7\Uri;
+
 class Order
 {
     const ENDPOINT = '/api/orders/';
@@ -82,10 +84,12 @@ class Order
      * Get the checkout URL for an order.
      *
      * @param  int $orderCode  The unique Payment Order ID.
-     * @return string
+     * @return \GuzzleHttp\Psr7\Uri
      */
     public function getCheckoutUrl($orderCode)
     {
-        return $this->client->getUrl().'/web/checkout?ref='.$orderCode;
+        return Uri::withQueryValue(
+            $this->client->getUrl()->withPath('web/checkout'), 'ref', $orderCode
+        );
     }
 }
