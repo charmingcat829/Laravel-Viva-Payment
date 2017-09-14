@@ -26,18 +26,19 @@ class VivaPaymentsServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(Client::class, function ($app) {
-            return new Client($this->bootGuzzleClient());
+            return new Client($this->bootGuzzleClient($app));
         });
     }
 
     /**
      * Instantiate the Guzzlehttp client.
      *
+     * @param  \Illuminate\Contracts\Foundation\Application $app
      * @return GuzzleHttp\Client
      */
-    protected function bootGuzzleClient()
+    protected function bootGuzzleClient($app)
     {
-        $config = $this->app['config']->get('services.viva');
+        $config = $app['config']->get('services.viva');
 
         return new GuzzleClient([
             'base_uri' => $this->getUrl($config['environment']),

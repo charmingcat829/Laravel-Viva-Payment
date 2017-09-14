@@ -2,10 +2,10 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
-use Illuminate\Support\Carbon;
 use DateTime;
-use Sebdesign\VivaPayments\Transaction;
+use Illuminate\Support\Carbon;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\Transaction;
 
 class TransactionTest extends TestCase
 {

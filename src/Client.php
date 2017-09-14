@@ -77,7 +77,7 @@ class Client
     /**
      * Make a DELETE request.
      *
-     * @param  string $endpoint
+     * @param  string $url
      * @param  array  $options
      * @return object
      */

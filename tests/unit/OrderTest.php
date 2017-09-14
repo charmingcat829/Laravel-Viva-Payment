@@ -2,8 +2,8 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
-use Sebdesign\VivaPayments\Order;
 use Sebdesign\VivaPayments\Client;
+use Sebdesign\VivaPayments\Order;
 use Sebdesign\VivaPayments\Test\TestCase;
 
 class OrderTest extends TestCase

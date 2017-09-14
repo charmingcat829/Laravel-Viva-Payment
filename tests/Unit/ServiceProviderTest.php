@@ -2,17 +2,13 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
-use GuzzleHttp\Psr7\Response;
 use InvalidArgumentException;
 use Sebdesign\VivaPayments\Client;
-use Sebdesign\VivaPayments\Order;
-use Sebdesign\VivaPayments\VivaException;
 use Sebdesign\VivaPayments\Test\TestCase;
 use Sebdesign\VivaPayments\VivaPaymentsServiceProvider;
 
 class ServiceProviderTest extends TestCase
 {
-
     /**
      * @test
      * @group unit

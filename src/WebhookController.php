@@ -54,21 +54,21 @@ abstract class WebhookController extends Controller
      *
      * @param  \Illuminate\Http\Request $request
      */
-    protected abstract function handleCreateTransaction(Request $request);
+    abstract protected function handleCreateTransaction(Request $request);
 
     /**
      * Handle a Refund Transaction event notification.
      *
      * @param  \Illuminate\Http\Request $request
      */
-    protected abstract function handleRefundTransaction(Request $request);
+    abstract protected function handleRefundTransaction(Request $request);
 
     /**
      * Handle any other type of event notification.
      *
      * @param  \Illuminate\Http\Request $request
      */
-    protected abstract function handleEventNotification(Request $request);
+    abstract protected function handleEventNotification(Request $request);
 
     /**
      * Verify a webhook.

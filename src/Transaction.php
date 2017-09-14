@@ -151,7 +151,7 @@ class Transaction
     /**
      * Get the transactions for an order code.
      *
-     * @param  int $orderCode
+     * @param  int $ordercode
      * @return array
      */
     public function getByOrder($ordercode)
@@ -171,9 +171,7 @@ class Transaction
      */
     public function getByDate($date)
     {
-        if ($date instanceof \DateTimeInterface) {
-            $date = $date->format('Y-m-d');
-        }
+        $date = $this->formatDate($date);
 
         $response = $this->client->get(self::ENDPOINT, [
             \GuzzleHttp\RequestOptions::QUERY => compact('date'),
@@ -190,15 +188,28 @@ class Transaction
      */
     public function getByClearanceDate($clearancedate)
     {
-        if ($clearancedate instanceof \DateTimeInterface) {
-            $clearancedate = $clearancedate->format('Y-m-d');
-        }
+        $clearancedate = $this->formatDate($clearancedate);
 
         $response = $this->client->get(self::ENDPOINT, [
             \GuzzleHttp\RequestOptions::QUERY => compact('clearancedate'),
         ]);
 
         return $response->Transactions;
+    }
+
+    /**
+     * Format a date object to string.
+     *
+     * @param  \DateTimeInterface|string $date
+     * @return string
+     */
+    protected function formatDate($date)
+    {
+        if ($date instanceof \DateTimeInterface) {
+            return $date->format('Y-m-d');
+        }
+
+        return $date;
     }
 
     /**

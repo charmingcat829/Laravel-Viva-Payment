@@ -2,11 +2,11 @@
 
 namespace Sebdesign\VivaPayments\Test;
 
-use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\Client as GuzzleClient;
 use Sebdesign\VivaPayments\Card;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\VivaPaymentsServiceProvider;

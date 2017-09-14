@@ -2,8 +2,8 @@
 
 namespace Sebdesign\VivaPayments\Test\Functional;
 
-use Sebdesign\VivaPayments\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\Webhook;
 
 class WebhookTest extends TestCase
 {

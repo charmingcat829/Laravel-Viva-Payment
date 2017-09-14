@@ -5,8 +5,8 @@ namespace Sebdesign\VivaPayments\Test\Functional;
 use Illuminate\Support\Carbon;
 use Sebdesign\VivaPayments\Card;
 use Sebdesign\VivaPayments\Order;
-use Sebdesign\VivaPayments\Transaction;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\Transaction;
 
 class TransactionTest extends TestCase
 {
