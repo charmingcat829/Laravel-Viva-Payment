@@ -1,12 +1,15 @@
 <?php
 
+namespace Sebdesign\VivaPayments\Test\Unit;
+
 use Sebdesign\VivaPayments\Source;
+use Sebdesign\VivaPayments\Test\TestCase;
 
 class SourceTest extends TestCase
 {
     /**
      * @test
-     * @group functional
+     * @group unit
      */
     public function it_adds_a_payment_source()
     {
@@ -18,14 +21,12 @@ class SourceTest extends TestCase
         $source->create('Site 1', 'site1', 'https://www.domain.com', 'order/failure', 'order/success');
         $request = $this->getLastRequest();
 
-        parse_str($request->getBody(), $body);
-
-        $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
-        $this->assertEquals('Site 1', $body['Name'], 'The source name should be Site 1.');
-        $this->assertEquals('site1', $body['SourceCode'], 'The source code should be site1.');
-        $this->assertEquals('www.domain.com', $body['Domain'], 'The domain should be www.domain.com.');
-        $this->assertEquals('1', $body['isSecure'], 'The domain should be secure.');
-        $this->assertEquals('order/failure', $body['PathFail'], 'The fail path should be order/failure.');
-        $this->assertEquals('order/success', $body['PathSuccess'], 'The fail path should be order/success.');
+        $this->assertMethod('POST', $request);
+        $this->assertBody('Name', 'Site 1', $request);
+        $this->assertBody('SourceCode', 'site1', $request);
+        $this->assertBody('Domain', 'www.domain.com', $request);
+        $this->assertBody('isSecure', '1', $request);
+        $this->assertBody('PathFail', 'order/failure', $request);
+        $this->assertBody('PathSuccess', 'order/success', $request);
     }
 }

@@ -1,7 +1,10 @@
 <?php
 
+namespace Sebdesign\VivaPayments\Test\Unit;
+
 use Sebdesign\VivaPayments\Order;
 use Sebdesign\VivaPayments\Client;
+use Sebdesign\VivaPayments\Test\TestCase;
 
 class OrderTest extends TestCase
 {
@@ -16,16 +19,12 @@ class OrderTest extends TestCase
 
         $order = new Order($this->client);
 
-        $parameters = ['CustomerTrns' => 'Your reference'];
-        $orderCode = $order->create(30, $parameters);
+        $orderCode = $order->create(30, ['CustomerTrns' => 'Your reference']);
         $request = $this->getLastRequest();
 
-        parse_str($request->getBody(), $body);
-
-        $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
-        $this->assertArraySubset($parameters, $body, 'The parameters should be passed in the request body.');
-        $this->assertTrue(isset($body['Amount']), 'The amount should be passed in the parameters.');
-        $this->assertEquals(30, $body['Amount'], 'The amount should be 30.');
+        $this->assertMethod('POST', $request);
+        $this->assertBody('Amount', 30, $request);
+        $this->assertBody('CustomerTrns', 'Your reference', $request);
         $this->assertEquals(175936509216, $orderCode, 'The order code should be 175936509216');
     }
 
@@ -43,8 +42,8 @@ class OrderTest extends TestCase
         $response = $order->get(175936509216);
         $request = $this->getLastRequest();
 
-        $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
-        $this->assertStringEndsWith('175936509216', $request->getUri()->getPath(), 'The order code should be in the URL.');
+        $this->assertMethod('GET', $request);
+        $this->assertPath('/api/orders/175936509216', $request);
         $this->assertEquals(['foo' => 'bar'], (array) $response, 'The response is not correct.');
     }
 
@@ -63,11 +62,9 @@ class OrderTest extends TestCase
         $orderCode = $order->update(175936509216, $parameters);
         $request = $this->getLastRequest();
 
-        parse_str($request->getBody(), $body);
-
-        $this->assertEquals('PATCH', $request->getMethod(), 'The request method should be PATCH.');
-        $this->assertStringEndsWith('175936509216', $request->getUri()->getPath(), 'The order code should be in the URL.');
-        $this->assertEquals($parameters, $body, 'The parameters should be passed in the request body.');
+        $this->assertMethod('PATCH', $request);
+        $this->assertPath('/api/orders/175936509216', $request);
+        $this->assertBody('Amount', 50, $request);
     }
 
     /**
@@ -81,13 +78,11 @@ class OrderTest extends TestCase
 
         $order = new Order($this->client);
 
-        $orderCode = 175936509216;
-
-        $response = $order->cancel($orderCode);
+        $response = $order->cancel(175936509216);
         $request = $this->getLastRequest();
 
-        $this->assertEquals('DELETE', $request->getMethod(), 'The request method should be DELETE.');
-        $this->assertStringEndsWith((string) $orderCode, $request->getUri()->getPath(), 'The order code should be in the URL.');
+        $this->assertMethod('DELETE', $request);
+        $this->assertPath('/api/orders/175936509216', $request);
     }
 
     /**

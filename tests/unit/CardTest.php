@@ -1,6 +1,9 @@
 <?php
 
+namespace Sebdesign\VivaPayments\Test\Unit;
+
 use Sebdesign\VivaPayments\Card;
+use Sebdesign\VivaPayments\Test\TestCase;
 
 class CardTest extends TestCase
 {
@@ -18,17 +21,14 @@ class CardTest extends TestCase
         $token = $card->token('Customer name', '4111 1111 1111 1111', 111, 06, 2016);
         $request = $this->getLastRequest();
 
-        parse_str($request->getUri()->getQuery(), $query);
-        parse_str($request->getBody(), $body);
-
-        $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
-        $this->assertEquals($this->app['config']->get('services.viva.public_key'), $query['key'], 'The public key should be passed as a query.');
-        $this->assertTrue(is_string($token));
-        $this->assertEquals('Customer name', $body['CardHolderName'], 'The cardholder name should be Customer name.');
-        $this->assertEquals(4111111111111111, $body['Number'], 'The card number should be 4111111111111111.');
-        $this->assertEquals(111, $body['CVC'], 'The CVC number should be 111.');
-        $this->assertEquals('2016-06-15', $body['ExpirationDate'], 'The expiration date should be 2016-06-15.');
+        $this->assertInternalType('string', $token);
         $this->assertEquals('foo', $token, 'The token should be foo');
+        $this->assertMethod('POST', $request);
+        $this->assertQuery('key', $this->app['config']->get('services.viva.public_key'), $request);
+        $this->assertBody('CardHolderName', 'Customer name', $request);
+        $this->assertBody('Number', 4111111111111111, $request);
+        $this->assertBody('CVC', 111, $request);
+        $this->assertBody('ExpirationDate', '2016-06-15', $request);
     }
 
     /**
@@ -45,13 +45,9 @@ class CardTest extends TestCase
         $installments = $card->installments('4111 1111 1111 1111');
         $request = $this->getLastRequest();
 
-        parse_str($request->getUri()->getQuery(), $query);
-        parse_str($request->getBody(), $body);
-
-        $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
-        $this->assertEquals($this->app['config']->get('services.viva.public_key'), $query['key'], 'The public key should be passed as a query.');
-        $this->assertTrue($request->hasHeader('CardNumber'), 'The card number should be passed as a header.');
-        $this->assertEquals(4111111111111111, $request->getHeader('CardNumber')[0], 'The card number should be 4111111111111111.');
+        $this->assertMethod('GET', $request);
+        $this->assertQuery('key', $this->app['config']->get('services.viva.public_key'), $request);
+        $this->assertHeader('CardNumber', 4111111111111111, $request);
         $this->assertEquals(36, $installments, 'The installments should be 36.');
     }
 }

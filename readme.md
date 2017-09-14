@@ -64,10 +64,11 @@ Install the package through Composer.
 
 This package requires Laravel 5.0 or higher, and uses Guzzle to make API calls. Use the appropriate version according to your dependencies.
 
-| Viva Payments for Laravel  | Guzzle  |
-|----------------------------|---------|
-| 1.x                        | 5.x     |
-| 2.x                        | 6.x     |
+| Viva Payments for Laravel   | Guzzle  | Laravel |
+|-----------------------------|---------|---------|
+| ~1.0                        | ~5.0    | ~5.0    |
+| ~2.0                        | ~6.0    | ~5.0    |
+| ~3.0                        | ~6.0    | ~5.5    |
 
 ```
 composer require sebdesign/laravel-viva-payments
@@ -75,7 +76,9 @@ composer require sebdesign/laravel-viva-payments
 
 #### Service Provider
 
-Add the following service provider in your `config/app.php`.
+This package supports auto-discovery for Laravel 5.5.
+
+If you are using an older version, add the following service provider in your `config/app.php`.
 
 ```php
 'providers' => [
@@ -119,7 +122,7 @@ The following guide will walk you through the necessary steps:
 The first argument is the amount requested in cents. All the parameters in the second argument are optional. Check out all the supported [Optional Parameters](https://github.com/VivaPayments/API/wiki/Optional-Parameters).
 
 ```php
-$order = App::make(Sebdesign\VivaPayments\Order::class);
+$order = app(Sebdesign\VivaPayments\Order::class);
 
 $orderCode = $order->create(100, [
     'FullName'      => 'Customer Name',
@@ -141,9 +144,9 @@ return redirect($checkoutUrl);
 #### Confirm the transaction
 
 ```php
-$order = App::make(Sebdesign\VivaPayments\Order::class);
+$order = app(Sebdesign\VivaPayments\Order::class);
 
-$response = $order->get(Request::get('s'));
+$response = $order->get(request('orderCode'));
 ```
 
 ### Full example
@@ -195,7 +198,7 @@ class CheckoutController extends Controller
     public function confirm(Request $request, Order $order)
     {
         try {
-            $response = $order->get($request->get('s'));
+            $response = $order->get($request->get('orderCode'));
         } catch (VivaException $e) {
             return back()->withErrors($e->getMessage());
         }
@@ -237,7 +240,7 @@ Below is an example of the last step using this package.
 </head>
 <body>
     <form action="/order/checkout" id="paymentForm" method="POST" accept-charset="UTF-8">
-        {!! csrf_field() !!}
+        {{ csrf_field() }}
 
         <label for="txtCardHolder">Cardholder name:</label>
         <input id="txtCardHolder" data-vp="cardholder" type="text">
@@ -374,7 +377,7 @@ class CheckoutController extends Controller
 ### Create a payment order
 
 ```php
-$order = App::make(Sebdesign\VivaPayments\Order::class);
+$order = app(Sebdesign\VivaPayments\Order::class);
 
 $orderCode = $order->create(100, [
     'FullName'      => 'Customer Name',
@@ -388,7 +391,7 @@ $orderCode = $order->create(100, [
 ### Card Tokenization
 
 ```php
-$card = App::make(Sebdesign\VivaPayments\Card::class);
+$card = app(Sebdesign\VivaPayments\Card::class);
 
 $token = $card->token('Customer Name', '4111 1111 1111 1111', 111, 03, 2016);
 ```
@@ -396,7 +399,7 @@ $token = $card->token('Customer Name', '4111 1111 1111 1111', 111, 03, 2016);
 ### Check installments
 
 ```php
-$card = App::make(Sebdesign\VivaPayments\Card::class);
+$card = app(Sebdesign\VivaPayments\Card::class);
 
 $maxInstallments = $card->installments('4111 1111 1111 1111');
 ```
@@ -404,7 +407,7 @@ $maxInstallments = $card->installments('4111 1111 1111 1111');
 ### Process the payment
 
 ```php
-$transaction = App::make(Sebdesign\VivaPayments\Transaction::class);
+$transaction = app(Sebdesign\VivaPayments\Transaction::class);
 
 $response = $transaction->create([
     'OrderCode'     => $orderCode,
@@ -472,7 +475,7 @@ class WebhookController extends BaseController
 
 ### Define the route
 
-In your `app/Http/routes.php` define the following route for each webhook you have in your profile, replacing the URI(s) and your controller(s) accordingly.
+In your `routes/web.php` define the following route for each webhook you have in your profile, replacing the URI(s) and your controller(s) accordingly.
 
 ```php
 Route::match(['post', 'get'], 'viva/webhooks', 'WebhookController@handle');
@@ -487,9 +490,9 @@ Don't forget to add your webhook URI(s) to the `$except` array on your `VerifyCs
 
 namespace App\Http\Middleware;
 
-use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
 
-class VerifyCsrfToken extends BaseVerifier
+class VerifyCsrfToken extends Middleware
 {
     /**
      * The URIs that should be excluded from CSRF verification.
@@ -511,7 +514,7 @@ class VerifyCsrfToken extends BaseVerifier
 > See: https://github.com/VivaPayments/API/wiki/CreateOrder
 
 ```php
-$order = App::make(Sebdesign\VivaPayments\Order::class);
+$order = app(Sebdesign\VivaPayments\Order::class);
 
 $orderCode = $order->create(100, [...]);
 ```
@@ -547,7 +550,7 @@ $response = $order->cancel(175936509216);
 > See: https://github.com/VivaPayments/API/wiki/Native-Checkout
 
 ```php
-$transaction = App::make(Sebdesign\VivaPayments\Transaction::class);
+$transaction = app(Sebdesign\VivaPayments\Transaction::class);
 
 $response = $transaction->create([
     'OrderCode'     => 175936509216,
@@ -563,7 +566,7 @@ $response = $transaction->create([
 > See: https://github.com/VivaPayments/API/wiki/CreateRecurringTransaction
 
 ```php
-$transaction = App::make(Sebdesign\VivaPayments\Transaction::class);
+$transaction = app(Sebdesign\VivaPayments\Transaction::class);
 
 $response = $transaction->createRecurring('252b950e-27f2-4300-ada1-4dedd7c17904', [...]);
 ```
@@ -609,7 +612,7 @@ $response = $transaction->cancel('252b950e-27f2-4300-ada1-4dedd7c17904', 100, 'u
 > See: https://github.com/VivaPayments/API/wiki/Mobile-API#card-tokenization
 
 ```php
-$card = App::make(Sebdesign\VivaPayments\Card::class);
+$card = app(Sebdesign\VivaPayments\Card::class);
 
 $token = $card->token('Customer Name', '4111 1111 1111 1111', 111, 03, 2016);
 ```
@@ -629,7 +632,7 @@ $maxInstallments = $card->installments('4111 1111 1111 1111');
 > See: https://github.com/VivaPayments/API/wiki/Payment-Sources:-AddSource
 
 ```php
-$source = App::make(Sebdesign\VivaPayments\Source::class);
+$source = app(Sebdesign\VivaPayments\Source::class);
 
 $source->create('Site 1', 'site1', 'https://www.domain.com', 'order/failure', 'order/success');
 ```
@@ -641,7 +644,7 @@ $source->create('Site 1', 'site1', 'https://www.domain.com', 'order/failure', 'o
 > See: https://github.com/VivaPayments/API/wiki/Webhooks#webhook-url-verification
 
 ```php
-$webhook = App::make(Sebdesign\VivaPayments\Webhook::class);
+$webhook = app(Sebdesign\VivaPayments\Webhook::class);
 
 $key = $webhook->verify();
 ```

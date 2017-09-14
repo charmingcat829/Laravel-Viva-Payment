@@ -92,7 +92,7 @@ class Client
      * Get the response body.
      *
      * @param  \GuzzleHttp\Psr7\Response $response
-     * @return object
+     * @return mixed
      *
      * @throws \Sebdesign\VivaPayments\VivaException
      */
@@ -115,15 +115,5 @@ class Client
     public function getUrl()
     {
         return $this->client->getConfig('base_uri');
-    }
-
-    /**
-     * Get the Guzzlehttp client.
-     *
-     * @return \GuzzleHttp\Client
-     */
-    public function getClient()
-    {
-        return $this->client;
     }
 }

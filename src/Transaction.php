@@ -4,7 +4,7 @@ namespace Sebdesign\VivaPayments;
 
 class Transaction
 {
-    const ENDPOINT = '/api/Transactions/';
+    const ENDPOINT = '/api/transactions/';
 
     /**
      * Transaction types.

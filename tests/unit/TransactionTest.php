@@ -1,7 +1,11 @@
 <?php
 
-use Carbon\Carbon;
+namespace Sebdesign\VivaPayments\Test\Unit;
+
+use Illuminate\Support\Carbon;
+use DateTime;
 use Sebdesign\VivaPayments\Transaction;
+use Sebdesign\VivaPayments\Test\TestCase;
 
 class TransactionTest extends TestCase
 {
@@ -28,12 +32,12 @@ class TransactionTest extends TestCase
         $response = $transaction->create($parameters);
         $request = $this->getLastRequest();
 
-        parse_str($request->getUri()->getQuery(), $query);
-        parse_str($request->getBody(), $body);
-
-        $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
-        $this->assertEquals($this->app['config']->get('services.viva.public_key'), $query['key'], 'The public key should be passed as a query.');
-        $this->assertEquals($parameters, $body, 'The request body should be identical to the parameters.');
+        $this->assertMethod('POST', $request);
+        $this->assertQuery('key', $this->app['config']->get('services.viva.public_key'), $request);
+        $this->assertBody('OrderCode', 175936509216, $request);
+        $this->assertBody('SourceCode', 'Default', $request);
+        $this->assertBody('Installments', 36, $request);
+        $this->assertBody('CreditCard', ['Token' => 'foo'], $request);
         $this->assertEquals(['foo' => 'bar'], (array) $response);
     }
 
@@ -48,21 +52,16 @@ class TransactionTest extends TestCase
 
         $transaction = new Transaction($this->client);
 
-        $original = '252b950e-27f2-4300-ada1-4dedd7c17904';
-        $parameters = [
+        $response = $transaction->createRecurring('252b950e-27f2-4300-ada1-4dedd7c17904', 30, [
             'MerchantTrns' => 'Your reference',
-        ];
+        ]);
 
-        $response = $transaction->createRecurring($original, 30, $parameters);
         $request = $this->getLastRequest();
 
-        parse_str($request->getUri()->getQuery(), $query);
-        parse_str($request->getBody(), $body);
-
-        $this->assertEquals('POST', $request->getMethod(), 'The request method should be POST.');
-        $this->assertStringEndsWith($original, $request->getUri()->getPath(), 'The original transaction ID should be in the URL.');
-        $this->assertEquals(30, $body['Amount'], 'The request body contain the amount.');
-        $this->assertArraySubset($parameters, $body, 'The request body should contain the parameters.');
+        $this->assertMethod('POST', $request);
+        $this->assertPath('/api/transactions/252b950e-27f2-4300-ada1-4dedd7c17904', $request);
+        $this->assertBody('Amount', 30, $request);
+        $this->assertBody('MerchantTrns', 'Your reference', $request);
         $this->assertEquals(['foo' => 'bar'], (array) $response);
     }
 
@@ -77,18 +76,13 @@ class TransactionTest extends TestCase
 
         $transaction = new Transaction($this->client);
 
-        $original = '252b950e-27f2-4300-ada1-4dedd7c17904';
-        $customer = 'Customer name';
-
-        $response = $transaction->cancel($original, 30, $customer);
+        $response = $transaction->cancel('252b950e-27f2-4300-ada1-4dedd7c17904', 30, 'Customer name');
         $request = $this->getLastRequest();
 
-        parse_str($request->getUri()->getQuery(), $query);
-
-        $this->assertEquals('DELETE', $request->getMethod(), 'The request method should be DELETE.');
-        $this->assertStringEndsWith($original, $request->getUri()->getPath(), 'The original transaction ID should be in the URL.');
-        $this->assertEquals(30, $query['Amount'], 'The query string should contain the amount.');
-        $this->assertEquals($customer, $query['ActionUser'], 'The query string should contain the customer.');
+        $this->assertMethod('DELETE', $request);
+        $this->assertPath('/api/transactions/252b950e-27f2-4300-ada1-4dedd7c17904', $request);
+        $this->assertQuery('Amount', 30, $request);
+        $this->assertQuery('ActionUser', 'Customer name', $request);
         $this->assertEquals(['foo' => 'bar'], (array) $response);
     }
 
@@ -103,14 +97,12 @@ class TransactionTest extends TestCase
 
         $transaction = new Transaction($this->client);
 
-        $id = '252b950e-27f2-4300-ada1-4dedd7c17904';
-
-        $transactions = $transaction->get($id);
+        $transactions = $transaction->get('252b950e-27f2-4300-ada1-4dedd7c17904');
         $request = $this->getLastRequest();
 
-        $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
-        $this->assertStringEndsWith($id, $request->getUri()->getPath(), 'The transaction ID should be in the URL.');
-        $this->assertTrue(is_array($transactions));
+        $this->assertMethod('GET', $request);
+        $this->assertPath('/api/transactions/252b950e-27f2-4300-ada1-4dedd7c17904', $request);
+        $this->assertInternalType('array', $transactions);
     }
 
     /**
@@ -124,16 +116,12 @@ class TransactionTest extends TestCase
 
         $transaction = new Transaction($this->client);
 
-        $orderCode = 175936509216;
-
-        $transactions = $transaction->getByOrder($orderCode);
+        $transactions = $transaction->getByOrder(175936509216);
         $request = $this->getLastRequest();
 
-        parse_str($request->getUri()->getQuery(), $query);
-
-        $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
-        $this->assertEquals($orderCode, $query['ordercode'], 'The order code should be passed as a query.');
-        $this->assertTrue(is_array($transactions));
+        $this->assertMethod('GET', $request);
+        $this->assertQuery('ordercode', 175936509216, $request);
+        $this->assertInternalType('array', $transactions);
     }
 
     /**
@@ -160,11 +148,9 @@ class TransactionTest extends TestCase
         foreach ($this->requests as $key => $transactions) {
             $request = $transactions['request'];
 
-            parse_str($request->getUri()->getQuery(), $query);
-
-            $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
-            $this->assertEquals('2016-03-12', $query['date'], 'The date should be passed as a query.');
-            $this->assertTrue(is_array($responses[$key]));
+            $this->assertMethod('GET', $request);
+            $this->assertQuery('date', '2016-03-12', $request);
+            $this->assertInternalType('array', $responses[$key]);
         }
     }
 
@@ -192,11 +178,9 @@ class TransactionTest extends TestCase
         foreach ($this->requests as $key => $transactions) {
             $request = $transactions['request'];
 
-            parse_str($request->getUri()->getQuery(), $query);
-
-            $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
-            $this->assertEquals('2016-03-12', $query['clearancedate'], 'The date should be passed as a query.');
-            $this->assertTrue(is_array($responses[$key]));
+            $this->assertMethod('GET', $request);
+            $this->assertQuery('clearancedate', '2016-03-12', $request);
+            $this->assertInternalType('array', $responses[$key]);
         }
     }
 }

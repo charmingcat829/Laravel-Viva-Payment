@@ -1,9 +1,14 @@
 <?php
 
+namespace Sebdesign\VivaPayments\Test\Unit;
+
 use GuzzleHttp\Psr7\Response;
+use InvalidArgumentException;
+use GuzzleHttp\Client as GuzzleClient;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Order;
 use Sebdesign\VivaPayments\VivaException;
+use Sebdesign\VivaPayments\Test\TestCase;
 
 class ClientTest extends TestCase
 {
@@ -11,11 +16,11 @@ class ClientTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_gets_the_url()
+    public function it_gets_the_url_from_guzzle_configuration()
     {
-        $client = app(Client::class);
+        $client = new Client(new GuzzleClient(['base_uri' => Client::PRODUCTION_URL]));
 
-        $this->assertEquals(Client::DEMO_URL, $client->getUrl(), 'The URL should be '.Client::DEMO_URL);
+        $this->assertEquals(Client::PRODUCTION_URL, $client->getUrl(), 'The URL should be '.Client::PRODUCTION_URL);
     }
 
     /**
@@ -62,7 +67,7 @@ class ClientTest extends TestCase
 
         $order->get('foo');
 
-        $this->setExpectedException(VivaException::class);
+        $this->expectException(VivaException::class);
 
         $order->get('bar');
     }

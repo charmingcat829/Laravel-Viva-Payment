@@ -1,8 +1,11 @@
 <?php
 
+namespace Sebdesign\VivaPayments\Test\Unit;
+
 use Illuminate\Http\Request;
 use Sebdesign\VivaPayments\Webhook;
 use Sebdesign\VivaPayments\WebhookController;
+use Sebdesign\VivaPayments\Test\TestCase;
 
 class WebhookControllerTest extends TestCase
 {

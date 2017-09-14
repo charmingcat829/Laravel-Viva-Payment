@@ -1,6 +1,9 @@
 <?php
 
+namespace Sebdesign\VivaPayments\Test\Unit;
+
 use Sebdesign\VivaPayments\Webhook;
+use Sebdesign\VivaPayments\Test\TestCase;
 
 class WebhookTest extends TestCase
 {
@@ -20,7 +23,7 @@ class WebhookTest extends TestCase
         $code = $webhook->getAuthorizationCode();
         $request = $this->getLastRequest();
 
-        $this->assertEquals('GET', $request->getMethod(), 'The request method should be GET.');
+        $this->assertMethod('GET', $request);
         $this->assertEquals($verification, (array) $code);
     }
 }

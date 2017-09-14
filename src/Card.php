@@ -2,7 +2,7 @@
 
 namespace Sebdesign\VivaPayments;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 class Card
 {
