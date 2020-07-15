@@ -2,6 +2,10 @@
 
 All notable changes to `sebdesign/laravel-viva-payments` will be documented in this file
 
+## 4.3.1 - 2020-07-15
+
+-Remove extraneous single quote ([#17](https://github.com/sebdesign/laravel-viva-payments/pull/17)) (thanks [@adrianblynch](https://github.com/adrianblynch))
+
 ## 4.3.0 - 2020-07-08
 
 - Allow Guzzle 7
