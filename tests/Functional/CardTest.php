@@ -37,6 +37,6 @@ class CardTest extends TestCase
     {
         $installments = app(Card::class)->installments('4111 1111 1111 1111');
 
-        $this->assertIsInt($installments);
+        $this->assertTrue(is_int($installments), "Failed asserting that '{$installments}' is of type \"int\".");
     }
 }

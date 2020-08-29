@@ -21,7 +21,7 @@ class OrderTest extends TestCase
             'AllowRecurring' => true,
         ]);
 
-        $this->assertIsInt($orderCode);
+        $this->assertTrue(is_int($orderCode), "Failed asserting that '{$orderCode}' is of type \"int\".");
 
         return $orderCode;
     }
