@@ -524,7 +524,7 @@ class VerifyCsrfToken extends Middleware
 ```php
 $order = app(Sebdesign\VivaPayments\Order::class);
 
-$orderCode = $order->create(100, [...]);
+$orderCode = $order->create(100, $parameters = [], $guzzleOptions = []);
 ```
 
 ##### Get an order
@@ -532,7 +532,7 @@ $orderCode = $order->create(100, [...]);
 > See: https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Payments/paths/~1api~1orders~1{orderCode}/get
 
 ```php
-$response = $order->get(175936509216);
+$response = $order->get(175936509216, $guzzleOptions = []);
 ```
 
 ##### Update an order
@@ -540,7 +540,7 @@ $response = $order->get(175936509216);
 > See: https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Payments/paths/~1api~1orders~1{orderCode}/patch
 
 ```php
-$order->update(175936509216, ['Amount' => 50]);
+$order->update(175936509216, ['Amount' => 50], $guzzleOptions = []);
 ```
 
 ##### Cancel an order
@@ -548,7 +548,7 @@ $order->update(175936509216, ['Amount' => 50]);
 > See: https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Payments/paths/~1api~1orders~1{orderCode}/delete
 
 ```php
-$response = $order->cancel(175936509216);
+$response = $order->cancel(175936509216, $guzzleOptions = []);
 ```
 
 ### Transactions
@@ -566,7 +566,7 @@ $response = $transaction->create([
     'creditCard'    => [
         'token'     => 'A generated token',
     ]
-]);
+], $guzzleOptions = []);
 ```
 
 ##### Create a recurring transaction
@@ -576,7 +576,12 @@ $response = $transaction->create([
 ```php
 $transaction = app(Sebdesign\VivaPayments\Transaction::class);
 
-$response = $transaction->createRecurring('252b950e-27f2-4300-ada1-4dedd7c17904', 1500, [...]);
+$response = $transaction->createRecurring(
+    '252b950e-27f2-4300-ada1-4dedd7c17904',
+    1500,
+    $parameters = [],
+    $guzzleOptions = []
+);
 ```
 
 ##### Get transactions
@@ -585,24 +590,24 @@ $response = $transaction->createRecurring('252b950e-27f2-4300-ada1-4dedd7c17904'
 
 ```php
 // By transaction ID
-$transactions = $transaction->get('252b950e-27f2-4300-ada1-4dedd7c17904');
+$transactions = $transaction->get('252b950e-27f2-4300-ada1-4dedd7c17904', $guzzleOptions = []);
 
 // By order code
-$transactions = $transaction->getByOrder(175936509216);
+$transactions = $transaction->getByOrder(175936509216, $guzzleOptions = []);
 
 // By order date
 
 // The date can be a string in Y-m-d format,
 // or a DateTimeInterface instance like DateTime or Carbon.
 
-$transactions = $transaction->getByDate('2016-03-11');
+$transactions = $transaction->getByDate('2016-03-11', $guzzleOptions = []);
 
 // By clearance date
 
 // The date can be a string in Y-m-d format,
 // or a DateTimeInterface instance like DateTime or Carbon.
 
-$transactions = $transaction->getByClearanceDate('2016-03-11');
+$transactions = $transaction->getByClearanceDate('2016-03-11', $guzzleOptions = []);
 ```
 
 ##### Cancel a card payment / Make a refund
@@ -610,7 +615,12 @@ $transactions = $transaction->getByClearanceDate('2016-03-11');
 > See: https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/delete
 
 ```php
-$response = $transaction->cancel('252b950e-27f2-4300-ada1-4dedd7c17904', 100, 'username');
+$response = $transaction->cancel(
+    '252b950e-27f2-4300-ada1-4dedd7c17904',
+    100,
+    'username',
+    $guzzleOptions = []
+);
 ```
 
 ### Cards
@@ -622,7 +632,14 @@ $response = $transaction->cancel('252b950e-27f2-4300-ada1-4dedd7c17904', 100, 'u
 ```php
 $card = app(Sebdesign\VivaPayments\Card::class);
 
-$token = $card->token('Customer Name', '4111 1111 1111 1111', 111, 03, 2016);
+$token = $card->token(
+    'Customer Name',
+    '4111 1111 1111 1111',
+    111,
+    3,
+    2016,
+    $guzzleOptions = []
+);
 ```
 
 #### Check installments
@@ -630,7 +647,7 @@ $token = $card->token('Customer Name', '4111 1111 1111 1111', 111, 03, 2016);
 > See: https://developer.vivawallet.com/api-reference-guide/payment-api/installments-check
 
 ```php
-$maxInstallments = $card->installments('4111 1111 1111 1111');
+$maxInstallments = $card->installments('4111 1111 1111 1111', $guzzleOptions = []);
 ```
 
 ### Payment Sources
@@ -642,7 +659,14 @@ $maxInstallments = $card->installments('4111 1111 1111 1111');
 ```php
 $source = app(Sebdesign\VivaPayments\Source::class);
 
-$source->create('Site 1', 'site1', 'https://www.domain.com', 'order/failure', 'order/success');
+$source->create(
+    'Site 1',
+    'site1',
+    'https://www.domain.com',
+    'order/failure',
+    'order/success',
+    $guzzleOptions = []
+);
 ```
 
 ### Webhooks
@@ -654,7 +678,7 @@ $source->create('Site 1', 'site1', 'https://www.domain.com', 'order/failure', 'o
 ```php
 $webhook = app(Sebdesign\VivaPayments\Webhook::class);
 
-$key = $webhook->verify();
+$key = $webhook->getAuthorizationCode($guzzleOptions = []);
 ```
 
 ## Exceptions
