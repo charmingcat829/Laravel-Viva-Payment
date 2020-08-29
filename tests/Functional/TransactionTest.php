@@ -16,6 +16,8 @@ class TransactionTest extends TestCase
      */
     public function createTransaction()
     {
+        $this->markTestSkipped('Card tokenization endpoint doesn\'t work anymore.');
+
         $orderCode = $this->getOrderCode();
         $token = $this->getToken();
         $installments = $this->getInstallments();

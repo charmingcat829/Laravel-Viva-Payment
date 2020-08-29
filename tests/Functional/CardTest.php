@@ -14,6 +14,8 @@ class CardTest extends TestCase
      */
     public function it_creates_a_token()
     {
+        $this->markTestSkipped('Card tokenization endpoint doesn\'t work anymore.');
+
         // arrange
 
         $expirationDate = Carbon::parse('next year');
