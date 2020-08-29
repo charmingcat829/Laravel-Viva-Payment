@@ -16,6 +16,6 @@ class WebhookTest extends TestCase
         $code = app(Webhook::class)->getAuthorizationCode();
 
         $this->assertObjectHasAttribute('Key', $code);
-        $this->assertIsString($code->Key);
+        $this->assertTrue(is_string($code->Key), "Failed asserting that that '{$code->Key}' is of type \"string\".");
     }
 }

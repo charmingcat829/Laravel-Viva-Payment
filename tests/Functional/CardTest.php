@@ -26,7 +26,7 @@ class CardTest extends TestCase
 
         // assert
 
-        $this->assertIsString($token);
+        $this->assertTrue(is_string($token), "Failed asserting that that '{$token}' is of type \"string\".");
     }
 
     /**
