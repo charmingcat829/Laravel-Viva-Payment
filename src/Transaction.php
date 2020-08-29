@@ -96,8 +96,6 @@ class Transaction
 
     /**
      * Constructor.
-     *
-     * @param \Sebdesign\VivaPayments\Client $client
      */
     public function __construct(Client $client)
     {
@@ -107,17 +105,18 @@ class Transaction
     /**
      * Create a new transaction.
      *
-     * @param  array   $parameters
+     * @param  array  $parameters
+     * @param  array  $guzzleOptions Additional parameters for the Guzzle client
      * @return \stdClass
      */
-    public function create(array $parameters)
+    public function create(array $parameters, array $guzzleOptions = [])
     {
-        return $this->client->post(self::ENDPOINT, [
+        return $this->client->post(self::ENDPOINT, array_merge([
             \GuzzleHttp\RequestOptions::JSON => $parameters,
             \GuzzleHttp\RequestOptions::QUERY => [
-                'key' => $this->getKey(),
+                'key' => $this->client->getKey(),
             ],
-        ]);
+        ], $guzzleOptions));
     }
 
     /**
@@ -126,24 +125,32 @@ class Transaction
      * @param  string   $id
      * @param  int      $amount
      * @param  array    $parameters
+     * @param  array    $guzzleOptions Additional parameters for the Guzzle client
      * @return \stdClass
      */
-    public function createRecurring(string $id, int $amount, array $parameters = [])
-    {
-        return $this->client->post(self::ENDPOINT.$id, [
-            \GuzzleHttp\RequestOptions::JSON => array_merge(['amount' => $amount], $parameters),
-        ]);
+    public function createRecurring(
+        string $id,
+        int $amount,
+        array $parameters = [],
+        array $guzzleOptions = []
+    ) {
+        $parameters = array_merge(['amount' => $amount], $parameters);
+
+        return $this->client->post(self::ENDPOINT.$id, array_merge([
+            \GuzzleHttp\RequestOptions::JSON => $parameters,
+        ], $guzzleOptions));
     }
 
     /**
      * Get the transactions for an id.
      *
      * @param  string $id
+     * @param  array  $guzzleOptions Additional parameters for the Guzzle client
      * @return array
      */
-    public function get(string $id): array
+    public function get(string $id, array $guzzleOptions = []): array
     {
-        $response = $this->client->get(self::ENDPOINT.$id);
+        $response = $this->client->get(self::ENDPOINT.$id, $guzzleOptions);
 
         return $response->Transactions;
     }
@@ -151,14 +158,17 @@ class Transaction
     /**
      * Get the transactions for an order code.
      *
-     * @param  int $ordercode
+     * @param  int   $ordercode
+     * @param  array $guzzleOptions Additional parameters for the Guzzle client
      * @return array
      */
-    public function getByOrder($ordercode): array
+    public function getByOrder($ordercode, array $guzzleOptions = []): array
     {
-        $response = $this->client->get(self::ENDPOINT, [
-            \GuzzleHttp\RequestOptions::QUERY => compact('ordercode'),
-        ]);
+        $parameters = ['ordercode' => $ordercode];
+
+        $response = $this->client->get(self::ENDPOINT, array_merge([
+            \GuzzleHttp\RequestOptions::QUERY => $parameters,
+        ], $guzzleOptions));
 
         return $response->Transactions;
     }
@@ -167,15 +177,16 @@ class Transaction
      * Get the transactions that occured on a given date.
      *
      * @param  \DateTimeInterface|string $date
+     * @param  array                     $guzzleOptions Additional parameters for the Guzzle client
      * @return array
      */
-    public function getByDate($date): array
+    public function getByDate($date, array $guzzleOptions = []): array
     {
-        $date = $this->formatDate($date);
+        $parameters = ['date' => $this->formatDate($date)];
 
-        $response = $this->client->get(self::ENDPOINT, [
-            \GuzzleHttp\RequestOptions::QUERY => compact('date'),
-        ]);
+        $response = $this->client->get(self::ENDPOINT, array_merge([
+            \GuzzleHttp\RequestOptions::QUERY => $parameters,
+        ], $guzzleOptions));
 
         return $response->Transactions;
     }
@@ -184,15 +195,16 @@ class Transaction
      * Get the transactions that were cleared on a given date.
      *
      * @param  \DateTimeInterface|string $clearancedate
+     * @param  array                     $guzzleOptions Additional parameters for the Guzzle client
      * @return array
      */
-    public function getByClearanceDate($clearancedate): array
+    public function getByClearanceDate($clearancedate, array $guzzleOptions = []): array
     {
-        $clearancedate = $this->formatDate($clearancedate);
+        $parameters = ['clearancedate' => $this->formatDate($clearancedate)];
 
-        $response = $this->client->get(self::ENDPOINT, [
-            \GuzzleHttp\RequestOptions::QUERY => compact('clearancedate'),
-        ]);
+        $response = $this->client->get(self::ENDPOINT, array_merge([
+            \GuzzleHttp\RequestOptions::QUERY => $parameters,
+        ], $guzzleOptions));
 
         return $response->Transactions;
     }
@@ -218,25 +230,22 @@ class Transaction
      * @param  string       $id
      * @param  int          $amount
      * @param  string|null  $actionUser
+     * @param  array        $guzzleOptions Additional parameters for the Guzzle client
      * @return \stdClass
      */
-    public function cancel(string $id, int $amount, $actionUser = null)
-    {
-        $query = ['amount' => $amount];
-        $actionUser = $actionUser ? ['actionUser' => $actionUser] : [];
+    public function cancel(
+        string $id,
+        int $amount,
+        $actionUser = null,
+        array $guzzleOptions = []
+    ) {
+        $parameters = array_merge(
+            ['amount' => $amount],
+            $actionUser ? ['actionUser' => $actionUser] : []
+        );
 
-        return $this->client->delete(self::ENDPOINT.$id, [
-            \GuzzleHttp\RequestOptions::QUERY => array_merge($query, $actionUser),
-        ]);
-    }
-
-    /**
-     * Get the public key.
-     *
-     * @return string
-     */
-    protected function getKey(): string
-    {
-        return config('services.viva.public_key');
+        return $this->client->delete(self::ENDPOINT.$id, array_merge([
+            \GuzzleHttp\RequestOptions::QUERY => $parameters,
+        ], $guzzleOptions));
     }
 }

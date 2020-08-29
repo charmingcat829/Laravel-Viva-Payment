@@ -2,7 +2,7 @@
 
 namespace Sebdesign\VivaPayments;
 
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 
 class Card
 {
@@ -26,11 +26,12 @@ class Card
     /**
      * Get a token for the credit card.
      *
-     * @param  string $name   The cardholder's name
-     * @param  string $number The credit card number
-     * @param  int    $cvc    The CVC number
-     * @param  int    $month  The expiration month
-     * @param  int    $year   The expiration year
+     * @param  string $name          The cardholder's name
+     * @param  string $number        The credit card number
+     * @param  int    $cvc           The CVC number
+     * @param  int    $month         The expiration month
+     * @param  int    $year          The expiration year
+     * @param  array  $guzzleOptions Additional options for the Guzzle client
      * @return string
      */
     public function token(
@@ -38,42 +39,32 @@ class Card
         string $number,
         int $cvc,
         int $month,
-        int $year
+        int $year,
+        array $guzzleOptions = []
     ): string {
-        $token = $this->client->post(self::ENDPOINT, [
-            \GuzzleHttp\RequestOptions::FORM_PARAMS => [
-                'CardHolderName'    => $name,
-                'Number'            => $this->normalizeNumber($number),
-                'CVC'               => $cvc,
-                'ExpirationDate'    => $this->getExpirationDate($month, $year),
-            ],
-            \GuzzleHttp\RequestOptions::QUERY => [
-                'key'               => $this->getKey(),
-            ],
-        ]);
+        $parameters = [
+            'CardHolderName' => $name,
+            'Number' => $this->normalizeNumber($number),
+            'CVC' => $cvc,
+            'ExpirationDate' => $this->getExpirationDate($month, $year),
+        ];
 
-        return $token->Token;
+        $response = $this->client->post(self::ENDPOINT, array_merge([
+            \GuzzleHttp\RequestOptions::FORM_PARAMS => $parameters,
+            \GuzzleHttp\RequestOptions::QUERY => [
+                'key'=> $this->client->getKey(),
+            ],
+        ], $guzzleOptions));
+
+        return $response->Token;
     }
 
     /**
      * Strip non-numeric characters.
-     *
-     * @param  string $number  The credit card number
-     * @return string
      */
-    protected function normalizeNumber(string $number): string
+    protected function normalizeNumber(string $cardNumber): string
     {
-        return preg_replace('/\D/', '', $number);
-    }
-
-    /**
-     * Get the public key as query string.
-     *
-     * @return string
-     */
-    protected function getKey(): string
-    {
-        return config('services.viva.public_key');
+        return preg_replace('/\D/', '', $cardNumber);
     }
 
     /**
@@ -90,20 +81,20 @@ class Card
 
     /**
      * Check for installments support.
-     *
-     * @param  string $number  The credit card number
-     * @return int
      */
-    public function installments(string $number)
+    public function installments(string $cardNumber, array $guzzleOptions = []): int
     {
-        $response = $this->client->get(self::ENDPOINT.'/installments', [
-            \GuzzleHttp\RequestOptions::HEADERS => [
-                'CardNumber' => $this->normalizeNumber($number),
-            ],
-            \GuzzleHttp\RequestOptions::QUERY => [
-                'key' => $this->getKey(),
-            ],
-        ]);
+        $response = $this->client->get(
+            self::ENDPOINT.'/installments',
+            array_merge([
+                \GuzzleHttp\RequestOptions::HEADERS => [
+                    'CardNumber' => $this->normalizeNumber($cardNumber),
+                ],
+                \GuzzleHttp\RequestOptions::QUERY => [
+                    'key' => $this->client->getKey(),
+                ],
+            ], $guzzleOptions)
+        );
 
         return $response->MaxInstallments;
     }

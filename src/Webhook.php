@@ -23,8 +23,6 @@ class Webhook
 
     /**
      * Constructor.
-     *
-     * @param \Sebdesign\VivaPayments\Client $client
      */
     public function __construct(Client $client)
     {
@@ -34,10 +32,11 @@ class Webhook
     /**
      * Get a webhook authorization code.
      *
+     * @param  array $guzzleOptions Additional parameters for the Guzzle client
      * @return \stdClass
      */
-    public function getAuthorizationCode()
+    public function getAuthorizationCode(array $guzzleOptions = [])
     {
-        return $this->client->get(self::ENDPOINT);
+        return $this->client->get(self::ENDPOINT, $guzzleOptions);
     }
 }

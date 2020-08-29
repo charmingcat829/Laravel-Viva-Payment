@@ -16,8 +16,6 @@ class Source
 
     /**
      * Constructor.
-     *
-     * @param \Sebdesign\VivaPayments\Client $client
      */
     public function __construct(Client $client)
     {
@@ -27,34 +25,40 @@ class Source
     /**
      * Create a payment source.
      *
-     * @param  string $name    A meaningful name that will help you identify the source in Web Self Care environment
-     * @param  string $code    A unique code that is exchanged between your application and the API
-     * @param  string $url     The primary domain of your site WITH protocol scheme (http/https)
-     * @param  string $fail    The relative path url your client will end up to, after a failed transaction
-     * @param  string $success The relative path url your client will end up to, after a successful transaction
+     * @param  string $name          A meaningful name that will help you identify the source in Web Self Care environment
+     * @param  string $code          A unique code that is exchanged between your application and the API
+     * @param  string $url           The primary domain of your site WITH protocol scheme (http/https)
+     * @param  string $fail          The relative path url your client will end up to, after a failed transaction
+     * @param  string $success       The relative path url your client will end up to, after a successful transaction
+     * @param  array  $guzzleOptions Additional options for the Guzzle client
      * @return \stdClass
      */
-    public function create(string $name, string $code, $url, string $fail, string $success)
-    {
+    public function create(
+        string $name,
+        string $code,
+        string $url,
+        string $fail,
+        string $success,
+        array $guzzleOptions = []
+    ) {
         $uri = new Uri($url);
 
-        return $this->client->post(self::ENDPOINT, [
-            \GuzzleHttp\RequestOptions::JSON => [
-                'name'          => $name,
-                'sourceCode'    => $code,
-                'domain'        => $this->getDomain($uri),
-                'isSecure'      => $this->isSecure($uri),
-                'pathFail'      => $fail,
-                'pathSuccess'   => $success,
-            ],
-        ]);
+        $parameters = [
+            'name' => $name,
+            'sourceCode' => $code,
+            'domain' => $this->getDomain($uri),
+            'isSecure' => $this->isSecure($uri),
+            'pathFail' => $fail,
+            'pathSuccess' => $success,
+        ];
+
+        return $this->client->post(self::ENDPOINT, array_merge([
+            \GuzzleHttp\RequestOptions::JSON => $parameters,
+        ], $guzzleOptions));
     }
 
     /**
      * Get the domain of the given URL.
-     *
-     * @param  \Psr\Http\Message\UriInterface $uri
-     * @return string
      */
     protected function getDomain(UriInterface $uri): string
     {
@@ -63,9 +67,6 @@ class Source
 
     /**
      * Check if the given URL has an https:// protocol scheme.
-     *
-     * @param  \Psr\Http\Message\UriInterface  $uri
-     * @return bool
      */
     protected function isSecure(UriInterface $uri): bool
     {

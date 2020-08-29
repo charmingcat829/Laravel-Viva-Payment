@@ -25,9 +25,6 @@ class Client
 
     /**
      * Constructor.
-     *
-     * @param  \GuzzleHttp\Client   $client
-     * @return void
      */
     public function __construct(GuzzleClient $client)
     {
@@ -67,7 +64,7 @@ class Client
      *
      * @param  string $url
      * @param  array  $options
-     * @return \stdClass
+     * @return \stdClass|null
      */
     public function patch(string $url, array $options = [])
     {
@@ -94,12 +91,13 @@ class Client
      * Get the response body.
      *
      * @param  \Psr\Http\Message\ResponseInterface $response
-     * @return \stdClass
+     * @return \stdClass|null
      *
      * @throws \Sebdesign\VivaPayments\VivaException
      */
     protected function getBody(ResponseInterface $response)
     {
+        /** @var \stdClass|null $body */
         $body = json_decode($response->getBody(), false, 512, JSON_BIGINT_AS_STRING);
 
         if (isset($body->ErrorCode) && $body->ErrorCode !== 0) {
@@ -111,8 +109,6 @@ class Client
 
     /**
      * Get the URL.
-     *
-     * @return \Psr\Http\Message\UriInterface
      */
     public function getUrl(): UriInterface
     {
@@ -121,11 +117,17 @@ class Client
 
     /**
      * Get the Guzzle client.
-     *
-     * @return \GuzzleHttp\Client
      */
-    public function getClient()
+    public function getClient(): GuzzleClient
     {
         return $this->client;
+    }
+
+    /**
+     * Get the public key as query string.
+     */
+    public function getKey(): string
+    {
+        return config('services.viva.public_key');
     }
 }
