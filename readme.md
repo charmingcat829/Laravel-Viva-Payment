@@ -7,7 +7,7 @@
 
 [![VivaPayments logo](https://camo.githubusercontent.com/7f0b41d204f5c27c416a83fa0bc8d1d1e45cf495/68747470733a2f2f7777772e766976617061796d656e74732e636f6d2f436f6e74656e742f696d672f6c6f676f2e737667 "VivaPayments logo")](https://www.vivapayments.com/)
 
-This package provides an interface for the Viva Wallet API. It handles the **Redirect Checkout**, **Native Checkout**, and **Mobile Checkout** payment methods, as well as **Webhooks**.
+This package provides an interface for the Viva Wallet API. It handles the **Redirect Checkout**, **Native Checkout v2**, and **Simple Checkout** payment methods, as well as **Webhooks**.
 
 Check out the official Viva Wallet Developer Portal for detailed instructions on the APIs and more: https://developer.vivawallet.com
 
@@ -19,19 +19,17 @@ Check out the official Viva Wallet Developer Portal for detailed instructions on
     - [Installation](#installation)
     - [Service Provider](#service-provider)
     - [Configuration](#configuration)
+- [Simple Checkout](#simple-checkout)
+    - [Display the button](#display-the-button)
+    - [Make the charge](#make-the-charge)
+- [Native Checkout v2](#native-checkout-v2)
+    - [Build a custom payment form](#build-a-custom-payment-form)
+    - [Make the actual charge](#make-the-actual-charge)
 - [Redirect Checkout](#redirect-checkout)
     - [Create a payment order](#create-a-payment-order)
     - [Redirect to the Viva checkout page](#redirect-to-the-viva-checkout-page)
     - [Confirm the transaction](#confirm-the-transaction)
     - [Full example](#full-example)
-- [Native Checkout](#native-checkout)
-    - [Display the payment form](#display-the-payment-form)
-    - [Process the payment](#process-the-payment)
-- [Mobile Checkout](#mobile-checkout)
-    - [Create a payment order](#create-a-payment-order)
-    - [Card Tokenization](#card-tokenization)
-    - [Check installments](#check-installments)
-    - [Process the payment](#process-the-payment)
 - [Handling Webhooks](#handling-webhooks)
     - [Extend the controller](#extend-the-controller)
     - [Define the route](#define-the-route)
@@ -47,9 +45,16 @@ Check out the official Viva Wallet Developer Portal for detailed instructions on
         - [Create a recurring transaction](#create-a-recurring-transaction)
         - [Get transactions](#get-transactions)
         - [Cancel a card payment / Make a refund](#cancel-a-card-payment-make-a-refund)
-    - [Cards](#cards)
-        - [Create a token](#create-a-token)
-        - [Check installments](#check-installments)
+    - [OAuth](#oauth)
+        - [Request access token](#request-access-token)
+        - [Use an existing access token](#use-an-existing-access-token)
+    - [Native Checkout](#native-checkout)
+        - [Generate a charge token using card details](#generate-a-charge-token-using-card-details)
+        - [Generate a card token using a charge token](#generate-a-card-token-using-a-charge-token)
+        - [Generate one-time charge token using card token](#generate-one-time-charge-token-using-card-token)
+        - [Create transaction](#create-transaction)
+        - [Capture a pre-auth](#capture-a-pre-auth)
+        - [Check for installments](#check-for-installments)
     - [Payment Sources](#payment-sources)
         - [Add a payment source](#add-a-payment-source)
     - [Webhooks](#webhooks)
@@ -73,6 +78,7 @@ This package requires Laravel 5.0 or higher, and uses Guzzle to make API calls. 
 | ~4.0                        | ~6.0       | ~6.0    |
 | ~4.1                        | ~6.0       | ~7.0    |
 | ^4.3                        | ^6.0\|^7.0 | ^7.0    |
+| ^5.0                        | ^6.0\|^7.0 | ^7.0    |
 
 ```
 composer require sebdesign/laravel-viva-payments
@@ -100,18 +106,348 @@ Add the following array in your `config/services.php`.
     'merchant_id' => env('VIVA_MERCHANT_ID'),
     'public_key' => env('VIVA_PUBLIC_KEY'),
     'environment' => env('VIVA_ENVIRONMENT', 'production'),
+    'client_id' => env('VIVA_CLIENT_ID'),
+    'client_secret' => env('VIVA_CLIENT_SECRET'),
 ],
 ```
 
-The `api_key` and `merchant_id` can be found in the *Settings > API Access* section of your profile.
+The `api_key`, `merchant_id`, and `public_key` can be found in the *Settings > API Access* section of your profile.
 
-> Read more about API authentication on the Developer Portal: https://developer.vivawallet.com/authentication-methods
+The `public_key` is only needed for the *Simple Checkout*.
 
-The `public_key` is only needed for the *Native Checkout* and the *Mobile Checkout*.
+The `client_id` and `client_secret` are needed for the *Native Checkout*. You can generate the *Native Checkout v2 credentials* in the *Settings > API Access* section of your profile.
+
+> Read more about API authentication on the Developer Portal: https://developer.vivawallet.com/authentication
 
 The `environment` can be either `production` or `demo`.
 
 > To simulate a successful payment on the demo environment, use the card number 4111 1111 1111 1111 with any valid date and 111 for the CVV2.
+
+## Simple Checkout
+
+> Read more about the Simple Checkout process on the Developer portal: https://developer.vivawallet.com/online-checkouts/simple-checkout
+
+Follow these steps to complete setup of Simple Checkout.
+
+### Display the button
+
+First, create a route that displays the payment button.
+
+In your `routes/web.php`:
+```php
+Route::get('checkout', 'CheckoutController@create');
+```
+
+In your `app/Http/Controllers/CheckoutController.php`:
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+class CheckoutContrroller extends Controller
+{
+    /**
+     * Display the payment button.
+     * 
+     * @param  \Sebdesign\VivaPayments\Client $client
+     * @return \Illuminate\Http\Response
+     */
+    public function create(Client $client)
+    {
+        return view('checkout', [
+            'publicKey' => config('services.viva.public_key'),
+            'baseUrl' => $client->getUrl(),
+        ]);
+    }
+}
+```
+
+In your `resources/views/checkout.blade.php`:
+```php
+<html>
+    <head>
+        <title>Simple Checkout</title>
+    </head>
+    <body>
+      <form id="myform" action="{{ url('checkout') }}" method="post">
+        <button type="button"
+          data-vp-publickey="{{ $publicKey }}"
+          data-vp-baseurl="{{ $baseUrl }}"
+          data-vp-lang="en"
+          data-vp-amount="1000"
+          data-vp-description="My product">
+        </button>
+      </form>
+
+      <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+      <script src="https://demo.vivapayments.com/web/checkout/js"></script>
+    </body>
+</html>
+```
+
+### Make the charge
+
+Then create a route to submit the `vivaWalletToken` from your form's `action` to the `CheckoutController`.
+
+In your `routes/web.php`:
+```php
+Route::post('checkout', 'CheckoutController@store');
+```
+
+In your `app/Http/Controllers/CheckoutController.php`:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use GuzzleHttp\Exception\RequestException;
+use Sebdesign\VivaPayments\Transaction;
+use Sebdesign\VivaPayments\VivaException;
+use Illuminate\Http\Request;
+
+class CheckoutController extends Controller
+{
+    /**
+     * 
+     * @param  \Illuminate\Http\Request            $request
+     * @param  \Sebdesign\VivaPayments\Transaction $transactions
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request, Transaction $transactions)
+    {
+        try {
+            $transaction = $transactions->create([
+                'PaymentToken' => $request->input('vivaWalletToken');
+            ]);
+        } catch (RequestException | VivaException $e) {
+            report($e);
+
+            return back()->withErrors($e->getMessage());
+        }
+
+        return redirect('order/success');
+    }
+```
+
+## Native Checkout v2
+
+Follow the steps described in the Developer Portal: https://developer.vivawallet.com/online-checkouts/native-checkout-v2
+
+### Build a custom payment form
+
+First, create a route to the controller that returns the view with the payment form.
+
+In your `routes/web.php`:
+```php
+Route::get('checkout', 'CheckoutController@create');
+```
+
+In your `app/Http/Controllers/CheckoutController.php`:
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Http\Request;
+use Sebdesign\VivaPayments\Client;
+use Sebdesign\VivaPayments\OAuth;
+use Sebdesign\VivaPayments\VivaException;
+
+class CheckoutController extends Controller
+{
+    /**
+     * Display the payment form.
+     * 
+     * @param  \Sebdesign\VivaPayments\Client $client
+     * @param  \Sebdesign\VivaPayments\OAuth  $oauth
+     * @return \Illuminate\Http\Response
+     */ 
+    public function create(Client $client, OAuth $oauth)
+    {
+        try {
+            $token = $oauth->requestToken();
+        } catch (RequestException | VivaException $e) {
+            report($e);
+
+            return back()->withErrors($e->getMessage());
+        }
+
+        return view('checkout', [
+            'baseUrl' => $client->getApiUrl(),
+            'accessToken' => $token->access_token,
+        ]);
+    }
+}
+```
+
+In your `resources/views/checkout.blade.php`:
+```php
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Native 3DS test</title>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+        integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://demo.vivapayments.com/web/checkout/v2/js"></script>
+</head>
+
+<body>
+    <form action="{{ url('checkout') }}" method="POST" id="payment-form">
+        <div class="form-row">
+            <label>
+                <span>Cardholder Name</span>
+                <input type="text" data-vp="cardholder" size="20" name="txtCardHolder" autocomplete="off"/>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>
+                <span>Card Number</span>
+                <input type="text" data-vp="cardnumber" size="20" name="txtCardNumber" autocomplete="off"/>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>
+                <span>CVV</span>
+                <input type="text" data-vp="cvv" name="txtCVV" size="4" autocomplete="off"/>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label>
+                <span>Expiration (MM/YYYY)</span>
+                <input type="text" data-vp="month" size="2" name="txtMonth" autocomplete="off"/>
+            </label>
+            <span> / </span>
+            <input type="text" data-vp="year" size="4" name="txtYear" autocomplete="off"/>
+        </div>
+
+        <div class="form-row">
+            <label>
+                <span>Installments</span>
+                <select id="js-installments" name="installments" style="display:none"></select>
+            </label>
+        </div>
+
+        <input type="hidden" id="charge-token" name="chargeToken"/>
+        <input type="button" id="submit" value="Submit Payment" />
+    </form>
+
+    <div id="threed-pane" style="height: 450px; width:500px"></div>
+
+    <script>
+        $(document).ready(function () {
+            VivaPayments.cards.setup({
+                baseURL: '{{ $baseUrl }}',
+                authToken: '{{ $accessToken }}',
+                cardHolderAuthOptions: {
+                    cardHolderAuthPlaceholderId: 'threed-pane',
+                    cardHolderAuthInitiated: function () {
+                        $('#threed-pane').show();
+                    },
+                    cardHolderAuthFinished: function () {
+                        $('#threed-pane').hide();
+                    }
+                },
+                installmentsHandler: function (response) {
+                    if (!response.Error) {
+                        if (response.MaxInstallments == 0)
+                            return;
+                        $('#js-installments').show();
+                        for (i = 1; i <= response.MaxInstallments; i++) {
+                            $('#js-installments').append($("<option>").val(i).text(i));
+                        }
+                    }
+                    else {
+                        alert(response.Error);
+                    }
+                }
+            });
+
+            $('#submit').on('click', function (evt) {
+                evt.preventDefault();
+                VivaPayments.cards.requestToken({
+                    amount: 3600
+                }).done(function (data) {
+                    console.log(data);
+                    $('#charge-token').val(data.chargeToken);
+                    $('#payment-form').submit();
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
+```
+
+### Make the actual charge
+
+Then create a route to submit your form with the charge token to the `CheckoutController`.
+
+In your `routes/web.php`:
+```php
+Route::post('checkout', 'CheckoutController@store');
+```
+
+In your `app/Http/Controllers/CheckoutController.php`:
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use GuzzleHttp\Exception\RequestException;
+use Illuminate\Http\Request;
+use Sebdesign\VivaPayments\NativeCheckout;
+use Sebdesign\VivaPayments\OAuth;
+use Sebdesign\VivaPayments\VivaException;
+
+class CheckoutController extends Controller
+{
+    /**
+     * Create a new transaction with the charge token from the form.
+     *
+     * @param  \Illuminate\Http\Request               $request
+     * @param  \Sebdesign\VivaPayments\OAuth          $oauth
+     * @param  \Sebdesign\VivaPayments\NativeCheckout $nativeCheckout
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request, OAuth $oauth, NativeCheckout $nativeCheckout)
+    {
+        try {
+            $oauth->requestToken();
+
+            $transactionId = $nativeCheckout->createTransaction([
+                'amount' => 1000,
+                'tipAmount' => 0,
+                'preauth' => false,
+                'chargeToken' => $request->input('chargeToken'),
+                'installments' => $request->input('installments'),
+                'merchantTrns' => 'Merchant transaction reference',
+                'customerTrns' => 'Description that the customer sees',
+                'currencyCode' => 826,
+                'customer' => [
+                    'email' => 'native@vivawallet.com',
+                    'phone' => '442037347770',
+                    'fullname' => 'John Smith',
+                    'requestLang' => 'en',
+                    'countryCode' => 'GB',
+            ]);
+        } catch (RequestException | VivaException $e) {
+            report($e);
+
+            return back()->withErrors($e->getMessage());
+        }
+
+        return redirect('order/success');
+    }
+}
+```
 
 ## Redirect Checkout
 
@@ -231,202 +567,6 @@ class CheckoutController extends Controller
 }
 ```
 
-## Native Checkout
-
-Follow the **steps 1 through 7** described in the Developer Portal: https://developer.vivawallet.com/online-checkouts/native-checkout-v1
-
-Below is an example of the last step using this package.
-
-### Display the payment form
-
-```php
-<!doctype html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title></title>
-</head>
-<body>
-    <form action="/order/checkout" id="paymentForm" method="POST" accept-charset="UTF-8">
-        {{ csrf_field() }}
-
-        <label for="txtCardHolder">Cardholder name:</label>
-        <input id="txtCardHolder" data-vp="cardholder" type="text">
-
-        <label for="txtCardNumber">Card number:</label>
-        <input id="txtCardNumber" data-vp="cardnumber" type="number">
-
-        <div id="divInstallments" style="display: none;">
-            <label for="installments">Installments:</label>
-            <select id="installments" name="installments"></select>
-        </div>
-
-        <label for="txtCCV">CVV:</form>
-        <input id="txtCCV" data-vp="cvv" type="number">
-
-        <label for="txtExpMonth">Expiration Month:</label>
-        <input id="txtExpMonth" data-vp="month" type="number">
-
-        <label for="txtExpYear">Expiration Year:</label>
-        <input id="txtExpYear" data-vp="year" type="number">
-
-        <input name="token" id="token" type="hidden">
-
-        <button type="button">Submit</button>
-    </form>
-
-    <script src="https://code.jquery.com/jquery-1.12.1.min.js"></script>
-    <script src="https://demo.vivapayments.com/web/checkout/js"></script>
-
-    <script>
-        $(document).ready(function () {
-            var $paymentForm = $('#paymentForm');
-            var $installments = $paymentForm.find('#divInstallments');
-
-            VivaPayments.cards.setup({
-                publicKey: '{!! config("services.viva.public_key") !!}',
-                baseURL: '{!! app(Sebdesign\VivaPayments\Client::class)->getUrl() !!}',
-                cardTokenHandler: function (response) {
-                    if (!response.Error) {
-                        $paymentForm.find('#token').val(response.Token);
-                        $paymentForm.submit();
-                    } else {
-                        alert(response.Error);
-                    }
-                },
-                installmentsHandler: function (response) {
-                    var $select = $installments.find('select');
-
-                    if (!response.Error) {
-                        if (response.MaxInstallments === 0) {
-                            $select.empty();
-                            $installments.hide();
-                            return;
-                        }
-
-                        for (i = 1; i <= response.MaxInstallments; i++) {
-                            $select.append($("<option>").val(i).text(i));
-                        }
-
-                        $installments.show();
-                    } else {
-                        alert(response.Error);
-                    }
-                }
-            });
-
-            $paymentForm.find('button').click(function (event) {
-                event.preventDefault();
-                VivaPayments.cards.requestToken();
-            });
-        });
-    </script>
-</body>
-</html>
-```
-
-### Process the payment
-
-```php
-<?php
-
-namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use Sebdesign\VivaPayments\Order;
-use Sebdesign\VivaPayments\Transaction;
-use Sebdesign\VivaPayments\VivaException;
-
-class CheckoutController extends Controller
-{
-    /**
-     * Create a payment order and a new transaction with the token from the form.
-     *
-     * @param  \Illuminate\Http\Request             $request
-     * @param  \Sebdesign\VivaPayments\Order        $order
-     * @param  \Sebdesign\VivaPayments\Transaction  $transaction
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function checkout(Request $request, Order $order, Transaction $transaction)
-    {
-        try {
-            $orderCode = $order->create(100, [
-                'fullName'      => 'Customer Name',
-                'email'         => 'customer@domain.com',
-                'sourceCode'    => 'Default',
-                'merchantTrns'  => 'Order reference',
-                'customerTrns'  => 'Description that the customer sees',
-            ]);
-
-            $response = $transaction->create([
-                'orderCode'     => $orderCode,
-                'sourceCode'    => 'Default',
-                'creditCard'    => [
-                    'token'     => $request->get('token'),
-                ]
-            ]);
-        } catch (VivaException $e) {
-            report($e);
-
-            return back()->withErrors($e->getMessage());
-        }
-
-        if ($response->StatusId !== Transaction::COMPLETED) {
-            return redirect('order/failure');
-        }
-
-        return redirect('order/success');
-    }
-}
-```
-
-## Mobile Checkout
-
-### Create a payment order
-
-```php
-$order = app(Sebdesign\VivaPayments\Order::class);
-
-$orderCode = $order->create(100, [
-    'fullName'      => 'Customer Name',
-    'email'         => 'customer@domain.com',
-    'sourceCode'    => 'Default',
-    'merchantTrns'  => 'Order reference',
-    'customerTrns'  => 'Description that the customer sees',
-]);
-```
-
-### Card Tokenization
-
-```php
-$card = app(Sebdesign\VivaPayments\Card::class);
-
-$token = $card->token('Customer Name', '4111 1111 1111 1111', 111, 03, 2016);
-```
-
-### Check installments
-
-```php
-$card = app(Sebdesign\VivaPayments\Card::class);
-
-$maxInstallments = $card->installments('4111 1111 1111 1111');
-```
-
-### Process the payment
-
-```php
-$transaction = app(Sebdesign\VivaPayments\Transaction::class);
-
-$response = $transaction->create([
-    'orderCode'     => $orderCode,
-    'sourceCode'    => 'Default',
-    'installments'  => $maxInstallments,
-    'creditCard'    => [
-        'token'     => $token,
-    ]
-]);
-```
-
 ## Handling Webhooks
 
 Viva Payments supports Webhooks, and this package offers a controller which can be extended to handle incoming notification events.
@@ -515,6 +655,8 @@ class VerifyCsrfToken extends Middleware
 
 ## API Methods
 
+All methods accept a `$guzzleOptions` array argument as their last parameter. This argument is entirely optional, and it allows you to specify additional request options to the `Guzzle` client.
+
 ### Orders
 
 ##### Create a payment order
@@ -555,28 +697,24 @@ $response = $order->cancel(175936509216, $guzzleOptions = []);
 
 ##### Create a new transaction
 
-> See: https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/post
+> See: https://developer.vivawallet.com/online-checkouts/simple-checkout/#step-2-make-the-charge
 
 ```php
 $transaction = app(Sebdesign\VivaPayments\Transaction::class);
 
 $response = $transaction->create([
-    'orderCode'     => 175936509216,
-    'sourceCode'    => 'Default',
-    'creditCard'    => [
-        'token'     => 'A generated token',
-    ]
+    'PaymentToken' => $request->input('vivaWalletToken'),
 ], $guzzleOptions = []);
 ```
 
 ##### Create a recurring transaction
 
-> See: https://developer.vivawallet.com/api-reference-guide/payment-api/create-recurring-transaction
+> See: https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/post
 
 ```php
 $transaction = app(Sebdesign\VivaPayments\Transaction::class);
 
-$response = $transaction->createRecurring(
+$response = $transaction->create(
     '252b950e-27f2-4300-ada1-4dedd7c17904',
     1500,
     $parameters = [],
@@ -608,6 +746,13 @@ $transactions = $transaction->getByDate('2016-03-11', $guzzleOptions = []);
 // or a DateTimeInterface instance like DateTime or Carbon.
 
 $transactions = $transaction->getByClearanceDate('2016-03-11', $guzzleOptions = []);
+
+// By source code and date
+
+// The date can be a string in Y-m-d format,
+// or a DateTimeInterface instance like DateTime or Carbon.
+
+$transactions = $transaction->getBySourceCode('Default', '2016-03-11', $guzzleOptions = []);
 ```
 
 ##### Cancel a card payment / Make a refund
@@ -623,31 +768,138 @@ $response = $transaction->cancel(
 );
 ```
 
-### Cards
+### OAuth
 
-#### Create a token
+#### Request access token
 
-> See: https://developer.vivawallet.com/api-reference-guide/payment-api/tokenize-card
+> See: https://developer.vivawallet.com/authentication/#step-2-request-access-token
+
+These methods return the access token as an **object**.
 
 ```php
-$card = app(Sebdesign\VivaPayments\Card::class);
+$oauth = app(Sebdesign\VivaPayments\OAuth::class);
 
-$token = $card->token(
+// Using `client_id` and `client_secret` from `config/services.php`:
+// The token will be automatically stored on the client and used as a Bearer token.
+$token = $oauth->requestToken();
+
+// Using custom credentials
+// The token will be automatically stored on the client and used as a Bearer token.
+$token = $oauth->requestToken('client_id', 'client_secret', $guzzleOptions = []);
+
+// You can also generate an access token without storing it on the client:
+$token = $oauth->token('client_id', 'client_secret', $guzzleOptions = []);
+```
+
+### Use an existing access token
+
+```php
+$oauth = app(Sebdesign\VivaPayments\OAuth::class);
+
+// If you are storing the token somewhere, e.g. in your database or in the cache, you can set the access token string on the client to be used as a Bearer token.
+$oauth->withToken('eyJhbGciOiJSUzI1...');
+```
+
+### Native Checkout
+
+> Don't forget to generate or set an access token before using the following methods.
+
+#### Generate a charge token using card details
+
+> See: https://developer.vivawallet.com/api-reference-guide/card-tokenization-api/#step-1-generate-one-time-charge-token-using-card-details
+
+```php
+$native = app(Sebdesign\VivaPayments\NativeCheckout::class);
+
+$chargeToken = $native->chargeToken(
+    1000,
     'Customer Name',
     '4111 1111 1111 1111',
     111,
     3,
     2016,
+    'https://www.example.com',
     $guzzleOptions = []
 );
 ```
 
-#### Check installments
+#### Generate a card token using a charge token
 
-> See: https://developer.vivawallet.com/api-reference-guide/payment-api/installments-check
+> See: https://developer.vivawallet.com/api-reference-guide/card-tokenization-api/#step-2-generate-card-token-using-the-charge-token-optional
 
 ```php
-$maxInstallments = $card->installments('4111 1111 1111 1111', $guzzleOptions = []);
+$nativeCheckout = app(Sebdesign\VivaPayments\NativeCheckout::class);
+
+$cardToken = $nativeCheckout->cardToken(
+    'ctok__pEfMPKCt-FHnN0vS3T23Gz1aDk',
+    $guzzleOptions = []
+);
+```
+
+#### Generate one-time charge token using card token
+
+> See: https://developer.vivawallet.com/api-reference-guide/card-tokenization-api/#step-3-generate-one-time-charge-token-using-card-token-optional
+
+```php
+$nativeCheckout = app(Sebdesign\VivaPayments\NativeCheckout::class);
+
+$chargeToken = $nativeCheckout->chargeTokenUsingCardToken(
+    '2188A74B6BB8DE0D5671886B5385125121CAE870',
+    $guzzleOptions = []
+);
+```
+
+#### Create transaction
+
+> See: https://developer.vivawallet.com/api-reference-guide/native-checkout-v2-api/#create-transaction
+
+```php
+$nativeCheckout = app(Sebdesign\VivaPayments\NativeCheckout::class);
+
+$transactionId = $nativeCheckout->createTransaction(
+    [
+        'amount' => 1000,
+        'preauth' => false,
+        'sourceCode' => '4693',
+        'chargeToken' => '<charge token>',
+        'installments' => 1,
+        'merchantTrns' => 'Merchant transaction reference',
+        'customerTrns' => 'Description that the customer sees',
+        'currencyCode' => 826,
+        'customer' => [
+            'email' => 'native@vivawallet.com',
+            'phone' => '442037347770',
+            'fullname' => 'John Smith',
+            'requestLang' => 'en',
+            'countryCode' => 'GB',
+        ],
+    ],
+    $guzzleOptions = []
+);
+```
+
+#### Capture a pre-auth
+
+> See: https://developer.vivawallet.com/api-reference-guide/native-checkout-v2-api/#capture-a-pre-auth
+
+```php
+$nativeCheckout = app(Sebdesign\VivaPayments\NativeCheckout::class);
+
+$transactionId = $nativeCheckout->capturePreAuthTransaction(
+    'b1a3067c-321b-4ec6-bc9d-1778aef2a19d',
+    300,
+    $guzzleOptions = []
+);
+```
+
+#### Check for installments
+
+> See: https://developer.vivawallet.com/api-reference-guide/native-checkout-v2-api/#check-for-installments
+
+```php
+$nativeCheckout = app(Sebdesign\VivaPayments\NativeCheckout::class);
+
+$maxInstallments = $nativeCheckout->installments('4111 1111 1111 1111', $guzzleOptions = []);
 ```
 
 ### Payment Sources

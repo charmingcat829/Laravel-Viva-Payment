@@ -2,6 +2,14 @@
 
 All notable changes to `sebdesign/laravel-viva-payments` will be documented in this file
 
+## 5.0.0 - 2020-09-01
+
+- Add OAuth authentication
+- Add Simple Checkout
+- Add Native Checkout v2
+- Remove Native Checkout v1
+- Remove Mobile Checkout
+
 ## 4.4.0 - 2020-08-29
 
 - Allow additional options for the Guzzle client
