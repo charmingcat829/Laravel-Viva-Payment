@@ -4,8 +4,6 @@ namespace Sebdesign\VivaPayments;
 
 class Webhook
 {
-    const ENDPOINT = '/api/messages/config/token/';
-
     /**
      * Create Transaction event.
      */
@@ -37,6 +35,12 @@ class Webhook
      */
     public function getAuthorizationCode(array $guzzleOptions = [])
     {
-        return $this->client->get(self::ENDPOINT, $guzzleOptions);
+        return $this->client->get(
+            $this->client->getUrl()->withPath('/api/messages/config/token'),
+            array_merge_recursive(
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
     }
 }

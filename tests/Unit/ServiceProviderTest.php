@@ -2,7 +2,6 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
-use InvalidArgumentException;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Test\TestCase;
 use Sebdesign\VivaPayments\VivaPaymentsServiceProvider;
@@ -56,43 +55,6 @@ class ServiceProviderTest extends TestCase
 
         $this->assertInstanceof(Client::class, $client);
         $this->assertTrue($this->app->isShared(Client::class));
-    }
-
-    /**
-     * @test
-     * @group unit
-     */
-    public function it_gets_the_demo_url()
-    {
-        $url = app(Client::class)->getUrl();
-
-        $this->assertEquals(Client::DEMO_URL, $url, 'The URL should be '.Client::DEMO_URL);
-    }
-
-    /**
-     * @test
-     * @group unit
-     */
-    public function it_gets_the_production_url()
-    {
-        app('config')->set('services.viva.environment', 'production');
-
-        $url = app(Client::class)->getUrl();
-
-        $this->assertEquals(Client::PRODUCTION_URL, $url, 'The URL should be '.Client::PRODUCTION_URL);
-    }
-
-    /**
-     * @test
-     * @group unit
-     */
-    public function it_throws_an_exception_when_the_environment_is_invalid()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        app('config')->set('services.viva.environment', '');
-
-        $url = app(Client::class)->getUrl();
     }
 
     /**

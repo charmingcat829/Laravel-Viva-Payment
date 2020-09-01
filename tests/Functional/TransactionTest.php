@@ -3,7 +3,8 @@
 namespace Sebdesign\VivaPayments\Test\Functional;
 
 use Illuminate\Support\Carbon;
-use Sebdesign\VivaPayments\Card;
+use Sebdesign\VivaPayments\NativeCheckout;
+use Sebdesign\VivaPayments\OAuth;
 use Sebdesign\VivaPayments\Order;
 use Sebdesign\VivaPayments\Test\TestCase;
 use Sebdesign\VivaPayments\Transaction;
@@ -16,21 +17,11 @@ class TransactionTest extends TestCase
      */
     public function createTransaction()
     {
-        $this->markTestSkipped('Card tokenization endpoint doesn\'t work anymore.');
+        $this->markTestSkipped('Charge tokens fail 3DS authentication in demo environment.');
 
-        $orderCode = $this->getOrderCode();
         $token = $this->getToken();
-        $installments = $this->getInstallments();
 
-        $original = app(Transaction::class)->create([
-            'orderCode'       => $orderCode,
-            'sourceCode'      => env('VIVA_SOURCE_CODE'),
-            'installments'    => $installments,
-            'allowsRecurring' => true,
-            'creditCard'      => [
-                'token'       => $token,
-            ],
-        ]);
+        $original = app(Transaction::class)->create(['PaymentToken' => $token]);
 
         $this->assertEquals(Transaction::COMPLETED, $original->StatusId, 'The transaction was not completed.');
         $this->assertEquals(15, $original->Amount);
@@ -132,13 +123,32 @@ class TransactionTest extends TestCase
     /**
      * @test
      * @group functional
+     * @depends getById
+     */
+    public function getBySourceCode($original)
+    {
+        $date = Carbon::parse($original->InsDate);
+
+        $transactions = app(Transaction::class)->getBySourceCode(env('VIVA_SOURCE_CODE'), $date);
+
+        $this->assertNotEmpty($transactions);
+
+        foreach ($transactions as $key => $trns) {
+            $this->assertEquals(env('VIVA_SOURCE_CODE'), $trns->sourceCode);
+            $this->assertTrue(Carbon::parse($trns->InsDate)->isSameDay($date));
+        }
+    }
+
+    /**
+     * @test
+     * @group functional
      * @depends createTransaction
      */
     public function cancelTransaction($original)
     {
         $transaction = app(Transaction::class);
 
-        $response = $transaction->cancel($original->TransactionId, 1500);
+        $response = $transaction->cancel($original->TransactionId, env('VIVA_SOURCE_CODE'));
 
         $this->assertEquals(Transaction::COMPLETED, $response->StatusId, 'The cancel transaction was not completed.');
         $this->assertEquals(15, $response->Amount);
@@ -162,13 +172,23 @@ class TransactionTest extends TestCase
 
     protected function getToken()
     {
-        $expirationDate = Carbon::parse('next year');
+        app(OAuth::class)->requestToken();
 
-        return app(Card::class)->token('Customer name', '4111 1111 1111 1111', 111, $expirationDate->month, $expirationDate->year);
+        return app(NativeCheckout::class)->chargeToken(
+            1500,
+            'Customer name',
+            '4111 1111 1111 1111',
+            111,
+            10,
+            2030,
+            'https://www.example.com'
+        );
     }
 
     protected function getInstallments()
     {
-        return app(Card::class)->installments('4111 1111 1111 1111');
+        app(OAuth::class)->requestToken();
+
+        return app(NativeCheckout::class)->installments('4111 1111 1111 1111');
     }
 }

@@ -7,6 +7,9 @@ use Illuminate\Routing\Controller;
 
 abstract class WebhookController extends Controller
 {
+    /**
+     * @var \Sebdesign\VivaPayments\Webhook
+     */
     protected $webhook;
 
     public function __construct(Webhook $webhook)
@@ -75,8 +78,6 @@ abstract class WebhookController extends Controller
 
     /**
      * Verify a webhook.
-     *
-     * @return array
      */
     protected function verify(): array
     {

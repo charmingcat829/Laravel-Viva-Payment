@@ -20,24 +20,14 @@ class TransactionTest extends TestCase
 
         $transaction = new Transaction($this->client);
 
-        $parameters = [
-            'orderCode'     => 175936509216,
-            'sourceCode'    => 'Default',
-            'installments'  => 36,
-            'creditCard'    => [
-                'token'     => 'foo',
-            ],
-        ];
+        $parameters = ['PaymentToken' => 'foo'];
 
         $response = $transaction->create($parameters);
         $request = $this->getLastRequest();
 
         $this->assertMethod('POST', $request);
-        $this->assertQuery('key', $this->app['config']->get('services.viva.public_key'), $request);
-        $this->assertJsonBody('orderCode', 175936509216, $request);
-        $this->assertJsonBody('sourceCode', 'Default', $request);
-        $this->assertJsonBody('installments', 36, $request);
-        $this->assertJsonBody('creditCard', ['token' => 'foo'], $request);
+        $this->assertPath('/api/transactions', $request);
+        $this->assertJsonBody('PaymentToken', 'foo', $request);
         $this->assertEquals(['foo' => 'bar'], (array) $response);
     }
 
@@ -76,13 +66,13 @@ class TransactionTest extends TestCase
 
         $transaction = new Transaction($this->client);
 
-        $response = $transaction->cancel('252b950e-27f2-4300-ada1-4dedd7c17904', 30, 'Customer name');
+        $response = $transaction->cancel('252b950e-27f2-4300-ada1-4dedd7c17904', 30, env('VIVA_SOURCE_CODE'));
         $request = $this->getLastRequest();
 
         $this->assertMethod('DELETE', $request);
         $this->assertPath('/api/transactions/252b950e-27f2-4300-ada1-4dedd7c17904', $request);
         $this->assertQuery('amount', '30', $request);
-        $this->assertQuery('actionUser', 'Customer name', $request);
+        $this->assertQuery('sourceCode', env('VIVA_SOURCE_CODE'), $request);
         $this->assertEquals(['foo' => 'bar'], (array) $response);
     }
 
@@ -199,5 +189,31 @@ class TransactionTest extends TestCase
             DateTime::class => [new DateTime('2016-03-12')],
             Carbon::class => [new Carbon('2016-03-12')],
         ];
+    }
+
+    /**
+     * @test
+     * @group unit
+     * @dataProvider dates
+     */
+    public function it_gets_transactions_by_source_code($date)
+    {
+        $this->mockJsonResponses([
+            ['Transactions' => [
+                ['foo' => 'bar'],
+            ]],
+        ]);
+        $this->mockRequests();
+
+        $transaction = new Transaction($this->client);
+
+        $transactions = $transaction->getBySourceCode(env('VIVA_SOURCE_CODE'), $date);
+
+        $request = $this->getLastRequest();
+
+        $this->assertMethod('GET', $request);
+        $this->assertQuery('sourcecode', env('VIVA_SOURCE_CODE'), $request);
+        $this->assertQuery('date', '2016-03-12', $request);
+        $this->assertEquals([(object) ['foo' => 'bar']], $transactions);
     }
 }

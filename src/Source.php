@@ -3,6 +3,7 @@
 namespace Sebdesign\VivaPayments;
 
 use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\UriInterface;
 
 class Source
@@ -24,6 +25,8 @@ class Source
 
     /**
      * Create a payment source.
+     *
+     * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Sources/paths/~1api~1sources/post
      *
      * @param  string $name          A meaningful name that will help you identify the source in Web Self Care environment
      * @param  string $code          A unique code that is exchanged between your application and the API
@@ -52,9 +55,14 @@ class Source
             'pathSuccess' => $success,
         ];
 
-        return $this->client->post(self::ENDPOINT, array_merge([
-            \GuzzleHttp\RequestOptions::JSON => $parameters,
-        ], $guzzleOptions));
+        return $this->client->post(
+            $this->client->getUrl()->withPath(self::ENDPOINT),
+            array_merge_recursive(
+                [RequestOptions::JSON => $parameters],
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
     }
 
     /**

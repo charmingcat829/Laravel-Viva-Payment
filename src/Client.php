@@ -3,6 +3,9 @@
 namespace Sebdesign\VivaPayments;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Psr7\Uri;
+use GuzzleHttp\RequestOptions;
+use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 
@@ -19,16 +22,54 @@ class Client
     const PRODUCTION_URL = 'https://www.vivapayments.com';
 
     /**
+     * Demo environment accounts URL.
+     */
+    const DEMO_ACCOUNTS_URL = 'https://demo-accounts.vivapayments.com';
+
+    /**
+     * Production environment accounts URL.
+     */
+    const PRODUCTION_ACCOUNTS_URL = 'https://accounts.vivapayments.com';
+
+    /**
+     * Demo environment URL.
+     */
+    const DEMO_API_URL = 'https://demo-api.vivapayments.com';
+
+    /**
+     * Production environment URL.
+     */
+    const PRODUCTION_API_URL = 'https://api.vivapayments.com';
+
+    /**
      * @var \GuzzleHttp\Client
      */
     protected $client;
 
     /**
+     * @var string
+     */
+    protected $environment;
+
+    /**
+     * @var string
+     */
+    protected $token;
+
+    /**
      * Constructor.
      */
-    public function __construct(GuzzleClient $client)
+    public function __construct(GuzzleClient $client, string $environment)
     {
         $this->client = $client;
+
+        if (! in_array($environment, ['demo', 'production'])) {
+            throw new InvalidArgumentException(
+                'The Viva Payments environment must be demo or production.'
+            );
+        }
+
+        $this->environment = $environment;
     }
 
     /**
@@ -112,7 +153,38 @@ class Client
      */
     public function getUrl(): UriInterface
     {
-        return $this->client->getConfig('base_uri');
+        $uris = [
+            'production' => self::PRODUCTION_URL,
+            'demo' => self::DEMO_URL,
+        ];
+
+        return new Uri($uris[$this->environment]);
+    }
+
+    /**
+     * Get the accounts URL.
+     */
+    public function getAccountsUrl(): UriInterface
+    {
+        $uris = [
+            'production' => self::PRODUCTION_ACCOUNTS_URL,
+            'demo' => self::DEMO_ACCOUNTS_URL,
+        ];
+
+        return new Uri($uris[$this->environment]);
+    }
+
+    /**
+     * Get the API URL.
+     */
+    public function getApiUrl(): UriInterface
+    {
+        $uris = [
+            'production' => self::PRODUCTION_API_URL,
+            'demo' => self::DEMO_API_URL,
+        ];
+
+        return new Uri($uris[$this->environment]);
     }
 
     /**
@@ -124,10 +196,46 @@ class Client
     }
 
     /**
-     * Get the public key as query string.
+     * Authenticate using basic auth.
      */
-    public function getKey(): string
+    public function authenticateWithBasicAuth(): array
     {
-        return config('services.viva.public_key');
+        return [
+            RequestOptions::AUTH => [
+                config('services.viva.merchant_id'),
+                config('services.viva.api_key'),
+            ],
+        ];
+    }
+
+    /**
+     * Authenticate using the public key as a query string.
+     */
+    public function authenticateWithPublicKey(): array
+    {
+        return [
+            RequestOptions::QUERY => [
+                'key' => config('services.viva.public_key'),
+            ],
+        ];
+    }
+
+    /**
+     * Authenticate using the bearer token as an authorization header.
+     */
+    public function authenticateWithBearerToken(): array
+    {
+        return [
+            RequestOptions::HEADERS => [
+                'Authorization' => "Bearer {$this->token}",
+            ],
+        ];
+    }
+
+    public function withToken(string $token): self
+    {
+        $this->token = $token;
+
+        return $this;
     }
 }

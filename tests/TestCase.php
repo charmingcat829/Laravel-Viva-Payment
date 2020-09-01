@@ -91,15 +91,10 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     {
         $mockClient = new GuzzleClient([
             'handler' => $this->handler,
-            'base_uri' => Client::DEMO_URL,
             'curl' => [CURLOPT_SSL_CIPHER_LIST => 'TLSv1'],
-            'auth' => [
-                $this->app['config']['merchant_id'],
-                $this->app['config']['api_key'],
-            ],
         ]);
 
-        $this->client = new Client($mockClient);
+        $this->client = new Client($mockClient, 'demo');
     }
 
     protected function mockJsonResponses(array $bodies)

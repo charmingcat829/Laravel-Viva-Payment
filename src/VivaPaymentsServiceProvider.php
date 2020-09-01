@@ -20,29 +20,22 @@ class VivaPaymentsServiceProvider extends ServiceProvider
         );
 
         $this->app->singleton(Client::class, function ($app) {
-            return new Client($this->buildGuzzleClient($app));
+            return new Client(
+                $this->buildGuzzleClient(),
+                $app->make('config')->get('services.viva.environment')
+            );
         });
     }
 
     /**
      * Build the Guzzlehttp client.
-     *
-     * @param  \Illuminate\Contracts\Foundation\Application $app
-     * @return \GuzzleHttp\Client
      */
-    protected function buildGuzzleClient($app)
+    protected function buildGuzzleClient(): GuzzleClient
     {
-        $config = $app['config']->get('services.viva');
-
         return new GuzzleClient([
-            'base_uri' => $this->getUrl($config['environment']),
             'curl' => $this->curlDoesntUseNss()
                 ? [CURLOPT_SSL_CIPHER_LIST => 'TLSv1']
                 : [],
-            \GuzzleHttp\RequestOptions::AUTH => [
-                $config['merchant_id'],
-                $config['api_key'],
-            ],
         ]);
     }
 
@@ -56,25 +49,6 @@ class VivaPaymentsServiceProvider extends ServiceProvider
         $curl = curl_version();
 
         return ! preg_match('/NSS/', $curl['ssl_version']);
-    }
-
-    /**
-     * Get the URL based on the environment.
-     *
-     * @param  string $environment
-     * @return string
-     */
-    protected function getUrl($environment)
-    {
-        if ($environment === 'production') {
-            return Client::PRODUCTION_URL;
-        }
-
-        if ($environment === 'demo') {
-            return Client::DEMO_URL;
-        }
-
-        throw new \InvalidArgumentException('The Viva Payments environment must be demo or production.');
     }
 
     /**

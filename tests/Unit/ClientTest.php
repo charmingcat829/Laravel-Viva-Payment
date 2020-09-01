@@ -2,8 +2,8 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
-use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Response;
+use InvalidArgumentException;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Order;
 use Sebdesign\VivaPayments\Test\TestCase;
@@ -15,11 +15,127 @@ class ClientTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_gets_the_url_from_guzzle_configuration()
+    public function it_throws_an_exception_when_the_environment_is_invalid()
     {
-        $client = new Client(new GuzzleClient(['base_uri' => Client::PRODUCTION_URL]));
+        $this->expectException(InvalidArgumentException::class);
 
-        $this->assertEquals(Client::PRODUCTION_URL, $client->getUrl(), 'The URL should be '.Client::PRODUCTION_URL);
+        app('config')->set('services.viva.environment', '');
+
+        app(Client::class);
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_gets_the_demo_url()
+    {
+        $url = app(Client::class)->getUrl();
+
+        $this->assertEquals(Client::DEMO_URL, $url, 'The URL should be '.Client::DEMO_URL);
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_gets_the_production_url()
+    {
+        app('config')->set('services.viva.environment', 'production');
+
+        $url = app(Client::class)->getUrl();
+
+        $this->assertEquals(Client::PRODUCTION_URL, $url, 'The URL should be '.Client::PRODUCTION_URL);
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_gets_the_demo_accounts_url()
+    {
+        $url = app(Client::class)->getAccountsUrl();
+
+        $this->assertEquals(Client::DEMO_ACCOUNTS_URL, $url, 'The URL should be '.Client::DEMO_ACCOUNTS_URL);
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_gets_the_production_accounts_url()
+    {
+        app('config')->set('services.viva.environment', 'production');
+
+        $url = app(Client::class)->getAccountsUrl();
+
+        $this->assertEquals(Client::PRODUCTION_ACCOUNTS_URL, $url, 'The URL should be '.Client::PRODUCTION_ACCOUNTS_URL);
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_gets_the_demo_api_url()
+    {
+        $url = app(Client::class)->getApiUrl();
+
+        $this->assertEquals(Client::DEMO_API_URL, $url, 'The URL should be '.Client::DEMO_API_URL);
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_gets_the_production_api_url()
+    {
+        app('config')->set('services.viva.environment', 'production');
+
+        $url = app(Client::class)->getApiUrl();
+
+        $this->assertEquals(Client::PRODUCTION_API_URL, $url, 'The URL should be '.Client::PRODUCTION_API_URL);
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_authenticates_with_basic_auth()
+    {
+        $basic = app(Client::class)->authenticateWithBasicAuth();
+
+        $this->assertEquals([
+            'auth' => [
+                config('services.viva.merchant_id'),
+                config('services.viva.api_key'),
+            ],
+        ], $basic);
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_authenticates_with_public_key()
+    {
+        $key = app(Client::class)->authenticateWithPublicKey();
+
+        $this->assertEquals([
+            'query' => ['key' => config('services.viva.public_key')],
+        ], $key);
+    }
+
+    /**
+     * @test
+     * @group unit
+     */
+    public function it_authenticates_with_bearer_token()
+    {
+        $bearer = app(Client::class)->withToken('foo')->authenticateWithBearerToken();
+
+        $this->assertEquals([
+            'headers' => ['Authorization' => 'Bearer foo'],
+        ], $bearer);
     }
 
     /**

@@ -14,7 +14,13 @@ class SourceTest extends TestCase
      */
     public function it_adds_a_payment_source()
     {
-        $response = app(Source::class)->create('Site 1', Str::random(), 'https://www.domain.com', 'order/failure', 'order/success');
+        $response = app(Source::class)->create(
+            'Site 1',
+            Str::random(),
+            'https://www.domain.com',
+            'order/failure',
+            'order/success'
+        );
 
         $this->assertNull($response);
     }

@@ -2,10 +2,10 @@
 
 namespace Sebdesign\VivaPayments;
 
+use GuzzleHttp\RequestOptions;
+
 class Transaction
 {
-    const ENDPOINT = '/api/transactions/';
-
     /**
      * Transaction types.
      */
@@ -105,26 +105,39 @@ class Transaction
     /**
      * Create a new transaction.
      *
+     * @see https://developer.vivawallet.com/online-checkouts/simple-checkout/#step-2-make-the-charge
+     *
      * @param  array  $parameters
      * @param  array  $guzzleOptions Additional parameters for the Guzzle client
      * @return \stdClass
      */
     public function create(array $parameters, array $guzzleOptions = [])
     {
-        return $this->client->post(self::ENDPOINT, array_merge([
-            \GuzzleHttp\RequestOptions::JSON => $parameters,
-            \GuzzleHttp\RequestOptions::QUERY => [
-                'key' => $this->client->getKey(),
-            ],
-        ], $guzzleOptions));
+        return $this->client->post(
+            $this->client->getUrl()->withPath('/api/transactions'),
+            array_merge_recursive(
+                [RequestOptions::JSON => $parameters],
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
     }
 
     /**
      * Create a recurring transaction.
      *
-     * @param  string   $id
-     * @param  int      $amount
-     * @param  array    $parameters
+     * This API call allows you to make a new payment by either committing
+     * an already authorized transaction or by making a recurring payment.
+     * The latter is only permitted if the following two conditions are met:
+     *
+     * - The cardholder has already been charged successfully in the past
+     * - The cardholder has agreed to allow recurring payments on their card
+     *
+     * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/post
+     *
+     * @param  string   $id            The transaction's unique ID
+     * @param  int      $amount        The amount requested in the currency's smallest unit of measurement
+     * @param  array    $parameters    Transaction parameters
      * @param  array    $guzzleOptions Additional parameters for the Guzzle client
      * @return \stdClass
      */
@@ -136,13 +149,20 @@ class Transaction
     ) {
         $parameters = array_merge(['amount' => $amount], $parameters);
 
-        return $this->client->post(self::ENDPOINT.$id, array_merge([
-            \GuzzleHttp\RequestOptions::JSON => $parameters,
-        ], $guzzleOptions));
+        return $this->client->post(
+            $this->client->getUrl()->withPath("/api/transactions/{$id}"),
+            array_merge_recursive(
+                [RequestOptions::JSON => $parameters],
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
     }
 
     /**
-     * Get the transactions for an id.
+     * Get details for a single transaction, identified by its transactionId.
+     *
+     * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
      *
      * @param  string $id
      * @param  array  $guzzleOptions Additional parameters for the Guzzle client
@@ -150,13 +170,21 @@ class Transaction
      */
     public function get(string $id, array $guzzleOptions = []): array
     {
-        $response = $this->client->get(self::ENDPOINT.$id, $guzzleOptions);
+        $response = $this->client->get(
+            $this->client->getUrl()->withPath("/api/transactions/{$id}"),
+            array_merge_recursive(
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
 
         return $response->Transactions;
     }
 
     /**
-     * Get the transactions for an order code.
+     * Get details for all transactions for a given payment order.
+     *
+     * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
      *
      * @param  int   $ordercode
      * @param  array $guzzleOptions Additional parameters for the Guzzle client
@@ -166,15 +194,22 @@ class Transaction
     {
         $parameters = ['ordercode' => $ordercode];
 
-        $response = $this->client->get(self::ENDPOINT, array_merge([
-            \GuzzleHttp\RequestOptions::QUERY => $parameters,
-        ], $guzzleOptions));
+        $response = $this->client->get(
+            $this->client->getUrl()->withPath('/api/transactions'),
+            array_merge_recursive(
+                [RequestOptions::QUERY => $parameters],
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
 
         return $response->Transactions;
     }
 
     /**
-     * Get the transactions that occured on a given date.
+     * List of all transactions that occurred on a given date.
+     *
+     * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
      *
      * @param  \DateTimeInterface|string $date
      * @param  array                     $guzzleOptions Additional parameters for the Guzzle client
@@ -184,15 +219,22 @@ class Transaction
     {
         $parameters = ['date' => $this->formatDate($date)];
 
-        $response = $this->client->get(self::ENDPOINT, array_merge([
-            \GuzzleHttp\RequestOptions::QUERY => $parameters,
-        ], $guzzleOptions));
+        $response = $this->client->get(
+            $this->client->getUrl()->withPath('/api/transactions'),
+            array_merge_recursive(
+                [RequestOptions::QUERY => $parameters],
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
 
         return $response->Transactions;
     }
 
     /**
-     * Get the transactions that were cleared on a given date.
+     * List of all transactions that occurred on a specific clearance date.
+     *
+     * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
      *
      * @param  \DateTimeInterface|string $clearancedate
      * @param  array                     $guzzleOptions Additional parameters for the Guzzle client
@@ -202,11 +244,77 @@ class Transaction
     {
         $parameters = ['clearancedate' => $this->formatDate($clearancedate)];
 
-        $response = $this->client->get(self::ENDPOINT, array_merge([
-            \GuzzleHttp\RequestOptions::QUERY => $parameters,
-        ], $guzzleOptions));
+        $response = $this->client->get(
+            $this->client->getUrl()->withPath('/api/transactions'),
+            array_merge_recursive(
+                [RequestOptions::QUERY => $parameters],
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
 
         return $response->Transactions;
+    }
+
+    /**
+     * List of all transactions for a given Source Code for a specific date.
+     *
+     * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
+     *
+     * @param  string                    $sourcecode
+     * @param  \DateTimeInterface|string $date
+     * @param  array                     $guzzleOptions Additional parameters for the Guzzle client
+     * @return array
+     */
+    public function getBySourceCode($sourcecode, $date, array $guzzleOptions = []): array
+    {
+        $parameters = [
+            'sourcecode' => $sourcecode,
+            'date' => $this->formatDate($date),
+        ];
+
+        $response = $this->client->get(
+            $this->client->getUrl()->withPath('/api/transactions'),
+            array_merge_recursive(
+                [RequestOptions::QUERY => $parameters],
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
+
+        return $response->Transactions;
+    }
+
+    /**
+     * Cancel or refund a payment.
+     *
+     * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/delete
+     *
+     * @param  string       $id            The transaction's unique ID
+     * @param  int          $amount        The amount that will be refunded in the currency's smallest denomination (e.g amount in pounds x 100)
+     * @param  string|null  $sourceCode    The source from which the funds will be withdrawn. Each source is linked to a wallet. If no sourceCode is set then the funds will be withdrawn from the primary wallet.
+     * @param  array        $guzzleOptions Additional parameters for the Guzzle client
+     * @return \stdClass
+     */
+    public function cancel(
+        string $id,
+        int $amount,
+        $sourceCode = null,
+        array $guzzleOptions = []
+    ) {
+        $parameters = array_merge(
+            ['amount' => $amount],
+            $sourceCode ? ['sourceCode' => $sourceCode] : []
+        );
+
+        return $this->client->delete(
+            $this->client->getUrl()->withPath("/api/transactions/{$id}"),
+            array_merge_recursive(
+                [RequestOptions::QUERY => $parameters],
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
     }
 
     /**
@@ -222,30 +330,5 @@ class Transaction
         }
 
         return $date;
-    }
-
-    /**
-     * Cancel or refund a payment.
-     *
-     * @param  string       $id
-     * @param  int          $amount
-     * @param  string|null  $actionUser
-     * @param  array        $guzzleOptions Additional parameters for the Guzzle client
-     * @return \stdClass
-     */
-    public function cancel(
-        string $id,
-        int $amount,
-        $actionUser = null,
-        array $guzzleOptions = []
-    ) {
-        $parameters = array_merge(
-            ['amount' => $amount],
-            $actionUser ? ['actionUser' => $actionUser] : []
-        );
-
-        return $this->client->delete(self::ENDPOINT.$id, array_merge([
-            \GuzzleHttp\RequestOptions::QUERY => $parameters,
-        ], $guzzleOptions));
     }
 }
