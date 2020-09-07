@@ -2,6 +2,10 @@
 
 All notable changes to `sebdesign/laravel-viva-payments` will be documented in this file
 
+## 5.1.0 - 2020-09-07
+
+- Add support for Laravel 8
+
 ## 5.0.0 - 2020-09-01
 
 - Add OAuth authentication
