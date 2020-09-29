@@ -89,7 +89,7 @@ class NativeCheckout
         $parameters = ['token' => $cardToken];
 
         $response = $this->client->get(
-            $this->client->getApiUrl()->withPath('/acquiring/v1/cards/tokens'),
+            $this->client->getApiUrl()->withPath('/acquiring/v1/cards/chargetokens'),
             array_merge_recursive(
                 [RequestOptions::QUERY => $parameters],
                 $this->client->authenticateWithBearerToken(),
@@ -97,7 +97,7 @@ class NativeCheckout
             )
         );
 
-        return $response->token;
+        return $response->chargeToken;
     }
 
     /**

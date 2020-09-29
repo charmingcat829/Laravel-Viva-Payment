@@ -82,7 +82,7 @@ class NativeCheckoutTest extends TestCase
     public function it_creates_a_charge_token_using_card_token()
     {
         $this->mockJsonResponses([[
-            'token' => 'ctok_17wzXgZFCziELn22JzFm_g_0V74',
+            'chargeToken' => 'ctok_17wzXgZFCziELn22JzFm_g_0V74',
         ]]);
         $this->mockRequests();
 
@@ -94,7 +94,7 @@ class NativeCheckoutTest extends TestCase
 
         $request = $this->getLastRequest();
         $this->assertMethod('GET', $request);
-        $this->assertPath('/acquiring/v1/cards/tokens', $request);
+        $this->assertPath('/acquiring/v1/cards/chargetokens', $request);
         $this->assertHeader('Authorization', 'Bearer foo', $request);
         $this->assertQuery('token', '2188A74B6BB8DE0D5671886B5385125121CAE870', $request);
 
