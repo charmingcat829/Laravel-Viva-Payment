@@ -104,12 +104,13 @@ class ClientTest extends TestCase
     {
         $basic = app(Client::class)->authenticateWithBasicAuth();
 
-        $this->assertEquals([
-            'auth' => [
-                config('services.viva.merchant_id'),
-                config('services.viva.api_key'),
-            ],
-        ], $basic);
+        $this->assertArrayHasKey('auth', $basic);
+        $this->assertTrue(is_array($basic['auth']));
+        $this->assertCount(2, $basic['auth']);
+        $this->assertTrue(is_string($basic['auth'][0]));
+        $this->assertEquals(config('services.viva.merchant_id'), $basic['auth'][0]);
+        $this->assertTrue(is_string($basic['auth'][1]));
+        $this->assertEquals(config('services.viva.api_key'), $basic['auth'][1]);
     }
 
     /**

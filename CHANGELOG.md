@@ -2,6 +2,10 @@
 
 All notable changes to `sebdesign/laravel-viva-payments` will be documented in this file
 
+## 5.1.2 - 2020-12-09
+
+- Switch to GitHub Actions
+
 ## 5.1.1 - 2020-09-29
 
 - Fix NativeCheckout::chargeTokenUsingCardToken [#18](https://github.com/sebdesign/laravel-viva-payments/issues/18)

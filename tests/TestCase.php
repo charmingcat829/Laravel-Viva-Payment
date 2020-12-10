@@ -54,8 +54,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      */
     protected function getEnvironmentSetUp($app)
     {
-        $app->useEnvironmentPath(__DIR__.'/..');
-        $app->make('Illuminate\Foundation\Bootstrap\LoadEnvironmentVariables')->bootstrap($app);
+        // Define your environment setup.
     }
 
     protected function mockRequests()

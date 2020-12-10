@@ -2,5 +2,6 @@ build
 composer.lock
 vendor
 .env
+.env.testing
 phpunit.xml
 .phpunit.result.cache

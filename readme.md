@@ -2,8 +2,9 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/sebdesign/laravel-viva-payments.svg?style=flat-square)](https://packagist.org/packages/sebdesign/laravel-viva-payments)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Build Status](https://travis-ci.org/sebdesign/laravel-viva-payments.svg)](https://travis-ci.org/sebdesign/laravel-viva-payments)
+[![Build Status](https://img.shields.io/github/workflow/status/sebdesign/laravel-viva-payments/Tests/master?style=flat-square)](https://github.com/sebdesign/laravel-viva-payments/actions)
 [![Quality Score](https://img.shields.io/scrutinizer/g/sebdesign/laravel-viva-payments.svg?style=flat-square)](https://scrutinizer-ci.com/g/sebdesign/laravel-viva-payments)
+[![Scrutinizer Coverage](https://img.shields.io/scrutinizer/coverage/g/sebdesign/laravel-viva-payments.svg?style=flat-square)](https://scrutinizer-ci.com/g/sebdesign/laravel-viva-payments)
 
 [![VivaPayments logo](https://camo.githubusercontent.com/7f0b41d204f5c27c416a83fa0bc8d1d1e45cf495/68747470733a2f2f7777772e766976617061796d656e74732e636f6d2f436f6e74656e742f696d672f6c6f676f2e737667 "VivaPayments logo")](https://www.vivapayments.com/)
 
