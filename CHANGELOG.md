@@ -2,6 +2,10 @@
 
 All notable changes to `sebdesign/laravel-viva-payments` will be documented in this file
 
+## 5.1.3 - 2021-02-19
+
+- Update to TLS v1.2
+
 ## 5.1.2 - 2020-12-09
 
 - Switch to GitHub Actions

@@ -34,7 +34,7 @@ class VivaPaymentsServiceProvider extends ServiceProvider
     {
         return new GuzzleClient([
             'curl' => $this->curlDoesntUseNss()
-                ? [CURLOPT_SSL_CIPHER_LIST => 'TLSv1']
+                ? [CURLOPT_SSL_CIPHER_LIST => 'TLSv1.2']
                 : [],
         ]);
     }

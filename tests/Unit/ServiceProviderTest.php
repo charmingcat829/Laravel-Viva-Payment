@@ -69,7 +69,7 @@ class ServiceProviderTest extends TestCase
         if (preg_match('/NSS/', curl_version()['ssl_version'])) {
             $this->assertEmpty($curl);
         } else {
-            $this->assertEquals([CURLOPT_SSL_CIPHER_LIST => 'TLSv1'], $curl);
+            $this->assertEquals([CURLOPT_SSL_CIPHER_LIST => 'TLSv1.2'], $curl);
         }
     }
 }
