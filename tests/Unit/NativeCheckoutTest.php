@@ -179,7 +179,7 @@ class NativeCheckoutTest extends TestCase
         $transactionId = $native->capturePreAuthTransaction('b1a3067c-321b-4ec6-bc9d-1778aef2a19d', 300);
 
         $request = $this->getLastRequest();
-        $this->assertMethod('GET', $request);
+        $this->assertMethod('POST', $request);
         $this->assertPath('/nativecheckout/v2/transactions/b1a3067c-321b-4ec6-bc9d-1778aef2a19d', $request);
         $this->assertHeader('Authorization', 'Bearer foo', $request);
         $this->assertJsonBody('amount', 300, $request);
