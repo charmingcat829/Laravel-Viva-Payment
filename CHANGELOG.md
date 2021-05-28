@@ -2,6 +2,10 @@
 
 All notable changes to `sebdesign/laravel-viva-payments` will be documented in this file
 
+## 5.1.4 - 2021-05-28
+
+- Use POST instead of GET method in capturePreAuthTransaction API [#24](https://github.com/sebdesign/laravel-viva-payments/pull/24)
+
 ## 5.1.3 - 2021-02-19
 
 - Update to TLS v1.2
