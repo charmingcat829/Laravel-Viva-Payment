@@ -128,7 +128,7 @@ class Order
     public function getCheckoutUrl($orderCode): UriInterface
     {
         return Uri::withQueryValue(
-            $this->client->getUrl()->withPath('web/checkout'),
+            $this->client->getUrl()->withPath('/web/checkout'),
             'ref',
             (string) $orderCode
         );
