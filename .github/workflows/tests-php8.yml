@@ -1,4 +1,4 @@
-name: Tests
+name: PHP 8.x Tests
 
 on:
   push:
@@ -36,9 +36,26 @@ jobs:
           tools: composer:v2
           coverage: pcov
 
+      - name: Setup problem matchers for PHP
+        run: echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+
+      - name: Setup problem matchers for PHPUnit
+        run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+            path: ${{ steps.composer-cache.outputs.dir }}
+            key: $p{{ matrix.php }}-l{{ matrix.laravel }}-composer-${{ hashFiles('**/composer.json') }}
+            restore-keys: $p{{ matrix.php }}-l{{ matrix.laravel }}-composer-
+
       - name: Install dependencies
         run: |
-          composer require "illuminate/config:${{ matrix.laravel }}" "illuminate/routing:${{ matrix.laravel }}" "illuminate/support:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "phpunit/phpunit:^${{ matrix.phpunit }}" --no-interaction --no-update
+          composer require "illuminate/config:${{ matrix.laravel }}" "illuminate/routing:${{ matrix.laravel }}" "illuminate/support:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --prefer-dist --no-interaction --no-progress
 
       - name: Execute tests
@@ -53,6 +70,6 @@ jobs:
         run: vendor/bin/phpunit --verbose --whitelist=src --coverage-clover=build/coverage/coverage.clover
 
       - name: Upload coverage
-        run: |
-          wget https://scrutinizer-ci.com/ocular.phar
-          php ocular.phar code-coverage:upload --format=php-clover build/coverage/coverage.clover
+        uses: sudo-bot/action-scrutinizer@latest
+        with:
+          cli-args: "--format=php-clover build/coverage/coverage.clover"
