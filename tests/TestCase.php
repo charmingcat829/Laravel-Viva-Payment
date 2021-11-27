@@ -72,7 +72,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     /**
      * Mock responses.
      *
-     * @param \GuzzleHttp\Psr7\Response[] $responses
+     * @param  \GuzzleHttp\Psr7\Response[]  $responses
      * @return void
      */
     protected function mockResponses(array $responses)

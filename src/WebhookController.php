@@ -22,7 +22,7 @@ abstract class WebhookController extends Controller
      *
      * Handle a GET verification request or a POST notification.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
     public function handle(Request $request)
@@ -37,7 +37,7 @@ abstract class WebhookController extends Controller
     /**
      * Handle a POST notification.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
     protected function handleTransaction(Request $request)
@@ -55,7 +55,7 @@ abstract class WebhookController extends Controller
     /**
      * Handle a Create Transaction event notification.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
     abstract protected function handleCreateTransaction(Request $request);
@@ -63,7 +63,7 @@ abstract class WebhookController extends Controller
     /**
      * Handle a Refund Transaction event notification.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
     abstract protected function handleRefundTransaction(Request $request);
@@ -71,7 +71,7 @@ abstract class WebhookController extends Controller
     /**
      * Handle any other type of event notification.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
     abstract protected function handleEventNotification(Request $request);

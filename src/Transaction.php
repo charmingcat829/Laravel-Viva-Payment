@@ -108,7 +108,7 @@ class Transaction
      * @see https://developer.vivawallet.com/online-checkouts/simple-checkout/#step-2-make-the-charge
      *
      * @param  array  $parameters
-     * @param  array  $guzzleOptions Additional parameters for the Guzzle client
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return \stdClass
      */
     public function create(array $parameters, array $guzzleOptions = [])
@@ -135,10 +135,10 @@ class Transaction
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/post
      *
-     * @param  string   $id            The transaction's unique ID
-     * @param  int      $amount        The amount requested in the currency's smallest unit of measurement
-     * @param  array    $parameters    Transaction parameters
-     * @param  array    $guzzleOptions Additional parameters for the Guzzle client
+     * @param  string  $id  The transaction's unique ID
+     * @param  int  $amount  The amount requested in the currency's smallest unit of measurement
+     * @param  array  $parameters  Transaction parameters
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return \stdClass
      */
     public function createRecurring(
@@ -164,8 +164,8 @@ class Transaction
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
      *
-     * @param  string $id
-     * @param  array  $guzzleOptions Additional parameters for the Guzzle client
+     * @param  string  $id
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return array
      */
     public function get(string $id, array $guzzleOptions = []): array
@@ -186,8 +186,8 @@ class Transaction
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
      *
-     * @param  int   $ordercode
-     * @param  array $guzzleOptions Additional parameters for the Guzzle client
+     * @param  int  $ordercode
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return array
      */
     public function getByOrder($ordercode, array $guzzleOptions = []): array
@@ -211,8 +211,8 @@ class Transaction
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
      *
-     * @param  \DateTimeInterface|string $date
-     * @param  array                     $guzzleOptions Additional parameters for the Guzzle client
+     * @param  \DateTimeInterface|string  $date
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return array
      */
     public function getByDate($date, array $guzzleOptions = []): array
@@ -236,8 +236,8 @@ class Transaction
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
      *
-     * @param  \DateTimeInterface|string $clearancedate
-     * @param  array                     $guzzleOptions Additional parameters for the Guzzle client
+     * @param  \DateTimeInterface|string  $clearancedate
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return array
      */
     public function getByClearanceDate($clearancedate, array $guzzleOptions = []): array
@@ -261,9 +261,9 @@ class Transaction
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/get
      *
-     * @param  string                    $sourcecode
-     * @param  \DateTimeInterface|string $date
-     * @param  array                     $guzzleOptions Additional parameters for the Guzzle client
+     * @param  string  $sourcecode
+     * @param  \DateTimeInterface|string  $date
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return array
      */
     public function getBySourceCode($sourcecode, $date, array $guzzleOptions = []): array
@@ -290,10 +290,10 @@ class Transaction
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/delete
      *
-     * @param  string       $id            The transaction's unique ID
-     * @param  int          $amount        The amount that will be refunded in the currency's smallest denomination (e.g amount in pounds x 100)
-     * @param  string|null  $sourceCode    The source from which the funds will be withdrawn. Each source is linked to a wallet. If no sourceCode is set then the funds will be withdrawn from the primary wallet.
-     * @param  array        $guzzleOptions Additional parameters for the Guzzle client
+     * @param  string  $id  The transaction's unique ID
+     * @param  int  $amount  The amount that will be refunded in the currency's smallest denomination (e.g amount in pounds x 100)
+     * @param  string|null  $sourceCode  The source from which the funds will be withdrawn. Each source is linked to a wallet. If no sourceCode is set then the funds will be withdrawn from the primary wallet.
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return \stdClass
      */
     public function cancel(
@@ -320,7 +320,7 @@ class Transaction
     /**
      * Format a date object to string.
      *
-     * @param  \DateTimeInterface|string $date
+     * @param  \DateTimeInterface|string  $date
      * @return string
      */
     protected function formatDate($date): string

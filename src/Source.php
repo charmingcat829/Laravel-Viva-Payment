@@ -28,12 +28,12 @@ class Source
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Sources/paths/~1api~1sources/post
      *
-     * @param  string $name          A meaningful name that will help you identify the source in Web Self Care environment
-     * @param  string $code          A unique code that is exchanged between your application and the API
-     * @param  string $url           The primary domain of your site WITH protocol scheme (http/https)
-     * @param  string $fail          The relative path url your client will end up to, after a failed transaction
-     * @param  string $success       The relative path url your client will end up to, after a successful transaction
-     * @param  array  $guzzleOptions Additional options for the Guzzle client
+     * @param  string  $name  A meaningful name that will help you identify the source in Web Self Care environment
+     * @param  string  $code  A unique code that is exchanged between your application and the API
+     * @param  string  $url  The primary domain of your site WITH protocol scheme (http/https)
+     * @param  string  $fail  The relative path url your client will end up to, after a failed transaction
+     * @param  string  $success  The relative path url your client will end up to, after a successful transaction
+     * @param  array  $guzzleOptions  Additional options for the Guzzle client
      * @return \stdClass
      */
     public function create(
