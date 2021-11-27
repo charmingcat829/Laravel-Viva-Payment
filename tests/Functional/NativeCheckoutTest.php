@@ -140,7 +140,7 @@ class NativeCheckoutTest extends TestCase
 
     /**
      * @test
-     * @group unit
+     * @group functional
      */
     public function it_checks_for_installments()
     {

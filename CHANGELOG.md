@@ -2,6 +2,10 @@
 
 All notable changes to `sebdesign/laravel-viva-payments` will be documented in this file
 
+## 5.1.6 - 2021-11-27
+
+- Add support for PHP 8.0 and 8.1
+
 ## 5.1.5 - 2021-10-17
 
 - Fix relative URI exception from guzzle
