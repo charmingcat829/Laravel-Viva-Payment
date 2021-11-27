@@ -22,9 +22,9 @@ class OAuth
     /**
      * Request access token and set it to the client.
      *
-     * @param  string|null $clientId
-     * @param  string|null $clientSecret
-     * @param  array       $guzzleOptions
+     * @param  string|null  $clientId
+     * @param  string|null  $clientSecret
+     * @param  array  $guzzleOptions
      * @return \stdClass
      */
     public function requestToken(
@@ -56,9 +56,9 @@ class OAuth
     /**
      * Request access token.
      *
-     * @param  string $clientId
-     * @param  string $clientSecret
-     * @param  array  $guzzleOptions Additional options for the Guzzle client
+     * @param  string  $clientId
+     * @param  string  $clientSecret
+     * @param  array  $guzzleOptions  Additional options for the Guzzle client
      * @return \stdClass
      */
     public function token(

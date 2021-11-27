@@ -31,9 +31,9 @@ class Order
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Payments/paths/~1api~1orders/post
      *
-     * @param  int   $amount        The requested amount in the currency's smallest unit of measurement.
-     * @param  array $parameters    Optional parameters
-     * @param  array $guzzleOptions Additional parameters for the Guzzle client
+     * @param  int  $amount  The requested amount in the currency's smallest unit of measurement.
+     * @param  array  $parameters  Optional parameters
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return int
      */
     public function create(
@@ -60,8 +60,8 @@ class Order
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Payments/paths/~1api~1orders/post
      *
-     * @param  int   $orderCode     The 16-digit orderCode for which you wish to retrieve information.
-     * @param  array $guzzleOptions Additional parameters for the Guzzle client
+     * @param  int  $orderCode  The 16-digit orderCode for which you wish to retrieve information.
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return \stdClass
      */
     public function get($orderCode, array $guzzleOptions = [])
@@ -80,9 +80,9 @@ class Order
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Payments/paths/~1api~1orders~1{orderCode}/patch
      *
-     * @param  int    $orderCode     The 16-digit orderCode for which you requested information.
+     * @param  int  $orderCode  The 16-digit orderCode for which you requested information.
      * @param  array  $parameters
-     * @param  array  $guzzleOptions Additional parameters for the Guzzle client
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return null
      */
     public function update(
@@ -105,8 +105,8 @@ class Order
      *
      * @see https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Payments/paths/~1api~1orders~1{orderCode}/delete
      *
-     * @param  int   $orderCode     The 16-digit orderCode for which you requested information.
-     * @param  array $guzzleOptions Additional parameters for the Guzzle client
+     * @param  int  $orderCode  The 16-digit orderCode for which you requested information.
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return \stdClass
      */
     public function cancel($orderCode, array $guzzleOptions = [])
@@ -123,7 +123,7 @@ class Order
     /**
      * Get the checkout URL for an order.
      *
-     * @param int $orderCode
+     * @param  int  $orderCode
      */
     public function getCheckoutUrl($orderCode): UriInterface
     {

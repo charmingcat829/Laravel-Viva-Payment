@@ -75,7 +75,7 @@ class Client
     /**
      * Make a GET request.
      *
-     * @param  string $url
+     * @param  string  $url
      * @param  array  $options
      * @return \stdClass
      */
@@ -89,7 +89,7 @@ class Client
     /**
      * Make a POST request.
      *
-     * @param  string $url
+     * @param  string  $url
      * @param  array  $options
      * @return \stdClass
      */
@@ -103,7 +103,7 @@ class Client
     /**
      * Make a PATCH request.
      *
-     * @param  string $url
+     * @param  string  $url
      * @param  array  $options
      * @return \stdClass|null
      */
@@ -117,7 +117,7 @@ class Client
     /**
      * Make a DELETE request.
      *
-     * @param  string $url
+     * @param  string  $url
      * @param  array  $options
      * @return \stdClass
      */
@@ -131,7 +131,7 @@ class Client
     /**
      * Get the response body.
      *
-     * @param  \Psr\Http\Message\ResponseInterface $response
+     * @param  \Psr\Http\Message\ResponseInterface  $response
      * @return \stdClass|null
      *
      * @throws \Sebdesign\VivaPayments\VivaException

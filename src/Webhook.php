@@ -30,7 +30,7 @@ class Webhook
     /**
      * Get a webhook authorization code.
      *
-     * @param  array $guzzleOptions Additional parameters for the Guzzle client
+     * @param  array  $guzzleOptions  Additional parameters for the Guzzle client
      * @return \stdClass
      */
     public function getAuthorizationCode(array $guzzleOptions = [])
