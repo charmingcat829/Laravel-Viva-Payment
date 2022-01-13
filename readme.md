@@ -81,6 +81,7 @@ This package requires Laravel 5.0 or higher, and uses Guzzle to make API calls. 
 | ^4.3                        | ^6.0\|^7.0 | ^7.0    |
 | ^5.0                        | ^6.0\|^7.0 | ^7.0    |
 | ^5.1                        | ^7.0       | ^8.0    |
+| ^5.2                        | ^7.0       | ^9.0    |
 
 ```
 composer require sebdesign/laravel-viva-payments
@@ -150,7 +151,7 @@ class CheckoutContrroller extends Controller
 {
     /**
      * Display the payment button.
-     * 
+     *
      * @param  \Sebdesign\VivaPayments\Client $client
      * @return \Illuminate\Http\Response
      */
@@ -211,7 +212,7 @@ use Illuminate\Http\Request;
 class CheckoutController extends Controller
 {
     /**
-     * 
+     *
      * @param  \Illuminate\Http\Request            $request
      * @param  \Sebdesign\VivaPayments\Transaction $transactions
      * @return \Illuminate\Http\RedirectResponse
@@ -261,11 +262,11 @@ class CheckoutController extends Controller
 {
     /**
      * Display the payment form.
-     * 
+     *
      * @param  \Sebdesign\VivaPayments\Client $client
      * @param  \Sebdesign\VivaPayments\OAuth  $oauth
      * @return \Illuminate\Http\Response
-     */ 
+     */
     public function create(Client $client, OAuth $oauth)
     {
         try {
