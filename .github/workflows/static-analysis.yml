@@ -1,6 +1,10 @@
 name: Static analysis
 
-on: ['push', 'pull_request']
+on:
+  push:
+    paths:
+      - '**.php'
+      - 'phpstan.neon.dist'
 
 jobs:
   static-analysis:
