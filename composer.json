@@ -63,7 +63,7 @@
                 "Sebdesign\\VivaPayments\\VivaPaymentsServiceProvider"
             ],
             "aliases": {
-                "SmartCheckout": "Sebdesign\\VivaPayments\\Facades\\SmartCheckout"
+                "Viva": "Sebdesign\\VivaPayments\\Facades\\Viva"
             }
         }
     }

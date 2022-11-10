@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 - Extract service objects in subdirectory
+- Rename `SmartCheckout` facade to `Viva`
 
 ## [6.0.0-alpha.1] - 2022-11-08
 

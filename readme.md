@@ -101,7 +101,7 @@ The `environment` can be either `production` or `demo`.
 
 > Read more about the Smart Checkout process on the Developer portal: https://developer.vivawallet.com/smart-checkout/
 
-The `\Sebdesign\VivaPayments\Facades\SmartCheckout` facade provides all the methods needed to interact with the Smart Checkout integration.
+The `\Sebdesign\VivaPayments\Facades\Viva` facade provides all the methods needed to interact with the Smart Checkout integration.
 
 The following guide will walk you through the necessary steps:
 
@@ -110,9 +110,9 @@ The following guide will walk you through the necessary steps:
 The amount requested in cents is required. All the other parameters are optional. Check out the [request body schema](https://developer.vivawallet.com/apis-for-payments/payment-api/#tag/Payments/paths/~1checkout~1v2~1orders/post).
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
-$orderCode = SmartCheckout::orders()->create(
+$orderCode = Viva::orders()->create(
     order: new CreatePaymentOrder(amount: 1000),
 );
 ```
@@ -120,9 +120,9 @@ $orderCode = SmartCheckout::orders()->create(
 #### Redirect to Smart Checkout
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
-$redirectUrl = SmartCheckout::orders()->redirectUrl(
+$redirectUrl = Viva::orders()->redirectUrl(
     ref: $orderCode,
     color: '0000ff',
     paymentMethod: 23,
@@ -134,9 +134,9 @@ return redirect()->away(path: $redirectUrl);
 #### Verify payment
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
-$response = SmartCheckout::transactions()->retrieve(transactionId: request('t'));
+$response = Viva::transactions()->retrieve(transactionId: request('t'));
 ```
 
 ### Full example
@@ -149,7 +149,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Sebdesign\VivaPayments\Enums\TransactionStatus;
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Requests\CreatePaymentOrder;
 use Sebdesign\VivaPayments\Requests\Customer;
 use Sebdesign\VivaPayments\VivaException;
@@ -162,7 +162,7 @@ class CheckoutController extends Controller
     public function checkout(): RedirectResponse
     {
         try {
-            $orderCode = SmartCheckout::orders()->create(new CreatePaymentOrder(
+            $orderCode = Viva::orders()->create(new CreatePaymentOrder(
                 amount: 1000,
                 customerTrns: 'Short description of purchased items/services to display to your customer',
                 customer: new Customer(
@@ -178,7 +178,7 @@ class CheckoutController extends Controller
             return back()->withErrors($e->getMessage());
         }
 
-        $redirectUrl = SmartCheckout::orders()->redirectUrl(
+        $redirectUrl = Viva::orders()->redirectUrl(
             ref: $orderCode,
             color: '0000ff',
             paymentMethod: 23,
@@ -193,7 +193,7 @@ class CheckoutController extends Controller
     public function confirm(Request $request): RedirectResponse
     {
         try {
-            $transaction = SmartCheckout::transactions()->retrieve($request->input('t'));
+            $transaction = Viva::transactions()->retrieve($request->input('t'));
         } catch (VivaException $e) {
             report($e);
 
@@ -334,11 +334,11 @@ All methods accept a `$guzzleOptions` array argument as their last parameter. Th
 > See: https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Payments/paths/~1api~1orders~1{orderCode}/get
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Requests\CreatePaymentOrder;
 use Sebdesign\VivaPayments\Requests\Customer;
 
-$orderCode = SmartCheckout::orders()->create(
+$orderCode = Viva::orders()->create(
     order: new CreatePaymentOrder(
         amount: 1000,
         customerTrns: 'Short description of purchased items/services to display to your customer',
@@ -378,9 +378,9 @@ $orderCode = SmartCheckout::orders()->create(
 > See: https://developer.vivawallet.com/smart-checkout/smart-checkout-integration/#step-2-redirect-the-customer-to-smart-checkout-to-pay-the-payment-order
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
-$url = SmartCheckout::orders()->redirectUrl(
+$url = Viva::orders()->redirectUrl(
     ref: $orderCode,
     color: '0000ff',
     paymentMethod: 23,
@@ -394,9 +394,9 @@ $url = SmartCheckout::orders()->redirectUrl(
 > See: https://developer.vivawallet.com/apis-for-payments/payment-api/#tag/Transactions/paths/~1checkout~1v2~1transactions~1{transactionId}/get
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
-$transaction = SmartCheckout::transactions()->retrieve(
+$transaction = Viva::transactions()->retrieve(
     transactionId: 'c90d4902-6245-449f-b2b0-51d99cd09cfe',
     guzzleOptions: [],
 );
@@ -407,10 +407,10 @@ $transaction = SmartCheckout::transactions()->retrieve(
 > See: https://developer.vivawallet.com/api-reference-guide/payment-api/#tag/Transactions/paths/~1api~1transactions~1{Id}/post
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Requests\CreateRecurringTransaction;
 
-$response = SmartCheckout::transactions()->createRecurring(
+$response = Viva::transactions()->createRecurring(
     transactionId: '252b950e-27f2-4300-ada1-4dedd7c17904',
     transaction: new CreateRecurringTransaction(
         amount: 100,
@@ -434,9 +434,9 @@ You don't need to call this method, because the client requests the access token
 However, you can specify the client credentials at runtime if you want.
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
-SmartCheckout::withOAuthCredentials(
+Viva::withOAuthCredentials(
     clientId: 'client_id',
     clientSecret: 'client_secret',
 );
@@ -446,13 +446,13 @@ If you need to request access tokens manually, you can use the `requestToken` me
 This method returns the token as an `AccessToken` object.
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
 // Using `client_id` and `client_secret` from `config/services.php`:
-$token = SmartCheckout::oauth()->requestToken();
+$token = Viva::oauth()->requestToken();
 
 // Using custom client credentials
-$token = SmartCheckout::oauth()->requestToken(
+$token = Viva::oauth()->requestToken(
     clientId: 'client_id',
     clientSecret: 'client_secret',
     guzzleOptions: [],
@@ -464,9 +464,9 @@ $token = SmartCheckout::oauth()->requestToken(
 If you are storing the token somewhere, e.g. in your database or in the cache, you can set the access token string on the client to be used as a Bearer token.
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
-SmartCheckout::withToken(token: 'eyJhbGciOiJSUzI1...');
+Viva::withToken(token: 'eyJhbGciOiJSUzI1...');
 ```
 
 ### Cards
@@ -476,9 +476,9 @@ SmartCheckout::withToken(token: 'eyJhbGciOiJSUzI1...');
 > See: https://developer.vivawallet.com/apis-for-payments/payment-api/#tag/Transactions/paths/~1acquiring~1v1~1cards~1tokens/post
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
-$cardToken = SmartCheckout::cards()->createToken(
+$cardToken = Viva::cards()->createToken(
     transactionId: '6cffe5bf-909c-4d69-b6dc-2bef1a6202f7',
     guzzleOptions: [],
 );
@@ -491,9 +491,9 @@ $cardToken = SmartCheckout::cards()->createToken(
 > See: https://developer.vivawallet.com/webhooks-for-payments/#generate-a-webhook-verification-key
 
 ```php
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 
-$key = SmartCheckout::webhooks()->getVerificationKey(
+$key = Viva::webhooks()->getVerificationKey(
     guzzleOptions: [],
 );
 ```

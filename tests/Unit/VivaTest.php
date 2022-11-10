@@ -2,15 +2,15 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
-use Sebdesign\VivaPayments\Facades\SmartCheckout;
+use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Services\Card;
 use Sebdesign\VivaPayments\Services\Order;
 use Sebdesign\VivaPayments\Services\Transaction;
 use Sebdesign\VivaPayments\Services\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @covers \Sebdesign\VivaPayments\Facades\SmartCheckout */
-class SmartCheckoutTest extends TestCase
+/** @covers \Sebdesign\VivaPayments\Facades\Viva */
+class VivaTest extends TestCase
 {
     /**
      * @test
@@ -18,7 +18,7 @@ class SmartCheckoutTest extends TestCase
      */
     public function it_proxies_the_cards_service(): void
     {
-        $cards = SmartCheckout::cards();
+        $cards = Viva::cards();
 
         $this->assertInstanceOf(Card::class, $cards);
     }
@@ -29,7 +29,7 @@ class SmartCheckoutTest extends TestCase
      */
     public function it_proxies_the_orders_service(): void
     {
-        $orders = SmartCheckout::orders();
+        $orders = Viva::orders();
 
         $this->assertInstanceOf(Order::class, $orders);
     }
@@ -40,7 +40,7 @@ class SmartCheckoutTest extends TestCase
      */
     public function it_proxies_the_transactions_service(): void
     {
-        $transactions = SmartCheckout::transactions();
+        $transactions = Viva::transactions();
 
         $this->assertInstanceOf(Transaction::class, $transactions);
     }
@@ -51,7 +51,7 @@ class SmartCheckoutTest extends TestCase
      */
     public function it_proxies_the_webhooks_service(): void
     {
-        $webhooks = SmartCheckout::webhooks();
+        $webhooks = Viva::webhooks();
 
         $this->assertInstanceOf(Webhook::class, $webhooks);
     }

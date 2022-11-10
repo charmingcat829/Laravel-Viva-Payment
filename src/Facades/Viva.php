@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Sebdesign\VivaPayments\Webhook withOAuthCredentials(string $clientId, string $clientSecret)
  * @method static \Sebdesign\VivaPayments\Webhook withToken(string $token)
  */
-class SmartCheckout extends Facade
+class Viva extends Facade
 {
     /**
      * Get the registered name of the component.
