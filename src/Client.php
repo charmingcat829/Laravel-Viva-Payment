@@ -3,8 +3,10 @@
 namespace Sebdesign\VivaPayments;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
+use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UriInterface;
 use Sebdesign\VivaPayments\Enums\Environment;
@@ -103,6 +105,9 @@ class Client
      *
      * @param  array<string,mixed>  $options
      * @return array<mixed>
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function get(string $url, array $options = []): array
     {
@@ -116,6 +121,9 @@ class Client
      *
      * @param  array<string,mixed>  $options
      * @return array<mixed>
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function post(string $url, array $options = []): array
     {
@@ -129,21 +137,25 @@ class Client
      *
      * @return array<mixed>
      *
-     * @throws \Sebdesign\VivaPayments\VivaException
+     * @throws VivaException
      */
     protected function getBody(ResponseInterface $response): array
     {
         $body = (string) $response->getBody();
 
-        $decoded = json_decode(
-            json: $body,
-            associative: true,
-            depth: 512,
-            flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR,
-        );
+        try {
+            $decoded = json_decode(
+                json: $body,
+                associative: true,
+                depth: 512,
+                flags: JSON_BIGINT_AS_STRING | JSON_THROW_ON_ERROR,
+            );
+        } catch (JsonException $e) {
+            throw new VivaException('Invalid response: '.var_export($body, return: true), 0, $e);
+        }
 
         if (! is_array($decoded)) {
-            throw new VivaException('Invalid response', 0);
+            throw new VivaException('Invalid response: '.var_export($decoded, return: true), 0);
         }
 
         if (isset($decoded['ErrorCode']) && $decoded['ErrorCode'] !== 0) {
@@ -202,6 +214,9 @@ class Client
      * Authenticate using the bearer token as an authorization header.
      *
      * @return array{headers:array{Authorization:string}};
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function authenticateWithBearerToken(): array
     {

@@ -41,6 +41,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 
     protected function mockRequests(): void
     {
+        /** @throws never */
         $history = Middleware::history($this->history);
 
         $this->handler->push($history);

@@ -2,8 +2,10 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Sebdesign\VivaPayments\Requests\CreateRecurringTransaction;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\VivaException;
 
 /**
  * @covers \Sebdesign\VivaPayments\Client
@@ -15,6 +17,9 @@ class TransactionTest extends TestCase
      * @test
      * @group unit
      * @covers \Sebdesign\VivaPayments\Responses\Transaction
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_retrieves_a_transaction(): void
     {
@@ -72,6 +77,9 @@ class TransactionTest extends TestCase
      * @group unit
      * @covers \Sebdesign\VivaPayments\Requests\CreateRecurringTransaction
      * @covers \Sebdesign\VivaPayments\Responses\RecurringTransaction
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      *
      * @see https://developer.vivawallet.com/tutorials/payments/create-a-recurring-payment/#via-the-api
      */

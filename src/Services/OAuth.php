@@ -2,9 +2,11 @@
 
 namespace Sebdesign\VivaPayments\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Responses\AccessToken;
+use Sebdesign\VivaPayments\VivaException;
 
 class OAuth
 {
@@ -21,6 +23,9 @@ class OAuth
      * @see https://developer.vivawallet.com/integration-reference/oauth2-authentication/
      *
      * @param  array<string,mixed>  $guzzleOptions  Additional options for the Guzzle client
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function requestToken(
         #[\SensitiveParameter] ?string $clientId = null,

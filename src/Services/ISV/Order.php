@@ -2,9 +2,11 @@
 
 namespace Sebdesign\VivaPayments\Services\ISV;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Requests;
+use Sebdesign\VivaPayments\VivaException;
 
 class Order
 {
@@ -18,6 +20,9 @@ class Order
      * @see https://developer.vivawallet.com/isv-partner-program/payment-isv-api/#tag/Payments/paths/~1checkout~1v2~1isv~1orders/post
      *
      * @param  array<string,mixed>  $guzzleOptions  Additional parameters for the Guzzle client
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function create(Requests\CreatePaymentOrder $order, array $guzzleOptions = []): string
     {

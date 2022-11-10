@@ -2,6 +2,7 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Sebdesign\VivaPayments\Events\TransactionFailed;
@@ -10,6 +11,7 @@ use Sebdesign\VivaPayments\Events\WebhookEvent;
 use Sebdesign\VivaPayments\Http\Controllers\WebhookController;
 use Sebdesign\VivaPayments\Services\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\VivaException;
 
 /** @covers \Sebdesign\VivaPayments\Http\Controllers\WebhookController */
 class WebhookControllerTest extends TestCase
@@ -17,6 +19,9 @@ class WebhookControllerTest extends TestCase
     /**
      * @test
      * @group unit
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_verifies_a_webhook(): void
     {

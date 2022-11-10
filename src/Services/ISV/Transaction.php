@@ -2,9 +2,11 @@
 
 namespace Sebdesign\VivaPayments\Services\ISV;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Responses;
+use Sebdesign\VivaPayments\VivaException;
 
 class Transaction
 {
@@ -18,6 +20,9 @@ class Transaction
      * @see https://developer.vivawallet.com/isv-partner-program/payment-isv-api/#tag/Retrieve-Transactions/paths/~1checkout~1v2~1isv~1transactions~1{transactionId}?merchantId={merchantId}/get
      *
      * @param  array<string,mixed>  $guzzleOptions  Additional parameters for the Guzzle client
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function retrieve(string $transactionId, array $guzzleOptions = []): Responses\Transaction
     {

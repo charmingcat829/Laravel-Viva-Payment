@@ -2,7 +2,9 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\VivaException;
 
 /**
  * @covers \Sebdesign\VivaPayments\Client
@@ -14,6 +16,9 @@ class WebhookTest extends TestCase
      * @test
      * @group unit
      * @covers \Sebdesign\VivaPayments\Responses\WebhookVerificationKey
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_gets_an_authorization_code(): void
     {

@@ -2,11 +2,12 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit\Services\ISV;
 
-use Sebdesign\VivaPayments\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Sebdesign\VivaPayments\Requests\CreatePaymentOrder;
 use Sebdesign\VivaPayments\Requests\Customer;
 use Sebdesign\VivaPayments\Services\ISV\Order;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\VivaException;
 
 /**
  * @covers \Sebdesign\VivaPayments\Client
@@ -19,6 +20,9 @@ class OrderTest extends TestCase
      * @group unit
      * @covers \Sebdesign\VivaPayments\Requests\CreatePaymentOrder
      * @covers \Sebdesign\VivaPayments\Requests\Customer
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_creates_an_isv_payment_order(): void
     {
@@ -95,23 +99,5 @@ class OrderTest extends TestCase
         $this->assertJsonBody('isvAmount', 1, $request);
         $this->assertJsonBody('resellerSourceCode', 'Default', $request);
         $this->assertSame('1272214778972604', $orderCode, 'The order code should be 1272214778972604');
-    }
-
-    /**
-     * @test
-     * @group unit
-     */
-    public function it_gets_a_redirect_url(): void
-    {
-        $this->mockJsonResponses([]);
-        $this->mockRequests();
-
-        $url = $this->client->orders()->redirectUrl(
-            ref: '175936509216',
-            color: '0000ff',
-            paymentMethod: 23,
-        );
-
-        $this->assertEquals(Client::DEMO_URL.'/web/checkout?ref=175936509216&color=0000ff&paymentMethod=23', $url);
     }
 }

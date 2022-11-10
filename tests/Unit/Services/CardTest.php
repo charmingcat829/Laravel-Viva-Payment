@@ -2,7 +2,9 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\VivaException;
 
 /**
  * @covers \Sebdesign\VivaPayments\Client
@@ -13,6 +15,9 @@ class CardTest extends TestCase
     /**
      * @test
      * @group unit
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_creates_a_card_token(): void
     {

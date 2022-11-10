@@ -2,6 +2,7 @@
 
 namespace Sebdesign\VivaPayments\Http\Controllers;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -9,6 +10,7 @@ use Sebdesign\VivaPayments\Events\TransactionFailed;
 use Sebdesign\VivaPayments\Events\TransactionPaymentCreated;
 use Sebdesign\VivaPayments\Events\WebhookEvent;
 use Sebdesign\VivaPayments\Services\Webhook;
+use Sebdesign\VivaPayments\VivaException;
 
 class WebhookController extends Controller
 {
@@ -16,6 +18,9 @@ class WebhookController extends Controller
      * Verify a webhook.
      *
      * @see https://developer.vivawallet.com/webhooks-for-payments/#generate-a-webhook-verification-key
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function verify(Webhook $webhook): JsonResponse
     {

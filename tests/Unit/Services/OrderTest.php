@@ -2,11 +2,13 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Requests\CreatePaymentOrder;
 use Sebdesign\VivaPayments\Requests\Customer;
 use Sebdesign\VivaPayments\Services\Order;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\VivaException;
 
 /**
  * @covers \Sebdesign\VivaPayments\Client
@@ -19,6 +21,9 @@ class OrderTest extends TestCase
      * @group unit
      * @covers \Sebdesign\VivaPayments\Requests\CreatePaymentOrder
      * @covers \Sebdesign\VivaPayments\Requests\Customer
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_creates_a_payment_order(): void
     {

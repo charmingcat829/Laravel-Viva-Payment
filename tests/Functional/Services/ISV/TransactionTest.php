@@ -2,9 +2,11 @@
 
 namespace Sebdesign\VivaPayments\Test\Functional\Services\ISV;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\VivaException;
 
 /**
  * @covers \Sebdesign\VivaPayments\Client
@@ -16,6 +18,9 @@ class TransactionTest extends TestCase
     /**
      * @test
      * @group functional
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_cannot_retrieve_an_isv_transaction_that_does_not_exist(): void
     {

@@ -2,6 +2,7 @@
 
 namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Requests\CreateRecurringTransaction;
@@ -14,6 +15,9 @@ class TransactionTest extends TestCase
     /**
      * @test
      * @group functional
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_cannot_retrieve_a_transaction_that_does_not_exist(): void
     {
@@ -29,6 +33,9 @@ class TransactionTest extends TestCase
      * @test
      * @group functional
      * @covers \Sebdesign\VivaPayments\Requests\CreateRecurringTransaction
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      *
      * @see https://developer.vivawallet.com/tutorials/payments/create-a-recurring-payment/#via-the-api
      */

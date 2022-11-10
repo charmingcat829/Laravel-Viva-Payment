@@ -2,6 +2,7 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Enums\Environment;
@@ -129,6 +130,9 @@ class ClientTest extends TestCase
     /**
      * @test
      * @group unit
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_authenticates_with_bearer_token(): void
     {
@@ -145,6 +149,9 @@ class ClientTest extends TestCase
     /**
      * @test
      * @group unit
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_sets_the_oauth_credentials(): void
     {
@@ -169,6 +176,27 @@ class ClientTest extends TestCase
      * @test
      * @group unit
      * @covers \Sebdesign\VivaPayments\VivaException
+     *
+     * @throws GuzzleException
+     * @throws VivaException
+     */
+    public function it_throws_an_exception_when_it_cannot_decode_an_invalid_response(): void
+    {
+        $this->mockResponses([new Response(body: 'invalid')]);
+
+        $this->expectException(VivaException::class);
+        $this->expectExceptionMessage('Invalid response');
+
+        $this->client->get('test');
+    }
+
+    /**
+     * @test
+     * @group unit
+     * @covers \Sebdesign\VivaPayments\VivaException
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_throws_an_exception_when_it_cannot_decode_a_response(): void
     {
@@ -183,6 +211,10 @@ class ClientTest extends TestCase
     /**
      * @test
      * @group unit
+     *
+     * @throws \JsonException
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_decodes_a_json_response(): void
     {
@@ -204,6 +236,9 @@ class ClientTest extends TestCase
      * @test
      * @group unit
      * @covers \Sebdesign\VivaPayments\VivaException
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_throws_an_exception_when_the_response_has_errors(): void
     {
@@ -220,6 +255,9 @@ class ClientTest extends TestCase
     /**
      * @test
      * @group unit
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_sends_a_get_request(): void
     {
@@ -241,6 +279,9 @@ class ClientTest extends TestCase
     /**
      * @test
      * @group unit
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_sends_a_post_request(): void
     {

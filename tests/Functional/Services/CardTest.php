@@ -3,8 +3,10 @@
 namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\GuzzleException;
 use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\VivaException;
 
 /** @covers \Sebdesign\VivaPayments\Services\Card */
 class CardTest extends TestCase
@@ -12,6 +14,9 @@ class CardTest extends TestCase
     /**
      * @test
      * @group functional
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_cannot_create_a_card_token_for_a_transaction_that_does_not_exist(): void
     {

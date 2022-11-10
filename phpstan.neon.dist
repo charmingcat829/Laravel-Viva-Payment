@@ -24,6 +24,14 @@ parameters:
     strictRules:
         strictCalls: false
 
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+        uncheckedExceptionClasses:
+            - 'Illuminate\Contracts\Container\BindingResolutionException'
+            - 'InvalidArgumentException'
+
 #    ignoreErrors:
 #        - '#PHPDoc tag @var#'
 #

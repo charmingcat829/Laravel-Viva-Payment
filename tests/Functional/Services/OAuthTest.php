@@ -2,8 +2,10 @@
 
 namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Test\TestCase;
+use Sebdesign\VivaPayments\VivaException;
 
 /** @covers \Sebdesign\VivaPayments\Services\OAuth */
 class OAuthTest extends TestCase
@@ -13,6 +15,9 @@ class OAuthTest extends TestCase
      * @group functional
      * @doesNotPerformAssertions
      * @covers \Sebdesign\VivaPayments\Responses\AccessToken
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_requests_an_access_token_with_the_default_credentials(): void
     {
@@ -24,6 +29,9 @@ class OAuthTest extends TestCase
      * @group functional
      * @doesNotPerformAssertions
      * @covers \Sebdesign\VivaPayments\Responses\AccessToken
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function it_requests_an_access_token_with_the_given_credentials(): void
     {

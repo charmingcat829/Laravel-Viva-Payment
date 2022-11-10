@@ -2,8 +2,10 @@
 
 namespace Sebdesign\VivaPayments\Services;
 
+use GuzzleHttp\Exception\GuzzleException;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Responses;
+use Sebdesign\VivaPayments\VivaException;
 
 class Webhook
 {
@@ -17,6 +19,9 @@ class Webhook
      * @see https://developer.vivawallet.com/webhooks-for-payments/#generate-a-webhook-verification-key
      *
      * @param  array<string,mixed>  $guzzleOptions  Additional parameters for the Guzzle client
+     *
+     * @throws GuzzleException
+     * @throws VivaException
      */
     public function getVerificationKey(array $guzzleOptions = []): Responses\WebhookVerificationKey
     {
