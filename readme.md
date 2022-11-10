@@ -8,7 +8,7 @@
 
 [![VivaPayments logo](https://www.vivawallet.com/assets/vw-logo.svg "Viva Wallet logo")](https://www.vivawallet.com/)
 
-This package provides an interface for the Viva Wallet Payment API. It handles the **Smart Checkout** integration, as well as **Webhooks**.
+This package provides an interface for the Viva Wallet Payment API. It handles the **Smart Checkout** integration, the **ISV Payment API**, and **Webhooks**.
 
 Check out the official Viva Wallet Developer Portal for detailed instructions on the APIs and more: https://developer.vivawallet.com
 
@@ -323,7 +323,7 @@ class CancelOrder
 }
 ```
 
-## API Methods
+## Payment API reference
 
 All methods accept a `$guzzleOptions` array argument as their last parameter. This argument is entirely optional, and it allows you to specify additional request options to the `Guzzle` client.
 
@@ -494,6 +494,57 @@ $cardToken = Viva::cards()->createToken(
 use Sebdesign\VivaPayments\Facades\Viva;
 
 $key = Viva::webhooks()->getVerificationKey(
+    guzzleOptions: [],
+);
+```
+
+## ISV Payment API Reference
+
+The ISV Payment API methods are available through the `Viva::isv()` service.
+
+### Orders
+
+#### Create a payment order
+
+> See: https://developer.vivawallet.com/isv-partner-program/payment-isv-api/#tag/Payments/paths/~1checkout~1v2~1isv~1orders/post
+
+```php
+use Sebdesign\VivaPayments\Facades\Viva;
+use Sebdesign\VivaPayments\Requests\CreatePaymentOrder;
+use Sebdesign\VivaPayments\Requests\Customer;
+
+$orderCode = Viva::isv()->orders()->create(
+    order: new CreatePaymentOrder(
+        amount: 1000,
+        customerTrns: 'Short description of purchased items/services to display to your customer',
+        customer: new Customer(
+            email: 'johdoe@vivawallet.com',
+            fullName: 'John Doe',
+            phone: '+30999999999',
+            countryCode: 'GB',
+            requestLang: 'en-GB',
+        ),
+        paymentTimeOut: 300,
+        preauth: false,
+        allowRecurring: false,
+        maxInstallments: 12,
+        paymentNotification: true,
+        tipAmount: 100,
+        disableExactAmount: false,
+        disableCash: true,
+        disableWallet: true,
+        sourceCode: '1234',
+        merchantTrns: 'Short description of items/services purchased by customer',
+        tags: [
+            'tags for grouping and filtering the transactions',
+            'this tag can be searched on VivaWallet sales dashboard',
+            'Sample tag 1',
+            'Sample tag 2',
+            'Another string',
+        ],
+        isvAmount: 10,
+        resellerSourceCode: '2345',
+    ),
     guzzleOptions: [],
 );
 ```

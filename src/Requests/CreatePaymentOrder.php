@@ -21,12 +21,14 @@ class CreatePaymentOrder
         public bool $disableExactAmount = false,
         public bool $disableCash = false,
         public bool $disableWallet = false,
+        public ?int $isvAmount = null,
         public string $sourceCode = 'Default',
         public ?string $merchantTrns = null,
         /** @var string[]|null */
         public ?array $tags = null,
         /** @var string[]|null */
         public ?array $cardTokens = null,
+        public ?string $resellerSourceCode = null,
     ) {
     }
 }

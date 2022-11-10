@@ -46,7 +46,7 @@ class Client
     public function __construct(
         public readonly GuzzleClient $client,
         protected Environment $environment,
-        protected string $merchantId,
+        public string $merchantId,
         protected string $apiKey,
         protected string $clientId,
         protected string $clientSecret,
@@ -91,6 +91,11 @@ class Client
     public function webhooks(): Services\Webhook
     {
         return new Services\Webhook($this);
+    }
+
+    public function isv(): Services\ISV
+    {
+        return new Services\ISV($this);
     }
 
     /**
