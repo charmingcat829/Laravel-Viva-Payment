@@ -1,9 +1,9 @@
 <?php
 
-namespace Sebdesign\VivaPayments\Test\Unit;
+namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
+use Sebdesign\VivaPayments\Services\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
-use Sebdesign\VivaPayments\Webhook;
 
 /** @covers \Sebdesign\VivaPayments\Webhook */
 class WebhookTest extends TestCase

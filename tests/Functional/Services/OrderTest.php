@@ -1,13 +1,13 @@
 <?php
 
-namespace Sebdesign\VivaPayments\Test\Functional;
+namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
-use Sebdesign\VivaPayments\Order;
 use Sebdesign\VivaPayments\Requests\CreatePaymentOrder;
 use Sebdesign\VivaPayments\Requests\Customer;
+use Sebdesign\VivaPayments\Services\Order;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @cover \Sebdesign\VivaPayments\Order */
+/** @cover \Sebdesign\VivaPayments\Services\Order */
 class OrderTest extends TestCase
 {
     /**

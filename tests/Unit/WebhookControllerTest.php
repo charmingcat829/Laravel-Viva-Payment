@@ -9,8 +9,8 @@ use Sebdesign\VivaPayments\Events\TransactionFailed;
 use Sebdesign\VivaPayments\Events\TransactionPaymentCreated;
 use Sebdesign\VivaPayments\Events\WebhookEvent;
 use Sebdesign\VivaPayments\Http\Controllers\WebhookController;
+use Sebdesign\VivaPayments\Services\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
-use Sebdesign\VivaPayments\Webhook;
 
 /** @covers \Sebdesign\VivaPayments\Http\Controllers\WebhookController */
 class WebhookControllerTest extends TestCase

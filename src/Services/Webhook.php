@@ -1,8 +1,9 @@
 <?php
 
-namespace Sebdesign\VivaPayments;
+namespace Sebdesign\VivaPayments\Services;
 
-use Sebdesign\VivaPayments\Responses\WebhookVerificationKey;
+use Sebdesign\VivaPayments\Client;
+use Sebdesign\VivaPayments\Responses;
 
 class Webhook
 {
@@ -17,7 +18,7 @@ class Webhook
      *
      * @param  array<string,mixed>  $guzzleOptions  Additional parameters for the Guzzle client
      */
-    public function getVerificationKey(array $guzzleOptions = []): WebhookVerificationKey
+    public function getVerificationKey(array $guzzleOptions = []): Responses\WebhookVerificationKey
     {
         $response = $this->client->get(
             $this->client->getUrl()->withPath('/api/messages/config/token'),
@@ -28,6 +29,6 @@ class Webhook
         );
 
         /** @phpstan-ignore-next-line */
-        return new WebhookVerificationKey(...$response);
+        return new Responses\WebhookVerificationKey(...$response);
     }
 }

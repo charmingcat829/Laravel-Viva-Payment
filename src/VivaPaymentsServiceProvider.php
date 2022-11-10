@@ -29,8 +29,8 @@ class VivaPaymentsServiceProvider extends ServiceProvider implements DeferrableP
             );
         });
 
-        $this->app->bind(OAuth::class, function ($app) {
-            return new OAuth(
+        $this->app->bind(Services\OAuth::class, function ($app) {
+            return new Services\OAuth(
                 client: $app->make(Client::class),
                 clientId: strval($app->make('config')->get('services.viva.client_id')),
                 clientSecret: strval($app->make('config')->get('services.viva.client_secret')),
@@ -73,6 +73,6 @@ class VivaPaymentsServiceProvider extends ServiceProvider implements DeferrableP
      */
     public function provides()
     {
-        return [Client::class, OAuth::class];
+        return [Client::class, Services\OAuth::class];
     }
 }

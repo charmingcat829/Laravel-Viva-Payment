@@ -1,11 +1,11 @@
 <?php
 
-namespace Sebdesign\VivaPayments\Test\Functional;
+namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
+use Sebdesign\VivaPayments\Services\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
-use Sebdesign\VivaPayments\Webhook;
 
-/** @covers \Sebdesign\VivaPayments\Webhook */
+/** @covers \Sebdesign\VivaPayments\Services\Webhook */
 class WebhookTest extends TestCase
 {
     /**

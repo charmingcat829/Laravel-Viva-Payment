@@ -8,7 +8,7 @@ use Illuminate\Routing\Controller;
 use Sebdesign\VivaPayments\Events\TransactionFailed;
 use Sebdesign\VivaPayments\Events\TransactionPaymentCreated;
 use Sebdesign\VivaPayments\Events\WebhookEvent;
-use Sebdesign\VivaPayments\Webhook;
+use Sebdesign\VivaPayments\Services\Webhook;
 
 class WebhookController extends Controller
 {

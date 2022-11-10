@@ -1,12 +1,12 @@
 <?php
 
-namespace Sebdesign\VivaPayments\Test\Functional;
+namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
-use Sebdesign\VivaPayments\OAuth;
 use Sebdesign\VivaPayments\Responses\AccessToken;
+use Sebdesign\VivaPayments\Services\OAuth;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @covers \Sebdesign\VivaPayments\OAuth */
+/** @covers \Sebdesign\VivaPayments\Services\OAuth */
 class OAuthTest extends TestCase
 {
     protected OAuth $oauth;

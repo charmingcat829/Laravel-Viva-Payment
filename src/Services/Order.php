@@ -1,11 +1,12 @@
 <?php
 
-namespace Sebdesign\VivaPayments;
+namespace Sebdesign\VivaPayments\Services;
 
 use GuzzleHttp\Psr7\Uri;
 use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\UriInterface;
-use Sebdesign\VivaPayments\Requests\CreatePaymentOrder;
+use Sebdesign\VivaPayments\Client;
+use Sebdesign\VivaPayments\Requests;
 
 class Order
 {
@@ -14,11 +15,13 @@ class Order
     }
 
     /**
+     * Create payment order.
+     *
      * @see https://developer.vivawallet.com/apis-for-payments/payment-api/#tag/Payments/paths/~1checkout~1v2~1orders/post
      *
-     * @param  array<string,mixed>  $guzzleOptions
+     * @param  array<string,mixed>  $guzzleOptions  Additional parameters for the Guzzle client
      */
-    public function create(CreatePaymentOrder $order, array $guzzleOptions = []): string
+    public function create(Requests\CreatePaymentOrder $order, array $guzzleOptions = []): string
     {
         $response = $this->client->post(
             $this->client->getApiUrl()->withPath('/checkout/v2/orders'),

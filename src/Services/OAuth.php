@@ -1,8 +1,9 @@
 <?php
 
-namespace Sebdesign\VivaPayments;
+namespace Sebdesign\VivaPayments\Services;
 
 use GuzzleHttp\RequestOptions;
+use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Responses\AccessToken;
 
 class OAuth

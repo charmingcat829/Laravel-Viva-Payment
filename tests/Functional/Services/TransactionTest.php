@@ -1,14 +1,14 @@
 <?php
 
-namespace Sebdesign\VivaPayments\Test\Functional;
+namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
 use GuzzleHttp\Exception\RequestException;
 use Sebdesign\VivaPayments\Requests\CreateRecurringTransaction;
+use Sebdesign\VivaPayments\Services\Transaction;
 use Sebdesign\VivaPayments\Test\TestCase;
-use Sebdesign\VivaPayments\Transaction;
 use Sebdesign\VivaPayments\VivaException;
 
-/** @covers \Sebdesign\VivaPayments\Transaction */
+/** @covers \Sebdesign\VivaPayments\Services\Transaction */
 class TransactionTest extends TestCase
 {
     /**

@@ -1,12 +1,12 @@
 <?php
 
-namespace Sebdesign\VivaPayments\Test\Unit;
+namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
 use Sebdesign\VivaPayments\Requests\CreateRecurringTransaction;
+use Sebdesign\VivaPayments\Services\Transaction;
 use Sebdesign\VivaPayments\Test\TestCase;
-use Sebdesign\VivaPayments\Transaction;
 
-/** @covers \Sebdesign\VivaPayments\Transaction */
+/** @covers \Sebdesign\VivaPayments\Services\Transaction */
 class TransactionTest extends TestCase
 {
     /**

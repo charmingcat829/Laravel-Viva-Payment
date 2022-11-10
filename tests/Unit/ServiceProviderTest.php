@@ -3,7 +3,7 @@
 namespace Sebdesign\VivaPayments\Test\Unit;
 
 use Sebdesign\VivaPayments\Client;
-use Sebdesign\VivaPayments\OAuth;
+use Sebdesign\VivaPayments\Services\OAuth;
 use Sebdesign\VivaPayments\Test\TestCase;
 use Sebdesign\VivaPayments\VivaPaymentsServiceProvider;
 

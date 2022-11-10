@@ -1,8 +1,9 @@
 <?php
 
-namespace Sebdesign\VivaPayments;
+namespace Sebdesign\VivaPayments\Services;
 
 use GuzzleHttp\RequestOptions;
+use Sebdesign\VivaPayments\Client;
 
 class Card
 {
@@ -15,7 +16,7 @@ class Card
      *
      * @see https://developer.vivawallet.com/apis-for-payments/payment-api/#tag/Transactions/paths/~1acquiring~1v1~1cards~1tokens/post
      *
-     * @param  array<string,mixed>  $guzzleOptions
+     * @param  array<string,mixed>  $guzzleOptions  Additional parameters for the Guzzle client
      */
     public function createToken(string $transactionId, array $guzzleOptions = []): string
     {

@@ -1,12 +1,12 @@
 <?php
 
-namespace Sebdesign\VivaPayments\Test\Functional;
+namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
 use GuzzleHttp\Exception\ClientException;
-use Sebdesign\VivaPayments\Card;
+use Sebdesign\VivaPayments\Services\Card;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @covers \Sebdesign\VivaPayments\Card */
+/** @covers \Sebdesign\VivaPayments\Services\Card */
 class CardTest extends TestCase
 {
     /**

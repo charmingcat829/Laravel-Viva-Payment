@@ -2,12 +2,12 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
-use Sebdesign\VivaPayments\Card;
 use Sebdesign\VivaPayments\Facades\SmartCheckout;
-use Sebdesign\VivaPayments\Order;
+use Sebdesign\VivaPayments\Services\Card;
+use Sebdesign\VivaPayments\Services\Order;
+use Sebdesign\VivaPayments\Services\Transaction;
+use Sebdesign\VivaPayments\Services\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
-use Sebdesign\VivaPayments\Transaction;
-use Sebdesign\VivaPayments\Webhook;
 
 /** @covers \Sebdesign\VivaPayments\Facades\SmartCheckout */
 class SmartCheckoutTest extends TestCase
@@ -16,7 +16,7 @@ class SmartCheckoutTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_proxies_the_cards_object(): void
+    public function it_proxies_the_cards_service(): void
     {
         $cards = SmartCheckout::cards();
 
@@ -27,7 +27,7 @@ class SmartCheckoutTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_proxies_the_orders_object(): void
+    public function it_proxies_the_orders_service(): void
     {
         $orders = SmartCheckout::orders();
 
@@ -38,7 +38,7 @@ class SmartCheckoutTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_proxies_the_transactions_object(): void
+    public function it_proxies_the_transactions_service(): void
     {
         $transactions = SmartCheckout::transactions();
 
@@ -49,7 +49,7 @@ class SmartCheckoutTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_proxies_the_webhooks_object(): void
+    public function it_proxies_the_webhooks_service(): void
     {
         $webhooks = SmartCheckout::webhooks();
 

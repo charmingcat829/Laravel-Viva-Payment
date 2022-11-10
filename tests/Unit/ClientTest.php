@@ -3,15 +3,15 @@
 namespace Sebdesign\VivaPayments\Test\Unit;
 
 use GuzzleHttp\Psr7\Response;
-use Sebdesign\VivaPayments\Card;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Enums\Environment;
-use Sebdesign\VivaPayments\OAuth;
-use Sebdesign\VivaPayments\Order;
+use Sebdesign\VivaPayments\Services\Card;
+use Sebdesign\VivaPayments\Services\OAuth;
+use Sebdesign\VivaPayments\Services\Order;
+use Sebdesign\VivaPayments\Services\Transaction;
+use Sebdesign\VivaPayments\Services\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
-use Sebdesign\VivaPayments\Transaction;
 use Sebdesign\VivaPayments\VivaException;
-use Sebdesign\VivaPayments\Webhook;
 
 class ClientTest extends TestCase
 {
@@ -19,7 +19,7 @@ class ClientTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_returns_the_cards_object(): void
+    public function it_returns_the_cards_service(): void
     {
         /** @var Client */
         $client = $this->app?->make(Client::class);
@@ -33,7 +33,7 @@ class ClientTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_returns_the_oauth_object(): void
+    public function it_returns_the_oauth_service(): void
     {
         /** @var Client */
         $client = $this->app?->make(Client::class);
@@ -47,7 +47,7 @@ class ClientTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_returns_the_orders_object(): void
+    public function it_returns_the_orders_service(): void
     {
         /** @var Client */
         $client = $this->app?->make(Client::class);
@@ -61,7 +61,7 @@ class ClientTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_returns_the_transactions_object(): void
+    public function it_returns_the_transactions_service(): void
     {
         /** @var Client */
         $client = $this->app?->make(Client::class);
@@ -75,7 +75,7 @@ class ClientTest extends TestCase
      * @test
      * @group unit
      */
-    public function it_returns_the_webhooks_object(): void
+    public function it_returns_the_webhooks_service(): void
     {
         /** @var Client */
         $client = $this->app?->make(Client::class);

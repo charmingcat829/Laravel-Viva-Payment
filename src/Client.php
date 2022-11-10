@@ -56,41 +56,41 @@ class Client
     /**
      * Request OAuth access tokens.
      */
-    public function oauth(): OAuth
+    public function oauth(): Services\OAuth
     {
-        return new OAuth($this, $this->clientId, $this->clientSecret);
+        return new Services\OAuth($this, $this->clientId, $this->clientSecret);
     }
 
     /**
      * Create card tokens.
      */
-    public function cards(): Card
+    public function cards(): Services\Card
     {
-        return new Card($this);
+        return new Services\Card($this);
     }
 
     /**
      * Create payment orders.
      */
-    public function orders(): Order
+    public function orders(): Services\Order
     {
-        return new Order($this);
+        return new Services\Order($this);
     }
 
     /**
      * Retrieve and create recurring transactions.
      */
-    public function transactions(): Transaction
+    public function transactions(): Services\Transaction
     {
-        return new Transaction($this);
+        return new Services\Transaction($this);
     }
 
     /**
      * Verity webhooks.
      */
-    public function webhooks(): Webhook
+    public function webhooks(): Services\Webhook
     {
-        return new Webhook($this);
+        return new Services\Webhook($this);
     }
 
     /**

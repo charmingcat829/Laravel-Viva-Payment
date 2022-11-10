@@ -1,11 +1,11 @@
 <?php
 
-namespace Sebdesign\VivaPayments\Test\Unit;
+namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
-use Sebdesign\VivaPayments\Card;
+use Sebdesign\VivaPayments\Services\Card;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @covers \Sebdesign\VivaPayments\Card */
+/** @covers \Sebdesign\VivaPayments\Services\Card */
 class CardTest extends TestCase
 {
     /**

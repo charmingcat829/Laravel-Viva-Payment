@@ -1,58 +1,14 @@
 <?php
 
-namespace Sebdesign\VivaPayments;
+namespace Sebdesign\VivaPayments\Services;
 
 use GuzzleHttp\RequestOptions;
-use Sebdesign\VivaPayments\Requests\CreateRecurringTransaction;
+use Sebdesign\VivaPayments\Client;
+use Sebdesign\VivaPayments\Requests;
+use Sebdesign\VivaPayments\Responses;
 
 class Transaction
 {
-    /**
-     * Transaction types.
-     */
-
-    // A Capture event of a preAuthorized transaction
-    const CAPTURE_FROM_PREAUTH = 0;
-
-    // Authorization hold
-    const PREAUTH = 1;
-
-    // Refund transaction
-    const REFUND_CARD = 4;
-
-    // Card payment transaction
-    const CHARGE_CARD = 5;
-
-    // A card payment that will be done with installments
-    const CHARGE_CARD_WITH_INSTALLMENTS = 6;
-
-    // A payment cancelation
-    const VOID = 7;
-
-    // A Wallet Payment
-    const WALLET_CHARGE = 9;
-
-    // A Refund of a Wallet Payment
-    const WALLET_REFUND = 11;
-
-    // Refund transaction for a claimed transaction
-    const CLAIM_REFUND = 13;
-
-    // Payment made through the DIAS system
-    const DIAS_PAYMENT = 15;
-
-    // Cash Payments, through the Viva Payments Authorised Resellers Network
-    const CASH_PAYMENT = 16;
-
-    // A Refunded installment
-    const REFUND_INSTALLMENTS = 18;
-
-    // Clearance of a transactions batch
-    const CLEARANCE = 19;
-
-    // Bank Transfer command from the merchant's wallet to their IBAN
-    const BANK_TRANSFER = 24;
-
     public function __construct(protected Client $client)
     {
     }
@@ -87,7 +43,7 @@ class Transaction
      */
     public function createRecurring(
         string $transactionId,
-        CreateRecurringTransaction $transaction,
+        Requests\CreateRecurringTransaction $transaction,
         array $guzzleOptions = []
     ): Responses\RecurringTransaction {
         /** @phpstan-var RecurringTransactionArray */
