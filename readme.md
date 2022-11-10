@@ -517,6 +517,21 @@ $orderCode = Viva::isv()->orders()->create(
 );
 ```
 
+### Transactions
+
+#### Retrieve a transaction
+
+> See: https://developer.vivawallet.com/isv-partner-program/payment-isv-api/#tag/Retrieve-Transactions/paths/~1checkout~1v2~1isv~1transactions~1{transactionId}?merchantId={merchantId}/get
+
+```php
+use Sebdesign\VivaPayments\Facades\Viva;
+
+$transaction = Viva::isv()->transactions()->retrieve(
+    transactionId: 'c90d4902-6245-449f-b2b0-51d99cd09cfe',
+    guzzleOptions: [],
+);
+```
+
 ## Exceptions
 
 When the VivaPayments API returns an error, a `Sebdesign\VivaPayments\VivaException` is thrown.

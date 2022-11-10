@@ -14,4 +14,9 @@ class ISV
     {
         return new ISV\Order($this->client);
     }
+
+    public function transactions(): ISV\Transaction
+    {
+        return new ISV\Transaction($this->client);
+    }
 }
