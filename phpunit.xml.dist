@@ -42,5 +42,9 @@
         <env name="VIVA_MERCHANT_ID" value="test-merchant-id"/>
         <env name="VIVA_ENVIRONMENT" value="demo"/>
         <env name="VIVA_SOURCE_CODE" value="viva-source-code"/>
+        <env name="VIVA_CLIENT_ID" value="viva-client-id"/>
+        <env name="VIVA_CLIENT_SECRET" value="viva-client-secret"/>
+        <env name="VIVA_ISV_CLIENT_ID" value="viva-isv-client-id"/>
+        <env name="VIVA_ISV_CLIENT_SECRET" value="viva-isv-client-secret"/>
     </php>
 </phpunit>
