@@ -2,7 +2,6 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Sebdesign\VivaPayments\Events\TransactionFailed;
@@ -29,7 +28,6 @@ class WebhookControllerTest extends TestCase
 
         $response = $controller->verify($webhook);
 
-        $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(['Key' => 'foo'], $response->getData(assoc: true));
     }
@@ -51,7 +49,6 @@ class WebhookControllerTest extends TestCase
 
         $response = $controller->handle($request);
 
-        $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
 
         Event::assertDispatched(WebhookEvent::class);
@@ -74,7 +71,6 @@ class WebhookControllerTest extends TestCase
 
         $response = $controller->handle($request);
 
-        $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
 
         Event::assertDispatched(WebhookEvent::class);
@@ -98,7 +94,6 @@ class WebhookControllerTest extends TestCase
 
         $response = $controller->handle($request);
 
-        $this->assertInstanceOf(JsonResponse::class, $response);
         $this->assertEquals(200, $response->getStatusCode());
 
         Event::assertDispatched(WebhookEvent::class);

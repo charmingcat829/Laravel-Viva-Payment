@@ -32,7 +32,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
      * Get package providers.
      *
      * @param  \Illuminate\Foundation\Application  $app
-     * @return array<int, string>
+     * @return array<int, class-string>
      */
     protected function getPackageProviders($app)
     {

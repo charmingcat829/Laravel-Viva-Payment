@@ -2,10 +2,12 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
-use Sebdesign\VivaPayments\Services\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @covers \Sebdesign\VivaPayments\Webhook */
+/**
+ * @covers \Sebdesign\VivaPayments\Client
+ * @covers \Sebdesign\VivaPayments\Services\Webhook
+ */
 class WebhookTest extends TestCase
 {
     /**
@@ -18,9 +20,7 @@ class WebhookTest extends TestCase
         $this->mockJsonResponses(['Key' => 'foo']);
         $this->mockRequests();
 
-        $webhook = new Webhook($this->client);
-
-        $verification = $webhook->getVerificationKey();
+        $verification = $this->client->webhooks()->getVerificationKey();
         $request = $this->getLastRequest();
 
         $this->assertMethod('GET', $request);

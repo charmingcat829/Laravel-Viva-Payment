@@ -2,46 +2,34 @@
 
 namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
-use Sebdesign\VivaPayments\Responses\AccessToken;
-use Sebdesign\VivaPayments\Services\OAuth;
+use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Test\TestCase;
 
 /** @covers \Sebdesign\VivaPayments\Services\OAuth */
 class OAuthTest extends TestCase
 {
-    protected OAuth $oauth;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        /** @phpstan-ignore-next-line */
-        $this->oauth = $this->app->make(OAuth::class);
-    }
-
     /**
      * @test
      * @group functional
+     * @doesNotPerformAssertions
+     * @covers \Sebdesign\VivaPayments\Responses\AccessToken
      */
     public function it_requests_an_access_token_with_the_default_credentials(): void
     {
-        $token = $this->oauth->requestToken();
-
-        $this->assertInstanceOf(AccessToken::class, $token);
+        Viva::oauth()->requestToken();
     }
 
     /**
      * @test
      * @group functional
+     * @doesNotPerformAssertions
      * @covers \Sebdesign\VivaPayments\Responses\AccessToken
      */
     public function it_requests_an_access_token_with_the_given_credentials(): void
     {
-        $token = $this->oauth->requestToken(
+        Viva::oauth()->requestToken(
             clientId: strval(env('VIVA_CLIENT_ID')),
             clientSecret: strval(env('VIVA_CLIENT_SECRET')),
         );
-
-        $this->assertInstanceOf(AccessToken::class, $token);
     }
 }

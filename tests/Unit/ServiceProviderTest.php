@@ -59,7 +59,7 @@ class ServiceProviderTest extends TestCase
     {
         $client = $this->app?->make(Client::class);
 
-        $this->assertInstanceof(Client::class, $client);
+        $this->assertInstanceOf(Client::class, $client);
         $this->assertTrue($this->app?->isShared(Client::class));
     }
 
@@ -71,7 +71,7 @@ class ServiceProviderTest extends TestCase
     {
         $oauth = $this->app?->make(OAuth::class);
 
-        $this->assertInstanceof(OAuth::class, $oauth);
+        $this->assertInstanceOf(OAuth::class, $oauth);
     }
 
     /**

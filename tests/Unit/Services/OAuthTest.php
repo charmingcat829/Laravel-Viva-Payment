@@ -2,10 +2,12 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
-use Sebdesign\VivaPayments\Services\OAuth;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @covers \Sebdesign\VivaPayments\Services\OAuth */
+/**
+ * @covers \Sebdesign\VivaPayments\Client
+ * @covers \Sebdesign\VivaPayments\Services\OAuth
+ */
 class OAuthTest extends TestCase
 {
     /**
@@ -23,9 +25,8 @@ class OAuthTest extends TestCase
         ]);
         $this->mockRequests();
 
-        $oauth = new OAuth($this->client, 'client_id', 'client_secret');
-
-        $token = $oauth->requestToken();
+        $token = $this->client->withOAuthCredentials('client_id', 'client_secret')
+            ->oauth()->requestToken();
 
         $request = $this->getLastRequest();
         $this->assertMethod('POST', $request);
@@ -53,9 +54,7 @@ class OAuthTest extends TestCase
         ]);
         $this->mockRequests();
 
-        $oauth = new OAuth($this->client, 'client_id', 'client_secret');
-
-        $token = $oauth->requestToken('foo', 'bar');
+        $token = $this->client->oauth()->requestToken('foo', 'bar');
 
         $request = $this->getLastRequest();
         $this->assertMethod('POST', $request);

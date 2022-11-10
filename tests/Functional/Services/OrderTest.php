@@ -2,9 +2,9 @@
 
 namespace Sebdesign\VivaPayments\Test\Functional\Services;
 
+use Sebdesign\VivaPayments\Facades\Viva;
 use Sebdesign\VivaPayments\Requests\CreatePaymentOrder;
 use Sebdesign\VivaPayments\Requests\Customer;
-use Sebdesign\VivaPayments\Services\Order;
 use Sebdesign\VivaPayments\Test\TestCase;
 
 /** @cover \Sebdesign\VivaPayments\Services\Order */
@@ -17,10 +17,7 @@ class OrderTest extends TestCase
      */
     public function it_creates_a_payment_order(): void
     {
-        /** @var Order */
-        $order = $this->app?->make(Order::class);
-
-        $orderCode = $order->create(new CreatePaymentOrder(
+        $orderCode = Viva::orders()->create(new CreatePaymentOrder(
             amount: 1000,
             customerTrns: 'Test customer description',
             customer: new Customer(

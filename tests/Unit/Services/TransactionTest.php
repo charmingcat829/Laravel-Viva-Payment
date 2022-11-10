@@ -3,10 +3,12 @@
 namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
 use Sebdesign\VivaPayments\Requests\CreateRecurringTransaction;
-use Sebdesign\VivaPayments\Services\Transaction;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @covers \Sebdesign\VivaPayments\Services\Transaction */
+/**
+ * @covers \Sebdesign\VivaPayments\Client
+ * @covers \Sebdesign\VivaPayments\Services\Transaction
+ */
 class TransactionTest extends TestCase
 {
     /**
@@ -38,11 +40,8 @@ class TransactionTest extends TestCase
         ]);
         $this->mockRequests();
 
-        $this->client->withToken('test');
-
-        $transaction = new Transaction($this->client);
-
-        $transaction = $transaction->retrieve('c90d4902-6245-449f-b2b0-51d99cd09cfe');
+        $transaction = $this->client->withToken('test')
+            ->transactions()->retrieve('c90d4902-6245-449f-b2b0-51d99cd09cfe');
 
         $request = $this->getLastRequest();
 
@@ -99,9 +98,7 @@ class TransactionTest extends TestCase
         ]);
         $this->mockRequests();
 
-        $transaction = new Transaction($this->client);
-
-        $response = $transaction->createRecurring(
+        $response = $this->client->transactions()->createRecurring(
             '14c59e93-f8e4-4f5c-8a63-60ae8f8807d1',
             new CreateRecurringTransaction(
                 amount: 100,

@@ -5,86 +5,12 @@ namespace Sebdesign\VivaPayments\Test\Unit;
 use GuzzleHttp\Psr7\Response;
 use Sebdesign\VivaPayments\Client;
 use Sebdesign\VivaPayments\Enums\Environment;
-use Sebdesign\VivaPayments\Services\Card;
-use Sebdesign\VivaPayments\Services\OAuth;
-use Sebdesign\VivaPayments\Services\Order;
-use Sebdesign\VivaPayments\Services\Transaction;
-use Sebdesign\VivaPayments\Services\Webhook;
 use Sebdesign\VivaPayments\Test\TestCase;
 use Sebdesign\VivaPayments\VivaException;
 
+/** @covers \Sebdesign\VivaPayments\Client */
 class ClientTest extends TestCase
 {
-    /**
-     * @test
-     * @group unit
-     */
-    public function it_returns_the_cards_service(): void
-    {
-        /** @var Client */
-        $client = $this->app?->make(Client::class);
-
-        $cards = $client->cards();
-
-        $this->assertInstanceOf(Card::class, $cards);
-    }
-
-    /**
-     * @test
-     * @group unit
-     */
-    public function it_returns_the_oauth_service(): void
-    {
-        /** @var Client */
-        $client = $this->app?->make(Client::class);
-
-        $oauth = $client->oauth();
-
-        $this->assertInstanceOf(OAuth::class, $oauth);
-    }
-
-    /**
-     * @test
-     * @group unit
-     */
-    public function it_returns_the_orders_service(): void
-    {
-        /** @var Client */
-        $client = $this->app?->make(Client::class);
-
-        $orders = $client->orders();
-
-        $this->assertInstanceOf(Order::class, $orders);
-    }
-
-    /**
-     * @test
-     * @group unit
-     */
-    public function it_returns_the_transactions_service(): void
-    {
-        /** @var Client */
-        $client = $this->app?->make(Client::class);
-
-        $transactions = $client->transactions();
-
-        $this->assertInstanceOf(Transaction::class, $transactions);
-    }
-
-    /**
-     * @test
-     * @group unit
-     */
-    public function it_returns_the_webhooks_service(): void
-    {
-        /** @var Client */
-        $client = $this->app?->make(Client::class);
-
-        $webhooks = $client->webhooks();
-
-        $this->assertInstanceOf(Webhook::class, $webhooks);
-    }
-
     /**
      * @test
      * @group unit
@@ -180,12 +106,7 @@ class ClientTest extends TestCase
 
         $basic = $client->authenticateWithBasicAuth();
 
-        $this->assertArrayHasKey('auth', $basic);
-        $this->assertTrue(is_array($basic['auth']));
-        $this->assertCount(2, $basic['auth']);
-        $this->assertTrue(is_string($basic['auth'][0]));
         $this->assertEquals(config('services.viva.merchant_id'), $basic['auth'][0]);
-        $this->assertTrue(is_string($basic['auth'][1]));
         $this->assertEquals(config('services.viva.api_key'), $basic['auth'][1]);
     }
 
@@ -202,7 +123,6 @@ class ClientTest extends TestCase
 
         $basic = $client->authenticateWithBasicAuth();
 
-        $this->assertArrayHasKey('auth', $basic);
         $this->assertEquals(['foo', 'bar'], $basic['auth']);
     }
 
@@ -248,6 +168,7 @@ class ClientTest extends TestCase
     /**
      * @test
      * @group unit
+     * @covers \Sebdesign\VivaPayments\VivaException
      */
     public function it_throws_an_exception_when_it_cannot_decode_a_response(): void
     {
@@ -282,6 +203,7 @@ class ClientTest extends TestCase
     /**
      * @test
      * @group unit
+     * @covers \Sebdesign\VivaPayments\VivaException
      */
     public function it_throws_an_exception_when_the_response_has_errors(): void
     {

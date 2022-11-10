@@ -2,10 +2,12 @@
 
 namespace Sebdesign\VivaPayments\Test\Unit\Services;
 
-use Sebdesign\VivaPayments\Services\Card;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @covers \Sebdesign\VivaPayments\Services\Card */
+/**
+ * @covers \Sebdesign\VivaPayments\Client
+ * @covers \Sebdesign\VivaPayments\Services\Card
+ */
 class CardTest extends TestCase
 {
     /**
@@ -19,9 +21,7 @@ class CardTest extends TestCase
 
         $this->client->withToken('test');
 
-        $card = new Card($this->client);
-
-        $token = $card->createToken('6cffe5bf-909c-4d69-b6dc-2bef1a6202f7');
+        $token = $this->client->cards()->createToken('6cffe5bf-909c-4d69-b6dc-2bef1a6202f7');
 
         $request = $this->getLastRequest();
 

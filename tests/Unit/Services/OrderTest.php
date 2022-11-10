@@ -8,7 +8,10 @@ use Sebdesign\VivaPayments\Requests\Customer;
 use Sebdesign\VivaPayments\Services\Order;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @covers \Sebdesign\VivaPayments\Services\Order */
+/**
+ * @covers \Sebdesign\VivaPayments\Client
+ * @covers \Sebdesign\VivaPayments\Services\Order
+ */
 class OrderTest extends TestCase
 {
     /**
@@ -100,10 +103,7 @@ class OrderTest extends TestCase
         $this->mockJsonResponses([]);
         $this->mockRequests();
 
-        /** @var Order */
-        $order = $this->app?->make(Order::class);
-
-        $url = $order->redirectUrl(
+        $url = $this->client->orders()->redirectUrl(
             ref: '175936509216',
             color: '0000ff',
             paymentMethod: 23,

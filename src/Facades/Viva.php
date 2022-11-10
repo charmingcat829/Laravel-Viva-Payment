@@ -5,14 +5,14 @@ namespace Sebdesign\VivaPayments\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \Sebdesign\VivaPayments\Card cards()
- * @method static \Sebdesign\VivaPayments\Order orders()
- * @method static \Sebdesign\VivaPayments\Transaction transactions()
- * @method static \Sebdesign\VivaPayments\Webhook webhooks()
- * @method static \Sebdesign\VivaPayments\Webhook withEnvironment(\Sebdesign\VivaPayments\Enums\Environment|string $environment)
- * @method static \Sebdesign\VivaPayments\Webhook withBasicAuthCredentials(string $merchantId, string $apiKey)
- * @method static \Sebdesign\VivaPayments\Webhook withOAuthCredentials(string $clientId, string $clientSecret)
- * @method static \Sebdesign\VivaPayments\Webhook withToken(string $token)
+ * @method static \Sebdesign\VivaPayments\Services\Card cards()
+ * @method static \Sebdesign\VivaPayments\Services\Order orders()
+ * @method static \Sebdesign\VivaPayments\Services\Transaction transactions()
+ * @method static \Sebdesign\VivaPayments\Services\Webhook webhooks()
+ * @method static \Sebdesign\VivaPayments\Client withEnvironment(\Sebdesign\VivaPayments\Enums\Environment|string $environment)
+ * @method static \Sebdesign\VivaPayments\Client withBasicAuthCredentials(string $merchantId, string $apiKey)
+ * @method static \Sebdesign\VivaPayments\Client withOAuthCredentials(string $clientId, string $clientSecret)
+ * @method static \Sebdesign\VivaPayments\Client withToken(string $token)
  */
 class Viva extends Facade
 {
