@@ -14,38 +14,6 @@ Check out the official Viva Wallet Developer Portal for detailed instructions on
 
 **Note:** This project is not a official package, and I'm not affiliated with Viva Payments in any way.
 
-## Table of Contents
-
-- [Setup](#setup)
-    - [Installation](#installation)
-    - [Service Provider](#service-provider)
-    - [Configuration](#configuration)
-- [Smart Checkout](#smart-checkout)
-    - [Create a payment order](#create-a-payment-order)
-    - [Redirect to Smart Checkout](#redirect-to-smart-checkout)
-    - [Verify payment](#verify-payment)
-    - [Full example](#full-example)
-- [Handling Webhooks](#handling-webhooks)
-    - [Define the route](#define-the-route)
-    - [Exclude from CSRF protection](exclude-from-csrf-protection)
-    - [Handle webhook events](#handle-webhook-events)
-- [API Methods](#api-methods)
-    - [Orders](#orders)
-        - [Create a payment order](#create-a-payment-order)
-        - [Get the redirect URL](#get-the-redirect-url)
-    - [Transactions](#transactions)
-        - [Retrieve a transaction](#retrieve-a-transaction)
-        - [Create a recurring transaction](#create-a-recurring-transaction)
-    - [OAuth](#oauth)
-        - [Request access token](#request-access-token)
-        - [Use an existing access token](#use-an-existing-access-token)
-    - [Cards](#cards)
-        - [Create card token](#create-card-token)
-    - [Webhooks](#webhooks)
-        - [Get an authorization code](#get-an-authorization-code)
-- [Exceptions](#exceptions)
-- [Tests](#tests)
-
 ## Setup
 
 #### Installation
