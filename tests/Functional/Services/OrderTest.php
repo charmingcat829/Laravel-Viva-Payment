@@ -7,7 +7,7 @@ use Sebdesign\VivaPayments\Requests\CreatePaymentOrder;
 use Sebdesign\VivaPayments\Requests\Customer;
 use Sebdesign\VivaPayments\Test\TestCase;
 
-/** @cover \Sebdesign\VivaPayments\Services\Order */
+/** @covers \Sebdesign\VivaPayments\Services\Order */
 class OrderTest extends TestCase
 {
     /**
