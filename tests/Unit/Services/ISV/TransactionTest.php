@@ -107,15 +107,15 @@ class TransactionTest extends TestCase
         ]);
         $this->mockRequests();
 
-        $response = $this->client->transactions()->createRecurring(
+        $response = $this->client->isv()->transactions()->createRecurring(
             '14c59e93-f8e4-4f5c-8a63-60ae8f8807d1',
             new CreateRecurringTransaction(
                 amount: 100,
-                installments: 1,
+                isvAmount: 1,
                 customerTrns: 'A description of products / services that is displayed to the customer',
                 merchantTrns: 'Your merchant reference',
-                sourceCode: '6054',
-                tipAmount: 0,
+                sourceCode: '4929333',
+                resellerSourceCode: '1565',
             )
         );
 
@@ -124,11 +124,11 @@ class TransactionTest extends TestCase
         $this->assertMethod('POST', $request);
         $this->assertPath('/api/transactions/14c59e93-f8e4-4f5c-8a63-60ae8f8807d1', $request);
         $this->assertJsonBody('amount', 100, $request);
-        $this->assertJsonBody('installments', 1, $request);
+        $this->assertJsonBody('isvAmount', 1, $request);
         $this->assertJsonBody('customerTrns', 'A description of products / services that is displayed to the customer', $request);
         $this->assertJsonBody('merchantTrns', 'Your merchant reference', $request);
-        $this->assertJsonBody('sourceCode', '6054', $request);
-        $this->assertJsonBody('tipAmount', 0, $request);
+        $this->assertJsonBody('sourceCode', '4929333', $request);
+        $this->assertJsonBody('resellerSourceCode', '1565', $request);
         $this->assertEquals(null, $response->Emv);
         $this->assertEquals(1.00, $response->Amount);
         $this->assertEquals('F', $response->StatusId->value);

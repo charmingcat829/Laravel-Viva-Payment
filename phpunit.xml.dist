@@ -46,5 +46,7 @@
         <env name="VIVA_CLIENT_SECRET" value="viva-client-secret"/>
         <env name="VIVA_ISV_CLIENT_ID" value="viva-isv-client-id"/>
         <env name="VIVA_ISV_CLIENT_SECRET" value="viva-isv-client-secret"/>
+        <env name="VIVA_ISV_PARTNER_ID" value="viva-isv-partner-id"/>
+        <env name="VIVA_ISV_PARTNER_API_KEY" value="viva-isv-partner-api-key"/>
     </php>
 </phpunit>

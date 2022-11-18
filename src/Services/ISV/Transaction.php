@@ -5,6 +5,7 @@ namespace Sebdesign\VivaPayments\Services\ISV;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\RequestOptions;
 use Sebdesign\VivaPayments\Client;
+use Sebdesign\VivaPayments\Requests;
 use Sebdesign\VivaPayments\Responses;
 use Sebdesign\VivaPayments\VivaException;
 
@@ -37,5 +38,33 @@ class Transaction
         );
 
         return Responses\Transaction::create($response);
+    }
+
+    /**
+     * Create a recurring transaction.
+     *
+     * @see https://developer.vivawallet.com/isv-partner-program/payment-isv-api/#tag/Recurring-Payments/paths/~1api~1transactions~1{id}/post
+     *
+     * @param  array<string,mixed>  $guzzleOptions  Additional parameters for the Guzzle client
+     *
+     * @throws GuzzleException
+     * @throws VivaException
+     */
+    public function createRecurring(
+        string $transactionId,
+        Requests\CreateRecurringTransaction $transaction,
+        array $guzzleOptions = []
+    ): Responses\RecurringTransaction {
+        /** @phpstan-var RecurringTransactionArray */
+        $response = $this->client->post(
+            $this->client->getUrl()->withPath("/api/transactions/{$transactionId}"),
+            array_merge_recursive(
+                [RequestOptions::JSON => $transaction],
+                $this->client->authenticateWithBasicAuth(),
+                $guzzleOptions
+            )
+        );
+
+        return Responses\RecurringTransaction::create($response);
     }
 }

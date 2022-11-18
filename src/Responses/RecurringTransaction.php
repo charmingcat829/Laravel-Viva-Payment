@@ -24,6 +24,10 @@ class RecurringTransaction
         public readonly ?string $CorrelationId,
         public readonly int $EventId,
         public readonly bool $Success,
+        public readonly ?string $IssuerMessage = null,
+        public readonly mixed $IssuerMessageControl = null,
+        public readonly mixed $Ctap = null,
+        public readonly ?string $CartesBancaires = null,
     ) {
     }
 

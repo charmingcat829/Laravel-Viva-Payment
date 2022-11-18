@@ -54,12 +54,16 @@ Add the following array in your `config/services.php`.
     'environment' => env('VIVA_ENVIRONMENT', 'production'),
     'client_id' => env('VIVA_CLIENT_ID'),
     'client_secret' => env('VIVA_CLIENT_SECRET'),
+    'isv_partner_id' => env('VIVA_ISV_PARTNER_ID'),
+    'isv_partner_api_key' => env('VIVA_ISV_PARTNER_API_KEY'),
 ],
 ```
 
 The `api_key` and `merchant_id` can be found in the *Settings > API Access* section of your profile.
 
 The `client_id` and `client_secret` are needed for the *Smart Checkout*. You can generate the *Smart Checkout Credentials* in the *Settings > API Access* section of your profile.
+
+The `isv_partner_id` and `isv_partner_api_key` are required for using the **ISV Payment API** with Basic authentication.
 
 > Read more about API authentication on the Developer Portal: https://developer.vivawallet.com/getting-started/find-your-account-credentials/client-smart-checkout-credentials/
 
@@ -528,6 +532,33 @@ use Sebdesign\VivaPayments\Facades\Viva;
 
 $transaction = Viva::isv()->transactions()->retrieve(
     transactionId: 'c90d4902-6245-449f-b2b0-51d99cd09cfe',
+    guzzleOptions: [],
+);
+```
+
+#### Create a recurring transaction
+
+> See: https://developer.vivawallet.com/isv-partner-program/payment-isv-api/#tag/Recurring-Payments/paths/~1api~1transactions~1{id}/post
+
+```php
+use Sebdesign\VivaPayments\Facades\Viva;
+use Sebdesign\VivaPayments\Requests\CreateRecurringTransaction;
+
+Viva::withBasicAuthCredentials(
+    config('services.viva.isv_partner_id').':'.config('services.viva.merchant_id'),
+    config('services.viva.isv_partner_api_key'),
+);
+
+$transaction = Viva::isv()->transactions()->createRecurring(
+    transactionId: 'c90d4902-6245-449f-b2b0-51d99cd09cfe',
+    transaction: new CreateRecurringTransaction(
+        amount: 100,
+        isvAmount: 1,
+        customerTrns: 'A description of products / services that is displayed to the customer',
+        merchantTrns: 'Your merchant reference',
+        sourceCode: '4929333',
+        resellerSourceCode: '1565',
+    ),
     guzzleOptions: [],
 );
 ```
