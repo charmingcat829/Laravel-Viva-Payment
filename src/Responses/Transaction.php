@@ -17,7 +17,7 @@ class Transaction
         public readonly string $cardNumber,
         public readonly string $currencyCode,
         public readonly string $customerTrns,
-        public readonly string $merchantTrns,
+        public readonly ?string $merchantTrns,
         public readonly TransactionType $transactionTypeId,
         public readonly bool $recurringSupport,
         public readonly int $totalInstallments,
