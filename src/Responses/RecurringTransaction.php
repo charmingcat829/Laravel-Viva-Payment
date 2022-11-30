@@ -3,6 +3,7 @@
 namespace Sebdesign\VivaPayments\Responses;
 
 use Sebdesign\VivaPayments\Enums\TransactionStatus;
+use Sebdesign\VivaPayments\Enums\TransactionType;
 
 class RecurringTransaction
 {
@@ -10,6 +11,7 @@ class RecurringTransaction
         public readonly ?string $Emv,
         public readonly float $Amount,
         public readonly TransactionStatus $StatusId,
+        public readonly TransactionType $TransactionTypeId,
         public readonly ?string $RedirectUrl,
         public readonly string $CurrencyCode,
         public readonly string $TransactionId,
@@ -37,6 +39,7 @@ class RecurringTransaction
         return new self(...[
             ...$attributes,
             'StatusId' => TransactionStatus::from($attributes['StatusId']),
+            'TransactionTypeId' => TransactionType::from($attributes['TransactionTypeId']),
         ]);
     }
 }

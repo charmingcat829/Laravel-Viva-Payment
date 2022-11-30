@@ -92,6 +92,7 @@ class TransactionTest extends TestCase
             'RedirectUrl' => null,
             'CurrencyCode' => '826',
             'TransactionId' => '14c59e93-f8e4-4f5c-8a63-60ae8f8807d1',
+            'TransactionTypeId' => 5,
             'ReferenceNumber' => 838982,
             'AuthorizationId' => '838982',
             'RetrievalReferenceNumber' => '109012838982',
@@ -131,6 +132,7 @@ class TransactionTest extends TestCase
         $this->assertEquals(null, $response->Emv);
         $this->assertEquals(1.00, $response->Amount);
         $this->assertEquals('F', $response->StatusId->value);
+        $this->assertEquals(5, $response->TransactionTypeId->value);
         $this->assertEquals(null, $response->RedirectUrl);
         $this->assertEquals('826', $response->CurrencyCode);
         $this->assertEquals('14c59e93-f8e4-4f5c-8a63-60ae8f8807d1', $response->TransactionId);
