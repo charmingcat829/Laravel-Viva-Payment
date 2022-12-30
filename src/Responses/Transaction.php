@@ -24,7 +24,7 @@ class Transaction
         public readonly ?string $cardCountryCode,
         public readonly ?string $cardIssuingBank,
         public readonly int $currentInstallment,
-        public readonly string $cardUniqueReference,
+        public readonly ?string $cardUniqueReference,
         public readonly int $cardTypeId,
         public readonly ?int $digitalWalletId = null,
     ) {
